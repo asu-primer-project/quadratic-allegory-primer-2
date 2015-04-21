@@ -1,0 +1,76 @@
+storyworld BeginWorld
+{
+	user: SquareA;
+	
+	beginning
+	{
+		page begin1
+		{
+			draw: World.back1, 0, 0;
+			draw: SquareA.me, -300, 0;
+			draw: SquareC.me, 300, 0;
+			text: "This is the first page.";		
+		}
+		
+		page begin2
+		{
+			draw: World.back2, 0, 0;
+			draw: SquareB.me, -300, 0;
+			draw: SquareC.me, 300, 0;
+			text: "This is the second page.";		
+		}
+		
+		page begin3
+		{
+			draw: World.back3, 0, 0;
+			draw: SquareA.me, -300, 0;
+			draw: SquareD.me, 300, 0;
+			text: "This is the third page.";		
+		}
+		
+		page begin4
+		{
+			draw: World.back4, 0, 0;
+			draw: SquareD.me, -300, 0;
+			draw: SquareB.me, 300, 0;
+			text: "This is the fourth page.";		
+		}
+		
+		page begin5
+		{
+			draw: World.back5, 0, 0;
+			draw: SquareA.me, -300, 0;
+			draw: SquareC.me, 300, 0;
+			text: "This is the fifth page.";			
+		}
+	}
+
+	entity SquareA
+	{
+		image: me, spriteA;
+	}
+	
+	entity SquareB
+	{
+		image: me, spriteB;
+	}
+	
+	entity SquareC
+	{
+		image: me, spriteC;
+	}
+	
+	entity SquareD
+	{
+		image: me, spriteD;
+	}
+	
+	entity World
+	{
+		image: back1, pageBack1;
+		image: back2, pageBack2;
+		image: back3, pageBack3;
+		image: back4, pageBack4;
+		image: back5, pageBack5;
+	}
+}

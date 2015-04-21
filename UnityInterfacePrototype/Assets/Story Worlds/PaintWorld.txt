@@ -1,0 +1,53 @@
+storyworld PaintWorld
+{
+	user: TallPainter;
+	
+	beginning
+	{
+		page begin1
+		{
+			draw: Room.background, 0, 0;
+			draw: TallPainter.standing, -0.6, 0;
+			text: "The tall painter stood around.";		
+		}
+		
+		page begin2
+		{
+			draw: Room.background, 0, 0;
+			draw: TallPainter.standing, -0.6, 0;
+			draw: ShortPainter.walkingLeft, 0.7, 0;
+			text: "A short painter walked into the room.";
+		}
+		
+		page begin3
+		{
+			draw: Room.background, 0, 0;
+			draw: TallPainter.standing, -0.6, 0;
+			draw: ShortPainter.standing, 0.6, 0;
+			text: "Now two painters were in the room together.";		
+		}
+	}
+
+	entity TallPainter
+	{
+		string: name, "Tall Painter";
+		image: standing, tallPainterStanding;
+		image: painting, tallPainterPainting;
+		image: walkingLeft, tallPainterWalkingLeft;
+		image: walkingRight, tallPainterWalkingRight;
+	}
+	
+	entity ShortPainter
+	{
+		string: name, "Short Painter";
+		image: standing, shortPainterStanding;
+		image: painting, shortPainterPainting;
+		image: walkingLeft, shortPainterWalkingLeft;
+		image: walkingRight, shortPainterWalkingRight;
+	}
+	
+	entity Room
+	{
+		image: background, roomBackground;
+	}
+}
