@@ -16,6 +16,7 @@ public class LudoNarrare : MonoBehaviour
 	private bool inputReady;
 	public TextAsset storyWorldFile;
 	private int loadStatus;
+	private bool done = false;
 
     //Constructer/Setup
 	/*
@@ -31,16 +32,20 @@ public class LudoNarrare : MonoBehaviour
         //verbBoxes.Add(comboBox6);
     }*/
 
-	//Returns reference to loaded story world
+	//Access functions
 	public StoryWorld getStoryWorld()
 	{
 		return sw;
 	}
 
-	//Returns reference to running engine
 	public Engine getEngine()
 	{
 		return engine;
+	}
+
+	public bool getDone()
+	{
+		return done;
 	}
 
 	//On start, initialize
@@ -60,6 +65,7 @@ public class LudoNarrare : MonoBehaviour
 			print("Error in LNScript file on line " + loadStatus);
 			Application.Quit();
 		}
+		done = true;
 	}
 	
 	/*

@@ -40,6 +40,8 @@ public class TurnPage : MonoBehaviour
 	
 	private int pageIndex;
 
+	private LudoNarrare ln;
+
 	//Creates a game object with the given draw instruction and page (0 - previous, 1 - current, 2 - next) 
 	private void drawInstruction(DrawInstruction d, int page, int depth)
 	{
@@ -211,16 +213,20 @@ public class TurnPage : MonoBehaviour
 	// Use this for initialization
 	void Start() 
 	{
-		LudoNarrare ln = GetComponent<LudoNarrare>();
-		sw = ln.getStoryWorld();
-		story = GetComponent<LudoNarrare>().getEngine().output;
-		pageIndex = 0;
-		drawPage(pageIndex);
+		ln = GetComponent<LudoNarrare>();
 	}
 
 	// Update is called once per frame
 	void Update() 
 	{
+		if (ln.getDone() && story == null)
+		{
+			sw = ln.getStoryWorld();
+			story = ln.getEngine().output;
+			pageIndex = 0;
+			drawPage(pageIndex);
+		}
+
 		if (story != null)
 		{
 			if (previousLeftPage != null 
