@@ -8,7 +8,7 @@ public class Verb
     /* Variables */
     public string name;
     public List<ConditionBundle> variables;
-    public List<ConditionBundle> arguments;
+    public List<Argument> arguments;
 	public string input;
     public List<Condition> preconditions;
 	public List<Case> cases;
@@ -21,7 +21,7 @@ public class Verb
     {
         name = _name;
         variables = new List<ConditionBundle>();
-		arguments = new List<ConditionBundle>();
+		arguments = new List<Argument>();
 		input = "";
 		preconditions = new List<Condition>();
 		cases = new List<Case>();
@@ -67,7 +67,7 @@ public class Verb
 			verb.arguments.Clear();
 			for (int i = 0; i < arguments.Count; i++)
 			{
-				ConditionBundle temp = new ConditionBundle("");
+				Argument temp = new Argument("", "");
 				arguments[i].copyTo(temp);
 				verb.arguments.Add(temp);
 			}

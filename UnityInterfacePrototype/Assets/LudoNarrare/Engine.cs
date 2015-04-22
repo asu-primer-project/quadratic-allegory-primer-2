@@ -28,6 +28,7 @@ public class Engine
 	{
 		foreach(Page p in storyWorld.beginning)
 			output.Add(p);
+		output.Add(storyWorld.input);
 	}
 
 	/*

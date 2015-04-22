@@ -19,6 +19,12 @@ public class TurnPage : MonoBehaviour
 	public Canvas previousCanvas;
 	public Canvas currentCanvas;
 	public Canvas nextCanvas;
+	public Canvas inputCanvas;
+
+	public GameObject previousText;
+	public GameObject currentText;
+	public GameObject nextText;
+	public GameObject inputText;
 
 	private StoryWorld sw;
 	private List<Page> story;
@@ -28,6 +34,7 @@ public class TurnPage : MonoBehaviour
 	private List<GameObject> nextPageItems = new List<GameObject>();
 
 	public float fallSpeed = 70.0f;
+	private float inputScale = 0.008333333f;
 
 	private static bool flippingLeft = false;
 	private static bool settledLeft = true;
@@ -41,28 +48,37 @@ public class TurnPage : MonoBehaviour
 	private int pageIndex;
 
 	private LudoNarrare ln;
+	private bool ready = false;
 
 	//Creates a game object with the given draw instruction and page (0 - previous, 1 - current, 2 - next) 
-	private void drawInstruction(DrawInstruction d, int page, int depth)
+	private void drawInstruction(DrawInstruction d, int page, int depth, bool input)
 	{
 		if (d.isText)
 		{
-			if (page == 0)
+			if (!input)
 			{
-				previousCanvas.enabled = true;
-				Text t = GameObject.Find("TextPrevious").GetComponent<Text>();
-				t.text = d.text;
+				if (page == 0)
+				{
+					previousCanvas.enabled = true;
+					Text t = previousText.GetComponent<Text>();
+					t.text = d.text;
+				}
+				else if (page == 1)
+				{
+					currentCanvas.enabled = true;
+					Text t = currentText.GetComponent<Text>();
+					t.text = d.text;
+				}
+				else if (page == 2)
+				{
+					nextCanvas.enabled = true;
+					Text t = nextText.GetComponent<Text>();
+					t.text = d.text;
+				}
 			}
-			else if (page == 1)
+			else
 			{
-				currentCanvas.enabled = true;
-				Text t = GameObject.Find("TextCurrent").GetComponent<Text>();
-				t.text = d.text;
-			}
-			else if (page == 2)
-			{
-				nextCanvas.enabled = true;
-				Text t = GameObject.Find("TextNext").GetComponent<Text>();
+				Text t = inputText.GetComponent<Text>();
 				t.text = d.text;
 			}
 		}
@@ -96,8 +112,8 @@ public class TurnPage : MonoBehaviour
 			}
 
 			sr.sortingOrder = depth;
-			temp.transform.localScale += new Vector3(0.05f, 0.0f);
-			temp.transform.localPosition = new Vector3((d.x * 1.05f)/100f, d.y/100f);
+			temp.transform.localScale += new Vector3(0.112f, 0.0f);
+			temp.transform.localPosition = new Vector3((d.x * 1.112f)/100f, d.y/100f);
 		}
 	}
 
@@ -120,6 +136,10 @@ public class TurnPage : MonoBehaviour
 		nextPageItems.Clear();
 		nextCanvas.enabled = false;
 
+		inputCanvas.enabled = false;
+		inputCanvas.transform.localScale = new Vector3(1.112f*inputScale, 1f*inputScale, 1f);
+		inputCanvas.transform.position = new Vector3(40f, -30f, -1f);
+
 		//Create sprite objects for new pages
 		int i = 0;
 
@@ -127,25 +147,53 @@ public class TurnPage : MonoBehaviour
 		{
 			foreach(DrawInstruction d in story[p - 1].drawList)
 			{
-				drawInstruction(d, 0, i);
+				drawInstruction(d, 0, i, false);
 				i++;
 			}
 		}
 
 		i = 0;
-		foreach(DrawInstruction d in story[p].drawList)
+		if (story[p].isInputPage)
 		{
-			drawInstruction(d, 1, i);
-			i++;
+			inputCanvas.enabled = true;
+			inputCanvas.transform.position = new Vector3(0f, 0f, -1f);
+			inputCanvas.transform.localScale = new Vector3(1f*inputScale, 1f*inputScale, 1f);
+
+			foreach(DrawInstruction d in story[p].drawList)
+			{
+				drawInstruction(d, 1, i, true);
+				i++;
+			}
+		}
+		else
+		{
+			foreach(DrawInstruction d in story[p].drawList)
+			{
+				drawInstruction(d, 1, i, false);
+				i++;
+			}
 		}
 
 		i = 0;
 		if (p != story.Count - 1)
 		{
-			foreach(DrawInstruction d in story[p + 1].drawList)
+			if (story[p + 1].isInputPage)
 			{
-				drawInstruction(d, 2, i);
-				i++;
+				inputCanvas.enabled = true;
+
+				foreach(DrawInstruction d in story[p + 1].drawList)
+				{
+					drawInstruction(d, 2, i, true);
+					i++;
+				}
+			}
+			else
+			{
+				foreach(DrawInstruction d in story[p + 1].drawList)
+				{
+					drawInstruction(d, 2, i, false);
+					i++;
+				}
 			}
 		}
 	}
@@ -219,15 +267,18 @@ public class TurnPage : MonoBehaviour
 	// Update is called once per frame
 	void Update() 
 	{
-		if (ln.getDone() && story == null)
+		if (!ready)
 		{
-			sw = ln.getStoryWorld();
-			story = ln.getEngine().output;
-			pageIndex = 0;
-			drawPage(pageIndex);
+			if (ln.getDone())
+			{
+				sw = ln.getStoryWorld();
+				story = ln.getEngine().output;
+				pageIndex = 0;
+				drawPage(pageIndex);
+				ready = true;
+			}
 		}
-
-		if (story != null)
+		else
 		{
 			if (previousLeftPage != null 
 			    && previousRightPage != null 
@@ -244,6 +295,13 @@ public class TurnPage : MonoBehaviour
 				{
 					if (settledRight && !flippingLeft && !flippingRight && Input.mousePosition.x < Screen.width/2 && pageIndex != 0)
 					{
+						//Make sure to draw input page dummy whenever pages are moving
+						if (story[pageIndex].isInputPage)
+						{
+							inputCanvas.transform.localScale = new Vector3(1.112f*inputScale, 1f*inputScale, 1f);
+							inputCanvas.transform.position = new Vector3(0f, -30f, -1f);
+						}
+
 						//Pick up left page
 						caughtAngleLeft = currentLeftPage.transform.eulerAngles;
 						
@@ -297,7 +355,6 @@ public class TurnPage : MonoBehaviour
 
 						currentRightPage.transform.position = new Vector3(4.5f*Mathf.Cos(Mathf.Deg2Rad*currentRightPage.transform.eulerAngles.y), 0.0f, 4.5f*Mathf.Sin(Mathf.Deg2Rad*currentRightPage.transform.eulerAngles.y));
 						nextLeftPage.transform.position = new Vector3(-4.5f*Mathf.Cos(Mathf.Deg2Rad*nextLeftPage.transform.eulerAngles.y), 0.0f, -4.5f*Mathf.Sin(Mathf.Deg2Rad*nextLeftPage.transform.eulerAngles.y));
-						print("x: " + currentRightPage.transform.position.x + " z: " + currentRightPage.transform.position.z);
 					}
 				} 
 				else
@@ -309,7 +366,7 @@ public class TurnPage : MonoBehaviour
 						flippingRight = false;
 				}
 
-				if (!flippingLeft)
+				if (!flippingLeft && !settledLeft)
 				{
 					//Let left page fall back
 					if (currentLeftPage.transform.eulerAngles.y < 90.0f && !Mathf.Approximately(currentLeftPage.transform.eulerAngles.y,0.0f))
@@ -323,6 +380,13 @@ public class TurnPage : MonoBehaviour
 					else if (currentLeftPage.transform.eulerAngles.y > 180.0f)
 					{
 						settledLeft = true;
+
+						//Once settled remove input dummy
+						if (story[pageIndex].isInputPage)
+						{
+							inputCanvas.transform.localScale = new Vector3(1f*inputScale, 1f*inputScale, 1f);
+							inputCanvas.transform.position = new Vector3(0f, 0f, -1f);
+						}
 
 						currentLeftPage.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
 						previousRightPage.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
@@ -338,8 +402,8 @@ public class TurnPage : MonoBehaviour
 					}
 				}
 
-				if (!flippingRight)
-				{
+				if (!flippingRight && !settledRight)
+				{	
 					//Let right page fall back
 					if (currentRightPage.transform.eulerAngles.y > 270.0f)
 					{
@@ -354,6 +418,13 @@ public class TurnPage : MonoBehaviour
 						pageIndex++;
 						drawPage(pageIndex);
 						flipPageRight(nextLeftPage.transform.eulerAngles);
+
+						//Make sure to draw input page dummy whenever pages are moving
+						if (story[pageIndex].isInputPage)
+						{
+							inputCanvas.transform.localScale = new Vector3(1.112f*inputScale, 1f*inputScale, 1f);
+							inputCanvas.transform.position = new Vector3(0f, -30f, -1f);
+						}
 					}
 					else if (currentRightPage.transform.eulerAngles.y < 180.0f)
 					{

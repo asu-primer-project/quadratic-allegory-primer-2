@@ -73,4 +73,10 @@ storyworld BeginWorld
 		image: back4, pageBack4;
 		image: back5, pageBack5;
 	}
+	
+	input
+	{
+		draw: World.back1, 0, 0;
+		text: "What do you do next?";
+	}
 }

@@ -10,6 +10,7 @@ public class StoryWorld
     public string userEntity;
 	public List<Page> beginning;
     public List<Entity> entities;
+	public Page input;
     public List<Verb> verbs;
 	public List<Ending> endings;
 
@@ -20,6 +21,7 @@ public class StoryWorld
         userEntity = _userEntity;
 		beginning = new List<Page>();
         entities = new List<Entity>();
+		input = null;
         verbs = new List<Verb>();
 
         Verb vTemp = new Verb("!Wait");

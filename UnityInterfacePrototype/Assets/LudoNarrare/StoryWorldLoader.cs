@@ -1650,6 +1650,40 @@ public class StoryWorldLoader : MonoBehaviour
 		return true;
 	}
 
+	//Parse Input Page
+	public bool parseInputPage(Page p)
+	{
+		bool error = false;
+
+		if (getToken() == 4)
+		{
+			while (getToken() != 5)
+			{
+				if (type == 0 && !error)
+				{
+					if (currentToken == "draw")
+					{
+						DrawInstruction temp = new DrawInstruction(false,"","","",0,0);
+						p.drawList.Add(temp);
+						error = parseDrawDef(temp);
+					}
+					else if (currentToken == "text")
+					{
+						DrawInstruction temp = new DrawInstruction(true,"","","",0,0);
+						p.drawList.Add(temp);
+						error = parseTextDef(temp);
+					}
+					else
+						return true;
+				}
+				else if (type != 5 || error)
+					return true;
+			}
+			return false;
+		}
+		return true;
+	}
+
 	//Parse Bundle
 	public bool parseBundle(ConditionBundle c)
 	{
@@ -1670,6 +1704,50 @@ public class StoryWorldLoader : MonoBehaviour
 							bool error = false;
 							error = parseCondition(temp);
 							if (error) return true;
+						}
+						else return true;
+					}
+					else return true;
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+
+	//Parse Argument
+	public bool parseArgument(Argument a)
+	{
+		if (getToken() == 0)
+		{
+			a.name = currentToken;
+			
+			if (getToken() == 4)
+			{
+				while (getToken() != 5)
+				{
+					if (type == 0)
+					{
+						if (currentToken == "where")
+						{
+							Condition temp = new Condition();
+							a.conditions.Add(temp);
+							bool error = false;
+							error = parseCondition(temp);
+							if (error) return true;
+						}
+						else if (currentToken == "text")
+						{
+							if (getToken() == 6)
+							{
+								if (getToken() == 1)
+								{
+									a.text = currentToken;
+									
+									if (getToken() != 7)
+										return true;
+								}
+							}
 						}
 						else return true;
 					}
@@ -1830,9 +1908,9 @@ public class StoryWorldLoader : MonoBehaviour
 						}
 						else if (currentToken == "argument")
 						{
-							ConditionBundle temp = new ConditionBundle("");
+							Argument temp = new Argument("", "");
 							v.arguments.Add(temp);
-							error = parseBundle(temp);							
+							error = parseArgument(temp);							
 						}
 						else if (currentToken == "input")
 							error = parseInput(v);
@@ -1925,6 +2003,13 @@ public class StoryWorldLoader : MonoBehaviour
 									Entity temp = new Entity("");
 									sw.entities.Add(temp);
 									error = parseEntity(temp);
+								}
+								else if (currentToken == "input")
+								{
+									Page temp = new Page("");
+									temp.isInputPage = true;
+									sw.input = temp;
+									error = parseInputPage(temp);
 								}
 								else if (currentToken == "verb")
 								{
