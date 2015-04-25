@@ -24,7 +24,14 @@ public class StoryWorld
 		input = null;
         verbs = new List<Verb>();
 
-        Verb vTemp = new Verb("!Wait");
+        Verb vTemp = new Verb("Wait");
+		Case cTemp = new Case("Wait");
+		cTemp.page = new Page("Wait");
+		vTemp.cases.Add(cTemp);
+		Discriminator dTemp = new Discriminator("Never show wait");
+		dTemp.neverShow = true;
+		vTemp.discriminators.Add(dTemp);
+		vTemp.icon = "waitIcon";
         verbs.Add(vTemp);
 
 		endings = new List<Ending>();

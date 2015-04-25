@@ -7,27 +7,25 @@ public class Verb
 {
     /* Variables */
     public string name;
-    public List<ConditionBundle> variables;
+    public List<Variable> variables;
     public List<Argument> arguments;
-	public string input;
     public List<Condition> preconditions;
 	public List<Case> cases;
-	public List<Condition> discriminator;
+	public List<Discriminator> discriminators;
+	public DynamicVerbTreeNode root;
 	public string icon;
-	public bool neverShow;
 
     /* Functions */
     public Verb(string _name)
     {
         name = _name;
-        variables = new List<ConditionBundle>();
+        variables = new List<Variable>();
 		arguments = new List<Argument>();
-		input = "";
 		preconditions = new List<Condition>();
 		cases = new List<Case>();
-		discriminator = new List<Condition>();
+		discriminators = new List<Discriminator>();
+		root = null;
 		icon = "";
-		neverShow = false;
     }
 
     public void applyPath(List<string> path)
@@ -44,8 +42,8 @@ public class Verb
 			preconditions[i].replaceWith(replace, with);
 		for (int i = 0; i < cases.Count; i++ )
 			cases[i].replaceWith(replace, with);
-		for (int i = 0; i < discriminator.Count; i++ )
-			discriminator[i].replaceWith(replace, with);
+		for (int i = 0; i < discriminators.Count; i++ )
+			discriminators[i].replaceWith(replace, with);
     }
 
     public void copyTo(Verb verb)
@@ -58,7 +56,7 @@ public class Verb
 			verb.variables.Clear();
 			for (int i = 0; i < variables.Count; i++)
 			{
-				ConditionBundle temp = new ConditionBundle("");
+				Variable temp = new Variable("");
 				variables[i].copyTo(temp);
 				verb.variables.Add(temp);
 			}
@@ -71,8 +69,6 @@ public class Verb
 				arguments[i].copyTo(temp);
 				verb.arguments.Add(temp);
 			}
-
-			verb.input = input;
 
 			//Copy preconditions
 			verb.preconditions.Clear();
@@ -93,21 +89,15 @@ public class Verb
 			}
 
 			//Copy discriminator
-			verb.discriminator.Clear();
-			for (int i = 0; i < discriminator.Count; i++)
+			verb.discriminators.Clear();
+			for (int i = 0; i < discriminators.Count; i++)
 			{
-				Condition temp = new Condition();
-				discriminator[i].copyTo(temp);
-				verb.discriminator.Add(temp);
+				Discriminator temp = new Discriminator("");
+				discriminators[i].copyTo(temp);
+				verb.discriminators.Add(temp);
 			}
 
 			verb.icon = icon;
-			verb.neverShow = neverShow;
         }
-    }
-
-    public override string ToString()
-    {
-		return input;
     }
 }

@@ -8,7 +8,7 @@ public class Operator
     /* Variables */
     public string name;
     public string operatorSubject;
-	//0 - add, 1 - remove, 2 - +, 3 - -, 4 - *, 5 - /
+	//0 - add, 1 - remove, 2 - +, 3 - -, 4 - *, 5 - /, 6 - =
 	public int op; 
     public Tag tag;
     public Relationship relationship;

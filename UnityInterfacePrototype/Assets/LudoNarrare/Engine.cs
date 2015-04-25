@@ -7,17 +7,20 @@ public class Engine
 {
     /* Variables */
     public StoryWorld storyWorld;
-    public int tick;
     public List<Page> output;
     public List<Verb> currentUserChoices;
     public bool ended;
     public Random rand;
+	
+	private string argument1;
+	private string argument2;
+	private string argument3;
+	private string argument4;
 
     /* Functions */
     public Engine(StoryWorld _storyWorld)
     {
         storyWorld = _storyWorld;
-        tick = 0;
 		output = new List<Page>();
         currentUserChoices = null;
         ended = false;
@@ -26,57 +29,784 @@ public class Engine
 
 	public void createBeginning()
 	{
-		foreach(Page p in storyWorld.beginning)
-			output.Add(p);
+		output.AddRange(storyWorld.beginning);
 		output.Add(storyWorld.input);
 	}
 
-	/*
-    //Currently string together all end conditions as being logical OR
+	//Functions that handle user verb choosing
+	public void setArgument1(string a1)
+	{
+		argument1 = a1;
+	}
+
+	public void setArgument2(string a2)
+	{
+		argument1 = a2;
+	}
+	
+	public void setArgument3(string a3)
+	{
+		argument1 = a3;
+	}
+
+	public void setArgument4(string a4)
+	{
+		argument1 = a4;
+	}
+
+	public void takeInputAndProcess(string choice)
+	{
+		if (!ended)
+		{
+			//Handle user action
+			output.Add(executeVerb(currentUserChoices.Find(x => x.name == choice)));
+			
+			//End at user action if end met
+			ended = checkEndConditions();
+			
+			//Handle AI
+			handleAI();
+			
+			//Now wait for input again
+			currentUserChoices = generatePossibleVerbs(storyWorld.entities.Find(x => x.name == storyWorld.userEntity));
+			
+			while (currentUserChoices.Count <= 1)
+			{
+				//Handle AI
+				handleAI();
+				
+				//Now wait for input again
+				currentUserChoices = generatePossibleVerbs(storyWorld.entities.Find(x => x.name == storyWorld.userEntity));
+			}
+
+			//Setup user choice interface
+		}
+		else
+		{
+			//Handle ended state and story restart.
+		}
+	}
+	
+    //If any of the story world's endings' conditions are satisfied, execute it.
     public bool checkEndConditions()
     {
-        for (int i = 0; i < storyWorld.endConditions.Count; i++)
-        {
-            if (checkCondition(storyWorld.endConditions[i]))
-            {
-                return true;
-            }                    
-        }
+		foreach(Ending e in storyWorld.endings)
+		{
+			bool allSatisfied = true;
 
-        return false;
+			foreach(Condition c in e.conditions)
+			{
+				if (!checkCondition(c, null))
+					allSatisfied = false;			
+			}
+
+			if (allSatisfied)
+			{
+				output.AddRange(e.pages);
+				return true;
+			}
+		}
+
+		return false;
     }
 
-    public void takeInputAndProcess(Verb choice)
-    {
-        if (!ended)
-        {
-            //Handle user action
-            if (choice.name != "!Wait")
-                output += (tick + ": " + executeVerb(choice) + "\n");
-            
-            //End at user action if end met
-            ended = checkEndConditions();
+	public bool checkCondition(Condition c, Verb context)
+	{
+		int type = c.getType();
 
-            //Handle AI
-            handleAI();
-            tick++;
+		//Is condition subject a variable or not?
+		if (c.conditionSubject[0] == '?' && context != null)
+		{
+			Variable varL = context.variables.Find(x => x.name == c.conditionSubject);
 
-            //Now wait for input again
-            currentUserChoices = generatePossibleVerbs(storyWorld.entities.Find(x => x.name == storyWorld.userEntity));
+			//Variable comparision?
+			if (type == 7)
+			{
+				if (c.variableObject == "?null")
+				{
+					if (c.comparison == 2)
+						return (varL.values.Count == 0) ? true : false;
+					else if (c.comparison == 3)
+						return (varL.values.Count == 0) ? false : true;
+					else return false;
+				}
+				else
+				{
+					if (c.comparison == 2)
+					{
+						Variable varR = context.variables.Find(x => x.name == c.variableObject);
 
-            while (currentUserChoices.Count <= 1)
-            {
-                //Handle AI
-                handleAI();
-                tick++;
+						if (varL.values.Count == varR.values.Count)
+						{
+							foreach (Entity e in varL.values)
+								if (varR.values.Find(x => x.name == e.name) == null) return false;
 
-                //Now wait for input again
-                currentUserChoices = generatePossibleVerbs(storyWorld.entities.Find(x => x.name == storyWorld.userEntity));
-            }
+							return true;
+						}
+						else return false;
+					}
+					else if (c.comparison == 3)
+					{
+						Variable varR = context.variables.Find(x => x.name == c.variableObject);
 
-            //waitingForInput = true;
-        }
-    }
+						if (varL.values.Count == varR.values.Count)
+						{
+							foreach (Entity e in varL.values)
+								if (varR.values.Find(x => x.name == e.name) == null) return true;
+							
+							return false;
+						}
+						else return true;
+					}
+					else return false;
+				}
+			}
+
+			//Universal or existential quantifier?
+			if (c.allCS)
+			{
+				//Has comparison
+				if (c.comparison == 0)
+				{
+					foreach (Entity e in varL.values)
+					{
+						switch (type)
+						{
+						case 0: if (e.tags.Find(x => x.name == c.tagRef) == null) return false;
+						case 1: if (e.relationships.Find(x => x.name == c.relateRef) == null) return false;
+						case 2: if (e.numbers.Find(x => x.name == c.numRef) == null) return false;
+						case 3: if (e.strings.Find(x => x.name == c.stringRef) == null) return false;
+						case 4: if (e.obligations.Find(x => x.name == c.obligationRef) == null) return false;
+						case 5: if (e.goals.Find(x => x.name == c.goalRef) == null) return false;
+						case 6: if (e.behaviors.Find(x => x.name == c.behaviorRef) == null) return false;
+						default: return false;
+						}
+					}
+
+					return true;
+				}
+				//Missing comparision
+				else if (c.comparison == 1)
+				{
+					foreach (Entity e in varL.values)
+					{
+						switch (type)
+						{
+						case 0: if (e.tags.Find(x => x.name == c.tagRef) != null) return false;
+						case 1: if (e.relationships.Find(x => x.name == c.relateRef) != null) return false;
+						case 2: if (e.numbers.Find(x => x.name == c.numRef) != null) return false;
+						case 3: if (e.strings.Find(x => x.name == c.stringRef) != null) return false;
+						case 4: if (e.obligations.Find(x => x.name == c.obligationRef) != null) return false;
+						case 5: if (e.goals.Find(x => x.name == c.goalRef) != null) return false;
+						case 6: if (e.behaviors.Find(x => x.name == c.behaviorRef) != null) return false;
+						default: return false;
+						}
+					}
+
+					return true;
+				}
+				//Equal comparision
+				else if (c.comparison == 2)
+				{
+					foreach (Entity e in varL.values)
+					{
+						switch (type)
+						{
+						case 1: 
+							if (c.relateObject[0] == '?')
+							{
+								if (c.allRO)
+								{
+									Variable varR = context.variables.Find(x => x.name == c.relateObject);
+									foreach (Entity n in varR.values)
+										if (e.relationships.Find(x => x.name == c.relateRef && x.other == n.name) == null) return false;
+								}
+								else
+								{
+									bool hasOne = false;
+									Variable varR = context.variables.Find(x => x.name == c.relateObject);
+									foreach (Entity n in varR.values)
+										if (e.relationships.Find(x => x.name == c.relateRef && x.other == n.name) != null) {hasOne = true; break;}
+
+									if (!hasOne) return false;
+								}
+							}
+							else if (e.relationships.Find(x => x.name == c.relateRef && x.other == c.relateObject) == null) return false;
+						case 2: if (e.numbers.Find(x => x.name == c.numRef && x.value == c.numCompare) == null) return false;
+						case 3: if (e.strings.Find(x => x.name == c.stringRef && x.text == c.stringCompare) == null) return false;
+						default: return false;
+						}
+					}
+
+					return true;
+				}
+				//Unequal comparision
+				else if (c.comparison == 3)
+				{
+					foreach (Entity e in varL.values)
+					{
+						switch (type)
+						{
+						case 1: 
+							if (c.relateObject[0] == '?')
+							{
+								if (c.allRO)
+								{
+									Variable varR = context.variables.Find(x => x.name == c.relateObject);
+									foreach (Entity n in varR.values)
+										if (e.relationships.Find(x => x.name == c.relateRef && x.other == n.name) != null) return false;
+								}
+								else
+								{
+									bool hasAll = true;
+									Variable varR = context.variables.Find(x => x.name == c.relateObject);
+									foreach (Entity n in varR.values)
+										if (e.relationships.Find(x => x.name == c.relateRef && x.other == n.name) == null) {hasAll = false; break;}
+									
+									if (hasAll) return false;
+								}
+							}
+							else if (e.relationships.Find(x => x.name == c.relateRef && x.other == c.relateObject) != null) return false;
+						case 2: if (e.numbers.Find(x => x.name == c.numRef && x.value == c.numCompare) != null) return false;
+						case 3: if (e.strings.Find(x => x.name == c.stringRef && x.text == c.stringCompare) != null) return false;
+						default: return false;
+						}
+					}
+					
+					return true;					
+				}
+				//Less than
+				else if (c.comparison == 4)
+				{
+					if (type == 2)
+					{
+						foreach (Entity e in varL.values)
+							if (e.numbers.Find(x => x.name == c.numRef && x.value < c.numCompare) == null) return false;
+					}
+					else return true;
+				}
+				//Greater than
+				else if (c.comparison == 5)
+				{
+					if (type == 2)
+					{
+						foreach (Entity e in varL.values)
+							if (e.numbers.Find(x => x.name == c.numRef && x.value > c.numCompare) == null) return false;
+					}
+					else return true;
+				}
+				//Less than/equal to
+				else if (c.comparison == 6)
+				{
+					if (type == 2)
+					{
+						foreach (Entity e in varL.values)
+							if (e.numbers.Find(x => x.name == c.numRef && x.value <= c.numCompare) == null) return false;
+					}
+					else return true;
+				}
+				//Greater than/equal to
+				else if (c.comparison == 7)
+				{
+					if (type == 2)
+					{
+						foreach (Entity e in varL.values)
+							if (e.numbers.Find(x => x.name == c.numRef && x.value >= c.numCompare) == null) return false;
+					}
+					else return true;
+				}
+				else return false;
+			}
+			else
+			{
+				//Has comparison
+				if (c.comparison == 0)
+				{
+					foreach (Entity e in varL.values)
+					{
+						switch (type)
+						{
+						case 0: if (e.tags.Find(x => x.name == c.tagRef) != null) return true;
+						case 1: if (e.relationships.Find(x => x.name == c.relateRef) != null) return true;
+						case 2: if (e.numbers.Find(x => x.name == c.numRef) != null) return true;
+						case 3: if (e.strings.Find(x => x.name == c.stringRef) != null) return true;
+						case 4: if (e.obligations.Find(x => x.name == c.obligationRef) != null) return true;
+						case 5: if (e.goals.Find(x => x.name == c.goalRef) != null) return true;
+						case 6: if (e.behaviors.Find(x => x.name == c.behaviorRef) != null) return true;
+						default: return false;
+						}
+					}
+					
+					return false;
+				}
+				//Missing comparision
+				else if (c.comparison == 1)
+				{
+					foreach (Entity e in varL.values)
+					{
+						switch (type)
+						{
+						case 0: if (e.tags.Find(x => x.name == c.tagRef) == null) return true;
+						case 1: if (e.relationships.Find(x => x.name == c.relateRef) == null) return true;
+						case 2: if (e.numbers.Find(x => x.name == c.numRef) == null) return true;
+						case 3: if (e.strings.Find(x => x.name == c.stringRef) == null) return true;
+						case 4: if (e.obligations.Find(x => x.name == c.obligationRef) == null) return true;
+						case 5: if (e.goals.Find(x => x.name == c.goalRef) == null) return true;
+						case 6: if (e.behaviors.Find(x => x.name == c.behaviorRef) == null) return true;
+						default: return false;
+						}
+					}
+					
+					return false;
+				}
+				//Equal comparision
+				else if (c.comparison == 2)
+				{
+					foreach (Entity e in varL.values)
+					{
+						switch (type)
+						{
+						case 1: 
+							if (c.relateObject[0] == '?')
+							{
+								if (c.allRO)
+								{
+									Variable varR = context.variables.Find(x => x.name == c.relateObject);
+									foreach (Entity n in varR.values)
+										if (e.relationships.Find(x => x.name == c.relateRef && x.other == n.name) == null) return false;
+								}
+								else
+								{
+									bool hasOne = false;
+									Variable varR = context.variables.Find(x => x.name == c.relateObject);
+									foreach (Entity n in varR.values)
+									if (e.relationships.Find(x => x.name == c.relateRef && x.other == n.name) != null) {hasOne = true; break;}
+									
+									if (!hasOne) return false;
+								}
+							}
+							else if (e.relationships.Find(x => x.name == c.relateRef && x.other == c.relateObject) == null) return true;
+						case 2: if (e.numbers.Find(x => x.name == c.numRef && x.value == c.numCompare) != null) return true;
+						case 3: if (e.strings.Find(x => x.name == c.stringRef && x.text == c.stringCompare) != null) return true;
+						default: return false;
+						}
+					}
+					
+					return false;
+				}
+				//Unequal comparision
+				else if (c.comparison == 3)
+				{
+					foreach (Entity e in varL.values)
+					{
+						switch (type)
+						{
+						case 1: 
+							if (c.relateObject[0] == '?')
+							{
+								if (c.allRO)
+								{
+									Variable varR = context.variables.Find(x => x.name == c.relateObject);
+									foreach (Entity n in varR.values)
+										if (e.relationships.Find(x => x.name == c.relateRef && x.other == n.name) != null) return false;
+								}
+								else
+								{
+									bool hasAll = true;
+									Variable varR = context.variables.Find(x => x.name == c.relateObject);
+									foreach (Entity n in varR.values)
+									if (e.relationships.Find(x => x.name == c.relateRef && x.other == n.name) == null) {hasAll = false; break;}
+									
+									if (hasAll) return false;
+								}
+							}
+							else if (e.relationships.Find(x => x.name == c.relateRef && x.other == c.relateObject) == null) return true;
+						case 2: if (e.numbers.Find(x => x.name == c.numRef && x.value == c.numCompare) == null) return true;
+						case 3: if (e.strings.Find(x => x.name == c.stringRef && x.text == c.stringCompare) == null) return true;
+						default: return false;
+						}
+					}
+					
+					return false;					
+				}
+				//Less than
+				else if (c.comparison == 4)
+				{
+					if (type == 2)
+					{
+						foreach (Entity e in varL.values)
+							if (e.numbers.Find(x => x.name == c.numRef && x.value < c.numCompare) != null) return true;
+					}
+					else return false;
+				}
+				//Greater than
+				else if (c.comparison == 5)
+				{
+					if (type == 2)
+					{
+						foreach (Entity e in varL.values)
+							if (e.numbers.Find(x => x.name == c.numRef && x.value > c.numCompare) != null) return true;
+					}
+					else return false;
+				}
+				//Less than/equal to
+				else if (c.comparison == 6)
+				{
+					if (type == 2)
+					{
+						foreach (Entity e in varL.values)
+							if (e.numbers.Find(x => x.name == c.numRef && x.value <= c.numCompare) != null) return true;
+					}
+					else return false;
+				}
+				//Greater than/equal to
+				else if (c.comparison == 7)
+				{
+					if (type == 2)
+					{
+						foreach (Entity e in varL.values)
+							if (e.numbers.Find(x => x.name == c.numRef && x.value >= c.numCompare) != null) return true;
+					}
+					else return false;
+				}
+				else return false;
+			}
+		}
+		else
+		{
+			Entity cs = storyWorld.entities.Find(x => x.name == c.conditionSubject);
+		
+			//Has comparision
+			if (c.comparison == 0)
+			{
+				switch (type)
+				{
+				case 0: return (cs.tags.Find(x => x.name == c.tagRef) != null) ? true : false;
+				case 1: return (cs.relationships.Find(x => x.name == c.relateRef) != null) ? true : false;
+				case 2: return (cs.numbers.Find(x => x.name == c.numRef) != null) ? true : false;
+				case 3: return (cs.strings.Find(x => x.name == c.stringRef) != null) ? true : false;
+				case 4: return (cs.obligations.Find(x => x.name == c.obligationRef) != null) ? true : false;
+				case 5: return (cs.goals.Find(x => x.name == c.goalRef) != null) ? true : false;
+				case 6: return (cs.behaviors.Find(x => x.name == c.behaviorRef) != null) ? true : false;
+				default: return false;
+				}
+			}
+			//Missing comparision
+			else if (c.comparison == 1)
+			{
+				switch (type)
+				{
+				case 0: return (cs.tags.Find(x => x.name == c.tagRef) == null) ? true : false;
+				case 1: return (cs.relationships.Find(x => x.name == c.relateRef) == null) ? true : false;
+				case 2: return (cs.numbers.Find(x => x.name == c.numRef) == null) ? true : false;
+				case 3: return (cs.strings.Find(x => x.name == c.stringRef) == null) ? true : false;
+				case 4: return (cs.obligations.Find(x => x.name == c.obligationRef) == null) ? true : false;
+				case 5: return (cs.goals.Find(x => x.name == c.goalRef) == null) ? true : false;
+				case 6: return (cs.behaviors.Find(x => x.name == c.behaviorRef) == null) ? true : false;
+				default: return false;
+				}
+			}
+			//Equal comparision
+			else if (c.comparison == 2)
+			{
+				switch (type)
+				{
+				case 1: 
+					if (c.relateObject[0] == '?' && context != null)
+					{
+						if (c.allRO)
+						{
+							Variable varR = context.variables.Find(x => x.name == c.relateObject);
+							foreach (Entity e in varR.values)
+								if (cs.relationships.Find(x => x.name == c.relateRef && x.other == e.name) == null) return false;
+
+							return true;
+						}
+						else
+						{
+							Variable varR = context.variables.Find(x => x.name == c.relateObject);
+							foreach (Entity e in varR.values)
+								if (cs.relationships.Find(x => x.name == c.relateRef && x.other == e.name) != null) return true;
+
+							return false;
+						}
+					}
+					else return (cs.relationships.Find(x => x.name == c.relateRef && x.other == c.relateObject) != null) ? true : false;
+				case 2: return (cs.numbers.Find(x => x.name == c.numRef && x.value == c.numCompare) != null) ? true : false;
+				case 3: return (cs.strings.Find(x => x.name == c.stringRef && x.text == c.stringCompare) != null) ? true : false;
+				default: return false;
+				}
+			}
+			//Unequal comparision
+			else if (c.comparison == 3)
+			{
+				switch (type)
+				{
+				case 1: 
+					if (c.relateObject[0] == '?' && context != null)
+					{
+						if (c.allRO)
+						{
+							Variable varR = context.variables.Find(x => x.name == c.relateObject);
+							foreach (Entity e in varR.values)
+								if (cs.relationships.Find(x => x.name == c.relateRef && x.other == e.name) != null) return false;
+							
+							return true;
+						}
+						else
+						{
+							Variable varR = context.variables.Find(x => x.name == c.relateObject);
+							foreach (Entity e in varR.values)
+								if (cs.relationships.Find(x => x.name == c.relateRef && x.other == e.name) == null) return true;
+							
+							return false;
+						}
+					}
+					else return (cs.relationships.Find(x => x.name == c.relateRef && x.other == c.relateObject) == null) ? true : false;
+				case 2: return (cs.numbers.Find(x => x.name == c.numRef && x.value == c.numCompare) == null) ? true : false;
+				case 3: return (cs.strings.Find(x => x.name == c.stringRef && x.text == c.stringCompare) == null) ? true : false;
+				default: return false;
+				}
+			}
+			//Less than
+			else if (c.comparison == 4)
+			{
+				if (type == 2)
+					return (cs.numbers.Find(x => x.name == c.numRef && x.value < c.numCompare) != null) ? true : false;
+				else return false;
+			}
+			//Greater than
+			else if (c.comparison == 5)
+			{
+				if (type == 2)
+					return (cs.numbers.Find(x => x.name == c.numRef && x.value > c.numCompare) != null) ? true : false;
+				else return false;
+			}
+			//Less than/equal to
+			else if (c.comparison == 6)
+			{
+				if (type == 2)
+					return (cs.numbers.Find(x => x.name == c.numRef && x.value <= c.numCompare) != null) ? true : false;
+				else return false;
+			}
+			//Greater than/equal to
+			else if (c.comparison == 7)
+			{
+				if (type == 2)
+					return (cs.numbers.Find(x => x.name == c.numRef && x.value >= c.numCompare) != null) ? true : false;
+				else return false;
+			}
+			else
+				return false;
+		}
+	}
+
+	//Given the parameters, arguments, verb context, and newly created DVT root, maps out the DVT root and returns whether there is a possible solution (null no, else yes)
+	public List<DynamicVerbTreeNode> generateDVT(List<Argument> parameters, List<Entity> arguments, Verb vContext, DynamicVerbTreeNode r)
+	{
+		if (arguments.Count < parameters.Count)
+		{
+			List<DynamicVerbTreeNode> children = new List<DynamicVerbTreeNode>();
+
+			foreach (Entity e in parameters[arguments.Count].values)
+			{
+				DynamicVerbTreeNode me = new DynamicVerbTreeNode(e);
+				List<Entity> tempA = new List<Entity>();
+				foreach (Entity a in arguments)
+					tempA.Add(a);
+				tempA.Add(e);
+				me.children = generateDVT(parameters, tempA, vContext, r);
+				if (me.children != null)
+					children.Add(me);
+			}
+
+			if (arguments.Count != 0)
+			{
+				if (children.Count > 0)
+					return children;
+				else
+					return null;
+			}
+			else
+			{
+				r.children = children;
+
+				if (r.children.Count > 0)
+					return children;
+				else
+					return null;
+			}
+		}
+		else if (arguments.Count == parameters.Count)
+		{
+			if (parameters.Count > 0)
+			{
+				List<DynamicVerbTreeNode> bottom = new List<DynamicVerbTreeNode>();
+
+				foreach (Entity e in parameters[arguments.Count].values)
+				{
+					//Check if any case is valid in this arrangement
+					bool anyCaseValid = false;
+					
+					foreach (Case c in vContext.cases)
+					{
+						bool invalidCase = false;
+						List<Condition> caseConditions = new List<Condition>();
+						caseConditions.AddRange(vContext.preconditions);
+						caseConditions.AddRange(c.conditions);
+						
+						foreach (Condition k in caseConditions)
+						{
+							Condition tempK = new Condition();
+							for (int i = 1; i <= arguments.Count; i++)
+								tempK.replaceWith(parameters[i-1], arguments[i-1]);
+							
+							if (!checkCondition(tempK, vContext))
+							{
+								invalidCase = true;
+								break;
+							}
+						}
+						
+						if (!invalidCase)
+						{
+							anyCaseValid = true;
+							break;			
+						}
+					}
+					
+					if (anyCaseValid)
+						bottom.Add(new DynamicVerbTreeNode(e));
+				}
+
+				if (bottom.Count > 0)
+					return bottom;
+				else
+					return null;
+			}
+			else
+			{
+				//Check if any case is valid in this arrangement
+				bool anyCaseValid = false;
+				
+				foreach (Case c in vContext.cases)
+				{
+					bool invalidCase = false;
+					List<Condition> caseConditions = new List<Condition>();
+					caseConditions.AddRange(vContext.preconditions);
+					caseConditions.AddRange(c.conditions);
+					
+					foreach (Condition k in caseConditions)
+					{
+						Condition tempK = new Condition();
+						
+						if (!checkCondition(tempK, vContext))
+						{
+							invalidCase = true;
+							break;
+						}
+					}
+					
+					if (!invalidCase)
+					{
+						anyCaseValid = true;
+						break;			
+					}
+				}
+
+				if (anyCaseValid)
+					return new List<DynamicVerbTreeNode>();
+				else
+					return null;
+			}
+		}
+		else
+			return null;
+	}
+
+	public List<Verb> generatePossibleVerbs(Entity e)
+	{
+		//Get all verbs
+		List<Verb> list = new List<Verb>();
+
+		foreach (Verb v in storyWorld.verbs)
+		{
+			Verb tempV = new Verb("");
+			v.copyTo(tempV);
+			tempV.replaceWith("?me", e.name);
+			bool invalid = false;
+
+			//Fill out variable lists
+			foreach (Variable x in v.variables)
+			{
+				foreach (Entity y in storyWorld.entities)
+				{
+					bool allSatisfied = true;
+
+					foreach (Condition c in x.conditions)
+					{
+						Condition tempC = new Condition();
+						c.copyTo(tempC);
+						tempC.replaceWith(x.name, y.name);
+
+						if (!checkCondition(tempC, v))
+						{
+							allSatisfied = false;
+							break;
+						}
+					}
+
+					if (allSatisfied)
+						x.values.Add(y);
+				}
+			}
+
+			//Fill out argument lists and check if they are null
+			foreach (Argument a in v.arguments)
+			{
+				foreach (Entity y in storyWorld.entities)
+				{
+					bool allSatisfied = true;
+
+					foreach (Condition c in a.conditions)
+					{
+						Condition tempC = new Condition();
+						c.copyTo(tempC);
+						tempC.replaceWith(a.name, y.name);
+
+						if (!checkCondition(tempC, v))
+						{
+							allSatisfied = false;
+							break;
+						}
+					}
+
+					if (allSatisfied)
+						a.values.Add(y);
+				}
+
+				if (a.values.Count <= 0)
+				{
+					invalid = true;
+					break;
+				}
+			}
+
+			if (invalid)
+				break;
+
+			//Check all path combinations of arguments to see if at least one case is valid 
+			v.root = new DynamicVerbTreeNode(e);
+			if (generateDVT(v.arguments, new List<Entity>(), v, v.root) == null)
+				break;
+
+			list.Add(tempV);
+		}
+
+		return list;
+	}
+
+	/*
 
     public void init()
     {

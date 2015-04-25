@@ -8,6 +8,8 @@ public class Condition
     /* Variables */
     public string name;
     public string conditionSubject;
+	public bool allCS; //false - one
+	public bool allRO; //false - one
 	//0 - has, 1 - missing, 2 - =, 3 - !=, 4 - <, 5 - >, 6 - <=, 7 - >=
 	public int comparison;
     public string tagRef;
@@ -20,12 +22,15 @@ public class Condition
 	public string behaviorRef;
 	public int numCompare;
 	public string stringCompare;
+	public string variableObject;
 
     /* Functions */
     public Condition()
     {
         name = "";
 		conditionSubject = "";
+		allCS = false;
+		allRO = false;
 		comparison = 0;
 		tagRef = "";
 		relateRef = "";
@@ -37,6 +42,7 @@ public class Condition
 		behaviorRef = "";
 		numCompare = 0;
 		stringCompare = "";
+		variableObject = "";
     }
 
     public void replaceWith(string replace, string with)
@@ -63,6 +69,8 @@ public class Condition
 			return 5;
 		else if (behaviorRef != "")
 			return 6;
+		else if (variableObject != "")
+			return 7;
 		else
 			return -1;
 	}

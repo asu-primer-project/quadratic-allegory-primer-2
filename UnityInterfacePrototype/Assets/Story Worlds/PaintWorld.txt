@@ -2,52 +2,101 @@ storyworld PaintWorld
 {
 	user: TallPainter;
 	
-	beginning
-	{
-		page begin1
-		{
-			draw: Room.background, 0, 0;
-			draw: TallPainter.standing, -0.6, 0;
-			text: "The tall painter stood around.";		
-		}
-		
-		page begin2
-		{
-			draw: Room.background, 0, 0;
-			draw: TallPainter.standing, -0.6, 0;
-			draw: ShortPainter.walkingLeft, 0.7, 0;
-			text: "A short painter walked into the room.";
-		}
-		
-		page begin3
-		{
-			draw: Room.background, 0, 0;
-			draw: TallPainter.standing, -0.6, 0;
-			draw: ShortPainter.standing, 0.6, 0;
-			text: "Now two painters were in the room together.";		
-		}
-	}
-
 	entity TallPainter
 	{
 		string: name, "Tall Painter";
 		image: standing, tallPainterStanding;
-		image: painting, tallPainterPainting;
-		image: walkingLeft, tallPainterWalkingLeft;
-		image: walkingRight, tallPainterWalkingRight;
+		image: paintingRed, tallPainterPaintingRed;
+		image: paintingYellow, tallPainterPaintingYellow;
+		image: paintingBlue, tallPainterPaintingBlue;
+		image: walking, tallPainterWalking;
 	}
 	
 	entity ShortPainter
 	{
 		string: name, "Short Painter";
 		image: standing, shortPainterStanding;
-		image: painting, shortPainterPainting;
-		image: walkingLeft, shortPainterWalkingLeft;
-		image: walkingRight, shortPainterWalkingRight;
+		image: paintingRed, shortPainterPaintingRed;
+		image: paintingYellow, shortPainterPaintingYellow;
+		image: paintingBlue, shortPainterPaintingBlue;
+		image: walking, shortPainterWalking;
 	}
 	
-	entity Room
+	entity RoomRed
 	{
-		image: background, roomBackground;
+		string: name, "red room";
+		tag: room;
+		image: room, roomRed;
+		image: door, roomRedDoor;
+	}
+	
+	entity RoomYellow
+	{
+		string: name, "yellow room";
+		tag: room;
+		image: room, roomYellow;
+		image: door, roomYellowDoor;
+	}
+	
+	entity RoomBlue
+	{
+		string: name, "blue room";
+		tag: room;
+		image: room, roomBlue;
+		image: door, roomBlueDoor;
+	}
+	
+	input
+	{
+		draw: RoomRed.room, 0, 0;
+		draw: TallPainter.standing, -400, 0;
+		text: "What does the Tall Painter do next?";
+	}
+	
+	verb Walk
+	{
+		icon: walkIcon;
+	
+		variable ?fromLoc
+		{
+			where: ?me.at = ?fromLoc;
+			where: ?fromLoc has tag room;
+		}
+		
+		variable ?userLoc
+		{
+			where: TallPainter.at = ?userLoc; 
+			where: ?userLoc has tag room;
+		}
+		
+		argument ?toLoc
+		{
+			text: "Where to next?";
+			where: ?toLoc.connected = ?fromLoc;
+			where: ?toLoc has tag room;
+		}
+
+		preconditions
+		{
+			where: ?fromLoc has entity;
+		}
+		
+		case default
+		{
+			do: ?me add relate at, ?toLoc;
+			do: ?me remove relate at, ?fromLoc;
+			
+			page verb
+			{
+				draw: ?toLoc.room, 0, 0;
+				draw: ?me.walking, 0, 0;
+				text: "?me walked from ?fromLoc to ?toLoc.";
+			}
+		}
+		
+		discriminator
+		{
+			where: ?toLoc = ?userLoc; //New condition type
+		}
 	}
 }

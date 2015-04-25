@@ -580,9 +580,26 @@ public class StoryWorldLoader : MonoBehaviour
 		
 		if (getToken() == 6)
 		{
-			if (getToken() == 0)
+			getToken();
+			bool gotAO = false;
+
+			if (type == 0 && currentToken == "one")
+			{
+				c.allCS = false;
+				gotAO = true;
+				getToken();
+			}
+			else if (type == 0 && currentToken == "all")
+			{
+				c.allCS = true;
+				gotAO = true;
+				getToken();
+			}
+
+			if (type == 0 || type == 3)
 			{
 				c.conditionSubject = currentToken;
+				int firstType = type;
 				getToken();
 				
 				if (currentToken == "has" || currentToken == "missing")
@@ -630,7 +647,30 @@ public class StoryWorldLoader : MonoBehaviour
 					}
 					else
 						return true;
-					return false;
+
+					if (getToken() == 7)
+						return false;
+				}
+				else if (firstType == 3 && !gotAO && (type == 9 || type == 10))
+				{
+					if (type == 9)
+						c.comparison = 2;
+					else
+						c.comparison = 3;
+
+					getToken();
+
+					if (type == 0 && currentToken == "null")
+					{
+						c.variableObject = "?null";
+					}
+					else if (type == 3)
+					{
+						c.variableObject = currentToken;
+					}
+
+					if (getToken() == 7)
+						return false;
 				}
 				else if (type == 19)
 				{
@@ -650,11 +690,40 @@ public class StoryWorldLoader : MonoBehaviour
 							
 							if (type == 0)
 							{
-								c.relateRef = tempRef;
-								c.relateObject = currentToken;
-								
-								if (getToken() == 7)
-									return false;
+								if (currentToken == "one")
+								{
+									c.allRO = false;
+
+									if (getToken() == 3)
+									{
+										c.relateRef = tempRef;
+										c.relateObject = currentToken;
+										
+										if (getToken() == 7)
+											return false;
+									}
+								}
+								else if (currentToken == "all")
+								{
+									c.allRO = true;
+
+									if (getToken() == 3)
+									{
+										c.relateRef = tempRef;
+										c.relateObject = currentToken;
+										
+										if (getToken() == 7)
+											return false;
+									}
+								}
+								else
+								{
+									c.relateRef = tempRef;
+									c.relateObject = currentToken;
+									
+									if (getToken() == 7)
+										return false;
+								}
 							}
 							else if (type == 1)
 							{
@@ -756,7 +825,9 @@ public class StoryWorldLoader : MonoBehaviour
 	//Parse Goal Operator
 	public bool parseGoalOperator(Goal g)
 	{
-		if (getToken() == 0)
+		getToken();
+
+		if (type == 0 || type == 3)
 		{
 			g.operatorSubject = currentToken;
 			
@@ -789,7 +860,9 @@ public class StoryWorldLoader : MonoBehaviour
 								
 								if (getToken() == 8)
 								{
-									if (getToken() == 0)
+									getToken();
+
+									if (type == 0 || type == 3)
 									{
 										g.relationship.other = currentToken;
 										
@@ -870,7 +943,9 @@ public class StoryWorldLoader : MonoBehaviour
 											{
 												if (type == 8)
 												{
-													if (getToken() == 0)
+													getToken();
+
+													if (type == 0 || type == 3)
 														g.obligation.arguments.Add(currentToken);
 													else return true;
 												}
@@ -911,7 +986,9 @@ public class StoryWorldLoader : MonoBehaviour
 														{
 															if (type == 8)
 															{
-																if (getToken() == 0)
+																getToken();
+
+																if (type == 0 || type == 3)
 																	g.behavior.arguments.Add(currentToken);
 																else return true;
 															}
@@ -990,6 +1067,19 @@ public class StoryWorldLoader : MonoBehaviour
 							}
 						}
 					}
+					else if (type == 9)
+					{
+						g.op = 6;
+						
+						if (getToken() == 2)
+						{
+							if (Int32.TryParse(currentToken, out g.num.value))
+							{
+								if (getToken() == 7)
+									return false;
+							}
+						}
+					}
 					else return true;
 				}
 			}
@@ -1002,7 +1092,9 @@ public class StoryWorldLoader : MonoBehaviour
 	{
 		if (getToken() == 6)
 		{
-			if (getToken() == 0)
+			getToken();
+
+			if (type == 0 || type == 3)
 			{
 				o.operatorSubject = currentToken;
 
@@ -1035,7 +1127,9 @@ public class StoryWorldLoader : MonoBehaviour
 
 									if (getToken() == 8)
 									{
-										if (getToken() == 0)
+										getToken();
+
+										if (type == 0 || type == 3)
 										{
 											o.relationship.other = currentToken;
 
@@ -1116,7 +1210,9 @@ public class StoryWorldLoader : MonoBehaviour
 												{
 													if (type == 8)
 													{
-														if (getToken() == 0)
+														getToken();
+
+														if (type == 0 || type == 3)
 															o.obligation.arguments.Add(currentToken);
 														else return true;
 													}
@@ -1182,7 +1278,9 @@ public class StoryWorldLoader : MonoBehaviour
 															{
 																if (type == 8)
 																{
-																	if (getToken() == 0)
+																	getToken();
+
+																	if (type == 0 || type == 3)
 																		o.behavior.arguments.Add(currentToken);
 																	else return true;
 																}
@@ -1252,6 +1350,19 @@ public class StoryWorldLoader : MonoBehaviour
 						{
 							o.op = 5;
 
+							if (getToken() == 2)
+							{
+								if (Int32.TryParse(currentToken, out o.num.value))
+								{
+									if (getToken() == 7)
+										return false;
+								}
+							}
+						}
+						else if (type == 9)
+						{
+							o.op = 6;
+							
 							if (getToken() == 2)
 							{
 								if (Int32.TryParse(currentToken, out o.num.value))
@@ -1684,12 +1795,12 @@ public class StoryWorldLoader : MonoBehaviour
 		return true;
 	}
 
-	//Parse Bundle
-	public bool parseBundle(ConditionBundle c)
+	//Parse Variable
+	public bool parseVariable(Variable v)
 	{
 		if (getToken() == 0)
 		{
-			c.name = currentToken;
+			v.name = currentToken;
 
 			if (getToken() == 4)
 			{
@@ -1700,7 +1811,7 @@ public class StoryWorldLoader : MonoBehaviour
 						if (currentToken == "where")
 						{
 							Condition temp = new Condition();
-							c.conditions.Add(temp);
+							v.conditions.Add(temp);
 							bool error = false;
 							error = parseCondition(temp);
 							if (error) return true;
@@ -1754,22 +1865,6 @@ public class StoryWorldLoader : MonoBehaviour
 					else return true;
 				}
 				return false;
-			}
-		}
-		return true;
-	}
-
-	//Parse Input
-	public bool parseInput(Verb v)
-	{
-		if (getToken() == 6)
-		{
-			if (getToken() == 1)
-			{
-				v.input = currentToken;
-
-				if (getToken() == 7)
-					return false;
 			}
 		}
 		return true;
@@ -1848,36 +1943,41 @@ public class StoryWorldLoader : MonoBehaviour
 	}
 
 	//Parse Discriminator
-	public bool parseDiscriminator(Verb v)
+	public bool parseDiscriminator(Discriminator d)
 	{
-		if (getToken() == 4)
-		{
-			while (getToken() != 5)
-			{
-				if (type == 0)
-				{
-					if (currentToken == "where")
-					{
-						Condition temp = new Condition();
-						v.discriminator.Add(temp);
-						bool error = false;
-						error = parseCondition(temp);
-						if (error) return true;
-					}
-					else return true;
-				}
-				else return true;
-			}
-			return false;
-		}
-		else if (getToken() == 0)
+		if (getToken() == 0)
 		{
 			if (currentToken == "never")
 			{
-				v.neverShow = true;
+				d.neverShow = true;
 
 				if (getToken() == 7)
 					return false;
+			}
+			else
+			{
+				d.name = currentToken;
+				
+				if (getToken() == 4)
+				{
+					while (getToken() != 5)
+					{
+						if (type == 0)
+						{
+							if (currentToken == "where")
+							{
+								Condition temp = new Condition();
+								d.conditions.Add(temp);
+								bool error = false;
+								error = parseCondition(temp);
+								if (error) return true;
+							}
+							else return true;
+						}
+						else return true;
+					}
+					return false;
+				}
 			}
 		}
 		return true;
@@ -1902,9 +2002,9 @@ public class StoryWorldLoader : MonoBehaviour
 							error = parseIcon(null, v);							
 						else if (currentToken == "variable")
 						{
-							ConditionBundle temp = new ConditionBundle("");
+							Variable temp = new Variable("");
 							v.variables.Add(temp);
-							error = parseBundle(temp);
+							error = parseVariable(temp);
 						}
 						else if (currentToken == "argument")
 						{
@@ -1912,8 +2012,6 @@ public class StoryWorldLoader : MonoBehaviour
 							v.arguments.Add(temp);
 							error = parseArgument(temp);							
 						}
-						else if (currentToken == "input")
-							error = parseInput(v);
 						else if (currentToken == "preconditions")
 							error = parsePreconditions(v);		
 						else if (currentToken == "case")
@@ -1923,7 +2021,11 @@ public class StoryWorldLoader : MonoBehaviour
 							error = parseCase(temp);
 						}
 						else if (currentToken == "discriminator")
-							error = parseDiscriminator(v);						
+						{
+							Discriminator temp = new Discriminator("");
+							v.discriminators.Add(temp);
+							error = parseDiscriminator(temp);						
+						}
 						else
 							return true;
 					}

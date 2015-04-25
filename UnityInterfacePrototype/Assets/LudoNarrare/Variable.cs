@@ -3,38 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-public class Argument
+public class Variable
 {
 	/* Variables */
 	public string name;
-	public string text;
 	public List<Entity> values;
 	public List<Condition> conditions;
 	
 	/* Functions */
-	public Argument(string _name, string _text)
+	public Variable(string _name)
 	{
 		name = _name;
-		text = _text;
 		values = new List<Entity>();
 		conditions = new List<Condition>();
 	}
 	
-	public void copyTo(Argument a)
+	public void copyTo(Variable v)
 	{
-		if (a != null)
+		if (v != null)
 		{
-			a.name = name;
-			a.text = text;
-			a.values.Clear();
+			v.name = name;
+			v.values.Clear();
 			for (int i = 0; i < values.Count; i++)
-				a.values.Add(values[i]);
-			a.conditions.Clear();
+				v.values.Add(values[i]);
+			v.conditions.Clear();
 			for (int i = 0; i < conditions.Count; i++)
 			{
 				Condition tempC = new Condition();
 				conditions[i].copyTo(tempC);
-				a.conditions.Add(tempC);
+				v.conditions.Add(tempC);
 			}
 		}
 	}
