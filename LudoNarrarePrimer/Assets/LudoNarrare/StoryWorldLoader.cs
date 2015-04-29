@@ -690,7 +690,7 @@ public class StoryWorldLoader : MonoBehaviour
 							
 							getToken();
 							
-							if (type == 0)
+							if (type == 0 || type == 3)
 							{
 								if (currentToken == "one")
 								{
@@ -1831,7 +1831,7 @@ public class StoryWorldLoader : MonoBehaviour
 	//Parse Argument
 	public bool parseArgument(Argument a)
 	{
-		if (getToken() == 0)
+		if (getToken() == 3)
 		{
 			a.name = currentToken;
 			

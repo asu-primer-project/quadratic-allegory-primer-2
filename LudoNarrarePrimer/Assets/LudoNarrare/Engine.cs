@@ -446,7 +446,7 @@ public class Engine : MonoBehaviour
 									if (!hasOne) return false;
 								}
 							}
-							else if (e.relationships.Find(x => x.name == c.relateRef && x.other == c.relateObject) == null) return true; break;
+							else if (e.relationships.Find(x => x.name == c.relateRef && x.other == c.relateObject) != null) return true; break;
 						case 2: if (e.numbers.Find(x => x.name == c.numRef && x.value == c.numCompare) != null) return true; break;
 						case 3: if (e.strings.Find(x => x.name == c.stringRef && x.text == c.stringCompare) != null) return true; break;
 						default: return false;
@@ -705,7 +705,7 @@ public class Engine : MonoBehaviour
 			{
 				List<DynamicVerbTreeNode> bottom = new List<DynamicVerbTreeNode>();
 
-				foreach (Entity e in parameters[arguments.Count].values)
+				foreach (Entity e in parameters[arguments.Count - 1].values)
 				{
 					//Check if any case is valid in this arrangement
 					bool anyCaseValid = false;
@@ -1119,6 +1119,23 @@ public class Engine : MonoBehaviour
 					}
 				}
 
+				foreach (Argument a in context.arguments)
+				{
+					Entity ent = a.values.Find(x => x.name == a.choice);
+					
+					foreach (LNString ln in ent.strings)
+					{
+						string str = (a.name + "." + ln.name);
+						d.text = d.text.Replace(str, ln.text);
+					}
+					
+					foreach (Number num in ent.numbers)
+					{
+						string str = (a.name + "." + num.name);
+						d.text = d.text.Replace(str, num.value.ToString());
+					}
+				}
+
 				foreach (Entity e in storyWorld.entities)
 				{
 					if (e.name == me.name)
@@ -1227,9 +1244,11 @@ public class Engine : MonoBehaviour
 			if (ended)
 				break;
 			else
-				AIAct(actors[i]);
+			{
+				if (actors[i].name != storyWorld.userEntity)
+					AIAct(actors[i]);
+			}
 		}
-
 		if (amountOfWaits == actors.Count && userFoundNoAction)
 			standStill = true;
 	}

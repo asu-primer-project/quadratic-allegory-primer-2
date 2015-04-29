@@ -15,6 +15,7 @@ storyworld RockPaperScissors
 	{
 		tag: player1;
 		string: name, "Ann";
+		num: score, 0;
 		image: throwRock, annRock;
 		image: throwPaper, annPaper;
 		image: throwScissors, annScissors;
@@ -26,6 +27,7 @@ storyworld RockPaperScissors
 	{
 		tag: player2;
 		string: name, "Jack";
+		num: score, 0;
 		image: throwRock, jackRock;
 		image: throwPaper, jackPaper;
 		image: throwScissors, jackScissors;
@@ -198,6 +200,7 @@ storyworld RockPaperScissors
 			
 			do: ?player1 remove tag rock;
 			do: ?player2 remove tag scissors;
+			do: ?player1 score + 1;
 			do: RPS state = 0;
 			
 			page verb
@@ -205,7 +208,7 @@ storyworld RockPaperScissors
 				draw: RPS.back, 0, 0;
 				draw: ?player1.won, -500, 0;
 				draw: ?player2.lost, 500, 0;
-				text: "?player1.name won this round!";
+				text: "?player1.name won this round! Score is ?player1.score - ?player2.score";
 			}
 		}
 				
@@ -216,6 +219,7 @@ storyworld RockPaperScissors
 			
 			do: ?player1 remove tag paper;
 			do: ?player2 remove tag rock;
+			do: ?player1 score + 1;
 			do: RPS state = 0;
 			
 			page verb
@@ -223,7 +227,7 @@ storyworld RockPaperScissors
 				draw: RPS.back, 0, 0;
 				draw: ?player1.won, -500, 0;
 				draw: ?player2.lost, 500, 0;
-				text: "?player1.name won this round!";
+				text: "?player1.name won this round! Score is ?player1.score - ?player2.score";
 			}
 		}
 		
@@ -234,6 +238,7 @@ storyworld RockPaperScissors
 			
 			do: ?player1 remove tag scissors;
 			do: ?player2 remove tag paper;
+			do: ?player1 score + 1;
 			do: RPS state = 0;
 			
 			page verb
@@ -241,7 +246,7 @@ storyworld RockPaperScissors
 				draw: RPS.back, 0, 0;
 				draw: ?player1.won, -500, 0;
 				draw: ?player2.lost, 500, 0;
-				text: "?player1.name won this round!";
+				text: "?player1.name won this round! Score is ?player1.score - ?player2.score";
 			}
 		}
 		
@@ -252,6 +257,7 @@ storyworld RockPaperScissors
 			
 			do: ?player2 remove tag rock;
 			do: ?player1 remove tag scissors;
+			do: ?player2 score + 1;
 			do: RPS state = 0;
 			
 			page verb
@@ -259,7 +265,7 @@ storyworld RockPaperScissors
 				draw: RPS.back, 0, 0;
 				draw: ?player1.lost, -500, 0;
 				draw: ?player2.won, 500, 0;
-				text: "?player2.name won this round!";
+				text: "?player2.name won this round! Score is ?player1.score - ?player2.score";
 			}
 		}
 				
@@ -270,6 +276,7 @@ storyworld RockPaperScissors
 			
 			do: ?player2 remove tag paper;
 			do: ?player1 remove tag rock;
+			do: ?player2 score + 1;
 			do: RPS state = 0;
 			
 			page verb
@@ -277,7 +284,7 @@ storyworld RockPaperScissors
 				draw: RPS.back, 0, 0;
 				draw: ?player1.lost, -500, 0;
 				draw: ?player2.won, 500, 0;
-				text: "?player2.name won this round!";
+				text: "?player2.name won this round! Score is ?player1.score - ?player2.score";
 			}
 		}
 		
@@ -288,6 +295,7 @@ storyworld RockPaperScissors
 			
 			do: ?player2 remove tag scissors;
 			do: ?player1 remove tag paper;
+			do: ?player2 score + 1;
 			do: RPS state = 0;
 			
 			page verb
@@ -295,7 +303,7 @@ storyworld RockPaperScissors
 				draw: RPS.back, 0, 0;
 				draw: ?player1.lost, -500, 0;
 				draw: ?player2.won, 500, 0;
-				text: "?player2.name won this round!";
+				text: "?player2.name won this round! Score is ?player1.score - ?player2.score";
 			}
 		}
 		
@@ -313,7 +321,7 @@ storyworld RockPaperScissors
 				draw: RPS.back, 0, 0;
 				draw: ?player1.lost, -500, 0;
 				draw: ?player2.lost, 500, 0;
-				text: "It's a tie! Everyone loses this round.";
+				text: "It's a tie! Everyone loses this round. Score is ?player1.score - ?player2.score";
 			}		
 		}
 		
@@ -331,7 +339,7 @@ storyworld RockPaperScissors
 				draw: RPS.back, 0, 0;
 				draw: ?player1.lost, -500, 0;
 				draw: ?player2.lost, 500, 0;
-				text: "It's a tie! Everyone loses this round.";
+				text: "It's a tie! Everyone loses this round. Score is ?player1.score - ?player2.score";
 			}		
 		}
 		
@@ -349,8 +357,42 @@ storyworld RockPaperScissors
 				draw: RPS.back, 0, 0;
 				draw: ?player1.lost, -500, 0;
 				draw: ?player2.lost, 500, 0;
-				text: "It's a tie! Everyone loses this round.";
+				text: "It's a tie! Everyone loses this round. Score is ?player1.score - ?player2.score";
 			}		
+		}
+	}
+	
+	ending player1IsChamp
+	{
+		where: Ann.score = 3;
+		
+		page AnnIsChamp
+		{
+			draw: RPS.back, 0, 0;
+			draw: Ann.won, 0, 0;
+			text: "Ann has won three rounds. She is the champ!";
+		}
+		
+		page theEnd
+		{
+			text: "The end!";
+		}
+	}
+	
+	ending player2IsChamp
+	{
+		where: Jack.score = 3;
+		
+		page JackIsChamp
+		{
+			draw: RPS.back, 0, 0;
+			draw: Jack.won, 0, 0;
+			text: "Jack has won three rounds. He is the champ!";
+		}
+		
+		page theEnd
+		{
+			text: "The end!";
 		}
 	}
 }

@@ -44,6 +44,12 @@ public class Book : MonoBehaviour
 	public GameObject argue3Text;
 	public GameObject argue4Text;
 
+	public GameObject fadePanel;
+	public float fadeSpeed = 3f;
+	private float fadeTimer = 0f;
+	private bool fadeOut = false;
+	private bool fadeIn = false;
+
 	private StoryWorld sw;
 	private List<Page> story;
 
@@ -224,7 +230,7 @@ public class Book : MonoBehaviour
 	//Functions that handle user verb choosing
 	public void incrementVerb()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (verbChoice != ln.getEngine().currentUserChoices.Count - 1)
 				verbChoice++;
@@ -238,7 +244,7 @@ public class Book : MonoBehaviour
 
 	public void decrementVerb()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (verbChoice != 0)
 				verbChoice--;
@@ -252,7 +258,7 @@ public class Book : MonoBehaviour
 
 	public void incrementArgument1()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (argument1 != ln.getEngine().currentUserChoices[verbChoice].arguments[0].values.Count - 1)
 				argument1++;
@@ -265,7 +271,7 @@ public class Book : MonoBehaviour
 	
 	public void decrementArgument1()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (argument1 != 0)
 				argument1--;
@@ -278,7 +284,7 @@ public class Book : MonoBehaviour
 	
 	public void incrementArgument2()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (argument2 != ln.getEngine().currentUserChoices[verbChoice].arguments[1].values.Count - 1)
 				argument2++;
@@ -291,7 +297,7 @@ public class Book : MonoBehaviour
 	
 	public void decrementArgument2()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (argument2 != 0)
 				argument2--;
@@ -304,7 +310,7 @@ public class Book : MonoBehaviour
 	
 	public void incrementArgument3()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (argument3 != ln.getEngine().currentUserChoices[verbChoice].arguments[2].values.Count - 1)
 				argument3++;
@@ -317,7 +323,7 @@ public class Book : MonoBehaviour
 	
 	public void decrementArgument3()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (argument3 != 0)
 				argument3--;
@@ -330,7 +336,7 @@ public class Book : MonoBehaviour
 	
 	public void incrementArgument4()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (argument4 != ln.getEngine().currentUserChoices[verbChoice].arguments[3].values.Count - 1)
 				argument4++;
@@ -343,7 +349,7 @@ public class Book : MonoBehaviour
 	
 	public void decrementArgument4()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			if (argument4 != 0)
 				argument4--;
@@ -354,53 +360,57 @@ public class Book : MonoBehaviour
 		}
 	}
 
+	public void processExecute()
+	{
+		Engine eng = ln.getEngine();
+		
+		//Process verb
+		Verb tempV = eng.currentUserChoices[verbChoice];
+		
+		switch (eng.currentUserChoices[verbChoice].arguments.Count)
+		{
+		case 0:
+			break;
+		case 1:
+			tempV.replaceWith(tempV.arguments[0].name, tempV.arguments[0].values[argument1].name);
+			break;
+		case 2:
+			tempV.replaceWith(tempV.arguments[0].name, tempV.arguments[0].values[argument1].name);
+			tempV.replaceWith(tempV.arguments[1].name, tempV.arguments[1].values[argument2].name);
+			break;
+		case 3:
+			tempV.replaceWith(tempV.arguments[0].name, tempV.arguments[0].values[argument1].name);
+			tempV.replaceWith(tempV.arguments[1].name, tempV.arguments[1].values[argument2].name);
+			tempV.replaceWith(tempV.arguments[2].name, tempV.arguments[2].values[argument3].name);
+			break;
+		case 4:
+			tempV.replaceWith(tempV.arguments[0].name, tempV.arguments[0].values[argument1].name);
+			tempV.replaceWith(tempV.arguments[1].name, tempV.arguments[1].values[argument2].name);
+			tempV.replaceWith(tempV.arguments[2].name, tempV.arguments[2].values[argument3].name);
+			tempV.replaceWith(tempV.arguments[3].name, tempV.arguments[3].values[argument4].name);
+			break;
+		}
+		
+		eng.takeInputAndProcess(tempV);
+		
+		//Restart input UI
+		verbChoice = 0;
+		argument1 = 0;
+		argument2 = 0;
+		argument3 = 0;
+		argument4 = 0;
+		drawPage(pageIndex);
+		setUIArguments(ln.getEngine().currentUserChoices[verbChoice].arguments.Count);
+		redrawUI(ln.getEngine().currentUserChoices[verbChoice].arguments.Count);
+		fadeIn = true;
+	}
+
 	public void execute()
 	{
-		if (waitingForInput)
+		if (waitingForInput && settledLeft && settledRight)
 		{
 			waitingForInput = false;
-
-			Engine eng = ln.getEngine();
-
-			//Process verb
-			Verb tempV = eng.currentUserChoices[verbChoice];
-
-			switch (eng.currentUserChoices[verbChoice].arguments.Count)
-			{
-			case 0:
-				break;
-			case 1:
-				tempV.replaceWith(tempV.arguments[0].name, tempV.arguments[0].values[argument1].name);
-				break;
-			case 2:
-				tempV.replaceWith(tempV.arguments[0].name, tempV.arguments[0].values[argument1].name);
-				tempV.replaceWith(tempV.arguments[1].name, tempV.arguments[1].values[argument2].name);
-				break;
-			case 3:
-				tempV.replaceWith(tempV.arguments[0].name, tempV.arguments[0].values[argument1].name);
-				tempV.replaceWith(tempV.arguments[1].name, tempV.arguments[1].values[argument2].name);
-				tempV.replaceWith(tempV.arguments[2].name, tempV.arguments[2].values[argument3].name);
-				break;
-			case 4:
-				tempV.replaceWith(tempV.arguments[0].name, tempV.arguments[0].values[argument1].name);
-				tempV.replaceWith(tempV.arguments[1].name, tempV.arguments[1].values[argument2].name);
-				tempV.replaceWith(tempV.arguments[2].name, tempV.arguments[2].values[argument3].name);
-				tempV.replaceWith(tempV.arguments[3].name, tempV.arguments[3].values[argument4].name);
-				break;
-			}
-
-			eng.takeInputAndProcess(tempV);
-
-			//Restart input UI
-			verbChoice = 0;
-			argument1 = 0;
-			argument2 = 0;
-			argument3 = 0;
-			argument4 = 0;
-			drawPage(pageIndex);
-			setUIArguments(ln.getEngine().currentUserChoices[verbChoice].arguments.Count);
-			redrawUI(ln.getEngine().currentUserChoices[verbChoice].arguments.Count);
-			waitingForInput = true;
+			fadeOut = true;
 		}
 	}
 	
@@ -621,6 +631,36 @@ public class Book : MonoBehaviour
 	// Update is called once per frame
 	void Update() 
 	{
+		if (fadeOut)
+		{
+			if (fadeSpeed != 0f)
+				fadeTimer += Time.deltaTime / fadeSpeed;
+			Image img = fadePanel.GetComponent<Image>();
+			img.color = new Vector4(img.color.r, img.color.g, img.color.b, Mathf.Lerp(0f, 1f, fadeTimer));
+
+			if (fadePanel.GetComponent<Image>().color.a == 1f)
+			{
+				fadeTimer = 0f;
+				fadeOut = false;
+				processExecute();
+			}
+		}
+
+		if (fadeIn)
+		{
+			if (fadeSpeed != 0f)
+				fadeTimer += Time.deltaTime / fadeSpeed;
+			Image img = fadePanel.GetComponent<Image>();
+			img.color = new Vector4(img.color.r, img.color.g, img.color.b, Mathf.Lerp(1f, 0f, fadeTimer));
+
+			if (fadePanel.GetComponent<Image>().color.a == 0f)
+			{
+				fadeTimer = 0f;
+				fadeIn = false;
+				waitingForInput = true;
+			}
+		}
+
 		if (!ready)
 		{
 			if (ln.getDone())
@@ -650,68 +690,71 @@ public class Book : MonoBehaviour
 			{
 				if (Input.GetMouseButton(0))
 				{
-					if (settledRight && !flippingLeft && !flippingRight && Input.mousePosition.x < Screen.width/2 && pageIndex != 0)
+					if (waitingForInput == true)
 					{
-						//Make sure to draw input page dummy whenever pages are moving
-						if (story[pageIndex].isInputPage)
+						if (settledRight && !flippingLeft && !flippingRight && Input.mousePosition.x < Screen.width/2 && pageIndex != 0)
 						{
-							inputCanvas.transform.localScale = new Vector3(1.112f*inputScale, 1f*inputScale, 1f);
-							inputCanvas.transform.position = new Vector3(0f, -30f, -1f);
+							//Make sure to draw input page dummy whenever pages are moving
+							if (story[pageIndex].isInputPage)
+							{
+								inputCanvas.transform.localScale = new Vector3(1.112f*inputScale, 1f*inputScale, 1f);
+								inputCanvas.transform.position = new Vector3(0f, -30f, -1f);
+							}
+
+							//Pick up left page
+							caughtAngleLeft = currentLeftPage.transform.eulerAngles;
+							
+							if (Mathf.Approximately(caughtAngleLeft.y, 0.0f))
+								mouseHingeLeft = Input.mousePosition.x;
+							else
+								mouseHingeLeft = Input.mousePosition.x - ((caughtAngleLeft.y/179.9f) * (Screen.width/2.0f));
+							
+							flippingLeft = true; 
+							settledLeft = false;
 						}
+						else if (settledLeft && !flippingRight && !flippingLeft && Input.mousePosition.x > Screen.width/2 && pageIndex != story.Count - 1)
+						{
+							//Pick up right page
+							caughtAngleRight = currentRightPage.transform.eulerAngles;
 
-						//Pick up left page
-						caughtAngleLeft = currentLeftPage.transform.eulerAngles;
-						
-						if (Mathf.Approximately(caughtAngleLeft.y, 0.0f))
-							mouseHingeLeft = Input.mousePosition.x;
-						else
-							mouseHingeLeft = Input.mousePosition.x - ((caughtAngleLeft.y/179.9f) * (Screen.width/2.0f));
-						
-						flippingLeft = true; 
-						settledLeft = false;
-					}
-					else if (settledLeft && !flippingRight && !flippingLeft && Input.mousePosition.x > Screen.width/2 && pageIndex != story.Count - 1)
-					{
-						//Pick up right page
-						caughtAngleRight = currentRightPage.transform.eulerAngles;
+							if (Mathf.Approximately(caughtAngleRight.y, 0.0f))
+								mouseHingeRight = Input.mousePosition.x;
+							else
+								mouseHingeRight = Input.mousePosition.x + (((caughtAngleRight.y - 360.0f)/-179.9f) * (Screen.width/2.0f));
 
-						if (Mathf.Approximately(caughtAngleRight.y, 0.0f))
-							mouseHingeRight = Input.mousePosition.x;
-						else
-							mouseHingeRight = Input.mousePosition.x + (((caughtAngleRight.y - 360.0f)/-179.9f) * (Screen.width/2.0f));
+							flippingRight = true; 
+							settledRight = false;
+						}
+						else if (flippingLeft && mouseHingeLeft - Input.mousePosition.x < 0)
+						{
+							//Pull back left page
+							currentLeftPage.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+							previousRightPage.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+							
+							float rotation = ((-(mouseHingeLeft - Input.mousePosition.x))/(Screen.width/2.0f)) * 179.9f;
+							rotation = Mathf.Clamp(rotation, 0.0f, 179.9f);
+							
+							currentLeftPage.transform.Rotate(Vector3.up * rotation);
+							previousRightPage.transform.Rotate(Vector3.up * rotation);
+							
+							currentLeftPage.transform.position = new Vector3(-4.5f*Mathf.Cos(Mathf.Deg2Rad*currentLeftPage.transform.eulerAngles.y), 0.0f, -4.5f*Mathf.Sin(Mathf.Deg2Rad*currentLeftPage.transform.eulerAngles.y));
+							previousRightPage.transform.position = new Vector3(4.5f*Mathf.Cos(Mathf.Deg2Rad*previousRightPage.transform.eulerAngles.y), 0.0f, 4.5f*Mathf.Sin(Mathf.Deg2Rad*previousRightPage.transform.eulerAngles.y));
+						}
+						else if (flippingRight && mouseHingeRight - Input.mousePosition.x > 0)
+						{
+							//Pull back right page
+							currentRightPage.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+							nextLeftPage.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
 
-						flippingRight = true; 
-						settledRight = false;
-					}
-					else if (flippingLeft && mouseHingeLeft - Input.mousePosition.x < 0)
-					{
-						//Pull back left page
-						currentLeftPage.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
-						previousRightPage.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-						
-						float rotation = ((-(mouseHingeLeft - Input.mousePosition.x))/(Screen.width/2.0f)) * 179.9f;
-						rotation = Mathf.Clamp(rotation, 0.0f, 179.9f);
-						
-						currentLeftPage.transform.Rotate(Vector3.up * rotation);
-						previousRightPage.transform.Rotate(Vector3.up * rotation);
-						
-						currentLeftPage.transform.position = new Vector3(-4.5f*Mathf.Cos(Mathf.Deg2Rad*currentLeftPage.transform.eulerAngles.y), 0.0f, -4.5f*Mathf.Sin(Mathf.Deg2Rad*currentLeftPage.transform.eulerAngles.y));
-						previousRightPage.transform.position = new Vector3(4.5f*Mathf.Cos(Mathf.Deg2Rad*previousRightPage.transform.eulerAngles.y), 0.0f, 4.5f*Mathf.Sin(Mathf.Deg2Rad*previousRightPage.transform.eulerAngles.y));
-					}
-					else if (flippingRight && mouseHingeRight - Input.mousePosition.x > 0)
-					{
-						//Pull back right page
-						currentRightPage.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
-						nextLeftPage.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+							float rotation = ((mouseHingeRight - Input.mousePosition.x)/(Screen.width/2.0f)) * -179.9f;
+							rotation = Mathf.Clamp(rotation, -179.9f, 0.0f);
 
-						float rotation = ((mouseHingeRight - Input.mousePosition.x)/(Screen.width/2.0f)) * -179.9f;
-						rotation = Mathf.Clamp(rotation, -179.9f, 0.0f);
+							currentRightPage.transform.Rotate(Vector3.up * rotation);
+							nextLeftPage.transform.Rotate(Vector3.up * rotation);
 
-						currentRightPage.transform.Rotate(Vector3.up * rotation);
-						nextLeftPage.transform.Rotate(Vector3.up * rotation);
-
-						currentRightPage.transform.position = new Vector3(4.5f*Mathf.Cos(Mathf.Deg2Rad*currentRightPage.transform.eulerAngles.y), 0.0f, 4.5f*Mathf.Sin(Mathf.Deg2Rad*currentRightPage.transform.eulerAngles.y));
-						nextLeftPage.transform.position = new Vector3(-4.5f*Mathf.Cos(Mathf.Deg2Rad*nextLeftPage.transform.eulerAngles.y), 0.0f, -4.5f*Mathf.Sin(Mathf.Deg2Rad*nextLeftPage.transform.eulerAngles.y));
+							currentRightPage.transform.position = new Vector3(4.5f*Mathf.Cos(Mathf.Deg2Rad*currentRightPage.transform.eulerAngles.y), 0.0f, 4.5f*Mathf.Sin(Mathf.Deg2Rad*currentRightPage.transform.eulerAngles.y));
+							nextLeftPage.transform.position = new Vector3(-4.5f*Mathf.Cos(Mathf.Deg2Rad*nextLeftPage.transform.eulerAngles.y), 0.0f, -4.5f*Mathf.Sin(Mathf.Deg2Rad*nextLeftPage.transform.eulerAngles.y));
+						}
 					}
 				} 
 				else

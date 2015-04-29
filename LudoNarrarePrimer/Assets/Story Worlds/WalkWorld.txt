@@ -1,0 +1,101 @@
+storyworld WalkWorld
+{
+	user: Walker;
+	
+	entity Walker
+	{
+		tag: canWalk;
+		relate: at, Courtyard;
+	}
+
+	entity Courtyard
+	{
+		tag: place;
+		icon: courtyardIcon;
+		string: name, "Courtyard";
+		relate: connected, WestTower;
+		relate: connected, EastTower;
+		relate: connected, NorthTower;
+		relate: connected, SouthTower;
+	}
+	
+	entity NorthTower
+	{
+		tag: place;
+		icon: northTowerIcon;
+		string: name, "North Tower";
+		relate: connected, Courtyard;
+		relate: connected, WestTower;
+		relate: connected, EastTower;
+	}
+	
+	entity SouthTower
+	{
+		tag: place;
+		icon: southTowerIcon;
+		string: name, "South Tower";
+		relate: connected, Courtyard;
+		relate: connected, WestTower;
+		relate: connected, EastTower;
+	}	
+
+	entity WestTower
+	{
+		tag: place;
+		icon: westTowerIcon;
+		string: name, "West Tower";
+		relate: connected, Courtyard;
+		relate: connected, NorthTower;
+		relate: connected, SouthTower;
+	}
+
+	entity EastTower
+	{
+		tag: place;
+		icon: eastTowerIcon;
+		string: name, "East Tower";
+		relate: connected, Courtyard;
+		relate: connected, NorthTower;
+		relate: connected, SouthTower;
+	}	
+	
+	input
+	{
+		text: "What do you do next?";
+	}
+	
+	verb Walk
+	{
+		icon: walkIcon;
+	
+		variable ?fromLocation
+		{
+			where: ?fromLocation has tag place;
+			where: ?me.at = ?fromLocation;
+		}
+		
+		argument ?toLocation
+		{
+			text: "Where to walk to?";
+			where: ?toLocation has tag place;
+			where: all ?fromLocation.connected = ?toLocation;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag canWalk;
+			where: ?fromLocation != null;
+		}
+		
+		case Walk
+		{
+			do: ?me remove relate at, ?fromLocation;
+			do: ?me add relate at, ?toLocation;
+			
+			page verb
+			{
+				text: "You walk from ?fromLocation.name to ?toLocation.name.";
+			}
+		}
+	}
+}

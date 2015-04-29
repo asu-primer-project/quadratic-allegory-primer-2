@@ -8,6 +8,7 @@ public class Argument
 	/* Variables */
 	public string name;
 	public string text;
+	public string choice;
 	public List<Entity> values;
 	public List<Condition> conditions;
 	
@@ -16,8 +17,16 @@ public class Argument
 	{
 		name = _name;
 		text = _text;
+		choice = "";
 		values = new List<Entity>();
 		conditions = new List<Condition>();
+	}
+
+	public void replaceWith(string replace, string with)
+	{
+		foreach (Condition c in conditions)
+			c.replaceWith(replace, with);
+		choice = with;
 	}
 	
 	public void copyTo(Argument a)

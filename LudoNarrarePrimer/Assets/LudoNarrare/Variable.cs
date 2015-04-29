@@ -17,7 +17,13 @@ public class Variable
 		values = new List<Entity>();
 		conditions = new List<Condition>();
 	}
-	
+
+	public void replaceWith(string replace, string with)
+	{
+		foreach (Condition c in conditions)
+			c.replaceWith(replace, with);
+	}
+
 	public void copyTo(Variable v)
 	{
 		if (v != null)

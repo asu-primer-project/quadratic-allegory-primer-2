@@ -38,6 +38,10 @@ public class Verb
     public void replaceWith(string replace, string with)
     {
 		//Add ability to replace page text entity references
+		for (int i = 0; i < variables.Count; i++)
+			variables[i].replaceWith(replace, with);
+		for (int i = 0; i < arguments.Count; i++)
+			arguments[i].replaceWith(replace, with);
 		for (int i = 0; i < preconditions.Count; i++ )
 			preconditions[i].replaceWith(replace, with);
 		for (int i = 0; i < cases.Count; i++ )
