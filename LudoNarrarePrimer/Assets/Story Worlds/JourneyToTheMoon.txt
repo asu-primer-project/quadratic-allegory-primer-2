@@ -1,0 +1,412 @@
+//Story World - Journey to the Moon: Created by J. M. Stark
+
+storyworld JourneyToTheMoon
+{
+	user: Linus;
+
+	////////////////////////////////////////////////////
+	// Beginning /////////////////////////////////////
+	////////////////////////////////////////////////////
+	
+	beginning
+	{
+		//The beginning of the story shows the launch into space and the landing onto the moon.
+		//Once the user lands on the moon, their ability to interact begins as they explore with
+		//their three counterparts.
+		
+		page LaunchDescript
+		{
+			text: "A rocket points upward, ready to launch. The countdown begins.";
+		}
+		
+		page Launch5
+		{
+			text: "5";		
+		}
+		
+		page Launch4
+		{
+			text: "4";		
+		}
+		
+		page Launch3
+		{
+			text: "3";		
+		}
+		
+		page Launch2
+		{
+			text: "2";		
+		}
+		
+		page Launch1
+		{
+			text: "1";		
+		}
+		
+		page LaunchLiftOff
+		{
+			text: "Lift off!";		
+		}
+		
+		page TheMoon
+		{
+			text: "The rocket is flying to the moon.";		
+		}
+		
+		page LandingOnTheMoon
+		{
+			text: "It lands inside a large crater on the moon's surface.";		
+		}
+		
+		page ExitTheCraft
+		{
+			text: "Linus and his peers exit the rocket to explore the lunar world.";		
+		}
+	}
+	
+	input
+	{
+		text: "What should Linus do?";
+	}
+	
+	////////////////////////////////////////////////////
+	// Entities ////////////////////////////////////////
+	////////////////////////////////////////////////////
+	
+	//People
+	
+	entity Linus
+	{
+		tag: person;
+		tag: canWalk;
+		string: name, "Linus";
+		relate: at, Crater;
+	}
+	
+	entity April
+	{
+		tag: person;
+		tag: canWalk;
+		string: name, "April";
+		relate: at, Crater;
+	}
+	
+	entity Whitney
+	{
+		tag: person;
+		tag: canWalk;
+		string: name, "Whitney";
+		relate: at, Crater;
+	}
+	
+	entity Randal
+	{
+		tag: person;
+		tag: canWalk;
+		string: name, "Randal";
+		relate: at, Crater;
+	}
+	
+	//Places
+	//Outside
+	
+	entity Crater
+	{
+		icontext: "Crater", 140, 149, 177;
+		tag: place;
+		string: name, "the crater";
+		relate: connected, Flatscape;
+		relate: connected, RocketCabin;
+	}
+	
+	entity Flatscape
+	{
+		icontext: "Flatscapes", 140, 149, 177;
+		tag: place;
+		string: name, "the vast flatscapes";
+		relate: connected, Hills;
+		relate: connected, Pits;
+		relate: connected, Canyon;
+		relate: connected, Crater;
+	}
+	
+	entity Hills
+	{
+		icontext: "Hills", 140, 149, 177;
+		tag: place;
+		string: name, "the hills";
+		relate: connected, Flatscape;
+		relate: connected, MoonBaseFrontDoor;
+	}
+	
+	entity Pits
+	{
+		icontext: "Pits", 140, 149, 177;
+		tag: place;
+		string: name, "the sea of pits";
+		relate: connected, Flatscape;
+	}
+	
+	entity Canyon
+	{
+		icontext: "Canyon", 140, 149, 177;
+		tag: place;
+		string: name, "the rotten canyon";
+		relate: connected, Flatscape;
+		relate: connected, SecretCave;
+	}
+	
+	entity SecretCave
+	{
+		icontext: "Secret Cave", 140, 149, 177;
+		tag: place;
+		string: name, "the hidden cave";
+		relate: connected, Canyon;
+	}
+	
+	//Inside
+	
+	entity RocketCabin
+	{
+		icontext: "Rocket", 140, 149, 177;
+		tag: place;
+		string: name, "the inside of the rocket";
+		relate: connected, Crater;
+	}
+	
+	entity MysteryRocketCabin
+	{
+		icontext: "Mysterious Rocket", 140, 149, 177;
+		tag: place;
+		string: name, "the inside of the large, mysterious rocket";
+		relate: connected, MoonBaseLaunchBay;
+	}
+	
+	entity MoonBaseFrontDoor
+	{
+		icontext: "Outside Front Door", 140, 149, 177;
+		tag: place;
+		string: name, "the outside of the steel door";
+		relate: connected, Hills;
+		relate: connected, MoonBaseHallway;
+	}
+	
+	entity MoonBaseHallway
+	{
+		icontext: "Hallway", 140, 149, 177;
+		tag: place;
+		string: name, "the hallway";
+		relate: connected, MoonBaseFrontDoor;
+		relate: connected, MoonBaseLivingQuarters;
+		relate: connected, MoonBaseLab;
+		relate: connected, MoonBaseLaunchBay;
+	}
+	
+	entity MoonBaseLivingQuarters
+	{
+		icontext: "Living Quarters", 140, 149, 177;
+		tag: place;
+		string: name, "the living quarters";
+		relate: connected, MoonBaseHallway;
+		relate: connected, MoonBaseHiddenStorage;
+	}
+	
+	entity MoonBaseLab
+	{
+		icontext: "Lab", 140, 149, 177;
+		tag: place;
+		string: name, "the lab";
+		relate: connected, MoonBaseHallway;
+	}
+	
+	entity MoonBaseLaunchBay
+	{
+		icontext: "Launch Bay", 140, 149, 177;
+		tag: place;
+		string: name, "the bay";
+		relate: connected, MoonBaseHallway;
+		relate: connected, LargeRocketCabin;
+	}
+	
+	entity MoonBaseHiddenStorage
+	{
+		icontext: "Hidden Storage", 140, 149, 177;
+		tag: place;
+		string: name, "the hidden storage room";
+		relate: connected, MoonBaseLivingQuarters;
+	}
+	
+	////////////////////////////////////////////////////
+	// Verbs //////////////////////////////////////////
+	////////////////////////////////////////////////////
+	
+	//verb Radio
+	//{
+	
+	//}
+	
+	//verb UseKeyCard 
+	//{
+	
+	//}
+	
+	//verb Punch
+	//{
+	
+	//}
+	
+	//verb Compliment
+	//{
+	
+	//}
+	
+	//verb Insult
+	//{
+	
+	//}
+	
+	//verb HighFive
+	//{
+	
+	//}
+	
+	verb Goto
+	{
+		icontext: "Go to", 199, 63, 42;
+	
+		variable ?fromLocation
+		{
+			where: ?fromLocation has tag place;
+			where: ?me.at = ?fromLocation;
+		}
+		
+		argument ?toLocation
+		{
+			text: "Where to go?";
+			where: ?toLocation has tag place;
+			where: all ?fromLocation.connected = ?toLocation;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag canWalk;
+			where: ?fromLocation != null;
+		}
+		
+		case Walk
+		{
+			do: ?me remove relate at, ?fromLocation;
+			do: ?me add relate at, ?toLocation;
+			
+			page verb
+			{
+				text: "?me.name goes from ?fromLocation.name to ?toLocation.name.";
+			}
+		}	
+	}
+	
+	//verb MakeChemical
+	//{
+	
+	//}
+	
+	//verb Grab
+	//{
+	
+	//}
+	
+	//verb Steal
+	//{
+	
+	//}
+	
+	//verb AskFor
+	//{
+	
+	//}
+	
+	//verb Give
+	//{
+	
+	//}
+	
+	//verb Freeze
+	//{
+	
+	//}
+	
+	//verb Shrink
+	//{
+	
+	//}
+	
+	//verb Melt
+	//{
+	
+	//}
+	
+	//verb OpenPortal
+	//{
+	
+	//}
+	
+	//verb Tell
+	//{
+	
+	//}
+	
+	//verb Observe
+	//{
+	
+	//}
+	
+	//verb PopOutOfHole
+	//{
+	
+	//}
+	
+	//verb Eat
+	//{
+	
+	//}
+	
+	//verb DisappearIntoHole
+	//{
+	
+	//}
+	
+	//verb Jump
+	//{
+	
+	//}
+	
+	//verb LaunchRocket
+	//{
+	
+	//}
+	
+	//verb Hide
+	//{
+	
+	//}
+	
+	//verb ComeOutOfHiding
+	//{
+	
+	//}
+
+	//verb Joke
+	//{
+	
+	//}
+	
+	//verb Trip
+	//{
+	
+	//}
+	
+	////////////////////////////////////////////////////
+	// Endings ////////////////////////////////////////
+	////////////////////////////////////////////////////
+}

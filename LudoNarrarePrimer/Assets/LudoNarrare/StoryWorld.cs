@@ -31,7 +31,10 @@ public class StoryWorld
 		Discriminator dTemp = new Discriminator("Never show wait");
 		dTemp.neverShow = true;
 		vTemp.discriminators.Add(dTemp);
-		vTemp.icon = "waitIcon";
+		vTemp.it = new IconText("Wait");
+		vTemp.it.red = 80;
+		vTemp.it.green = 80;
+		vTemp.it.blue = 80;
         verbs.Add(vTemp);
 
 		endings = new List<Ending>();

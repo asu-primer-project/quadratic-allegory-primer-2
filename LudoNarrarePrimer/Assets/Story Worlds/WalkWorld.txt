@@ -11,7 +11,7 @@ storyworld WalkWorld
 	entity Courtyard
 	{
 		tag: place;
-		icon: courtyardIcon;
+		icontext: "Courtyard", 140, 149, 177;
 		string: name, "Courtyard";
 		relate: connected, WestTower;
 		relate: connected, EastTower;
@@ -22,7 +22,7 @@ storyworld WalkWorld
 	entity NorthTower
 	{
 		tag: place;
-		icon: northTowerIcon;
+		icontext: "North Tower", 140, 149, 177;
 		string: name, "North Tower";
 		relate: connected, Courtyard;
 		relate: connected, WestTower;
@@ -32,7 +32,7 @@ storyworld WalkWorld
 	entity SouthTower
 	{
 		tag: place;
-		icon: southTowerIcon;
+		icontext: "South Tower", 140, 149, 177;
 		string: name, "South Tower";
 		relate: connected, Courtyard;
 		relate: connected, WestTower;
@@ -42,7 +42,7 @@ storyworld WalkWorld
 	entity WestTower
 	{
 		tag: place;
-		icon: westTowerIcon;
+		icontext: "West Tower", 140, 149, 177;
 		string: name, "West Tower";
 		relate: connected, Courtyard;
 		relate: connected, NorthTower;
@@ -52,7 +52,7 @@ storyworld WalkWorld
 	entity EastTower
 	{
 		tag: place;
-		icon: eastTowerIcon;
+		icontext: "East Tower", 140, 149, 177;
 		string: name, "East Tower";
 		relate: connected, Courtyard;
 		relate: connected, NorthTower;
@@ -66,7 +66,7 @@ storyworld WalkWorld
 	
 	verb Walk
 	{
-		icon: walkIcon;
+		icontext: "Walk", 199, 63, 42;
 	
 		variable ?fromLocation
 		{

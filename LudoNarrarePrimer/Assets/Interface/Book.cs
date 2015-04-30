@@ -81,6 +81,10 @@ public class Book : MonoBehaviour
 	private int argument3 = 0;
 	private int argument4 = 0;
 
+	public bool useTTS = false;
+	private int _speechId = 0;
+	private int pageAtTouch;
+
 	//Functions for changing input UI state
 	public void setUIArguments(int argueCount)
 	{
@@ -176,6 +180,209 @@ public class Book : MonoBehaviour
 		{
 		case 0:
 		{
+			IconText itV = ln.getEngine().currentUserChoices[verbChoice].it;
+			Image vi = verbIcon.GetComponent<Image>();
+			vi.color = new Vector4((float)itV.red/255f, (float)itV.green/255f, (float)itV.blue/255f, 1f);
+
+			Text vt = vi.GetComponentInChildren<Text>();
+			vt.text = itV.text;
+
+			if (itV.getTextColor())
+				vt.color = Color.black;
+			else
+				vt.color = Color.white;
+			break;
+		}
+		case 1:
+		{
+			IconText itV = ln.getEngine().currentUserChoices[verbChoice].it;
+			Image vi = verbIcon.GetComponent<Image>();
+			vi.color = new Vector4((float)itV.red/255f, (float)itV.green/255f, (float)itV.blue/255f, 1f);
+			
+			Text vt = vi.GetComponentInChildren<Text>();
+			vt.text = itV.text;
+			
+			if (itV.getTextColor())
+				vt.color = Color.black;
+			else
+				vt.color = Color.white;
+
+			IconText itA1 = ln.getEngine().currentUserChoices[verbChoice].arguments[0].values[argument1].it;
+			Image a1i = argue1Icon.GetComponent<Image>();
+			a1i.color = new Vector4((float)itA1.red/255f, (float)itA1.green/255f, (float)itA1.blue/255f, 1f);
+			
+			Text a1t = a1i.GetComponentInChildren<Text>();
+			a1t.text = itA1.text;
+			
+			if (itA1.getTextColor())
+				a1t.color = Color.black;
+			else
+				a1t.color = Color.white;
+
+			break;
+		}
+		case 2:
+		{
+			IconText itV = ln.getEngine().currentUserChoices[verbChoice].it;
+			Image vi = verbIcon.GetComponent<Image>();
+			vi.color = new Vector4((float)itV.red/255f, (float)itV.green/255f, (float)itV.blue/255f, 1f);
+			
+			Text vt = vi.GetComponentInChildren<Text>();
+			vt.text = itV.text;
+			
+			if (itV.getTextColor())
+				vt.color = Color.black;
+			else
+				vt.color = Color.white;
+			
+			IconText itA1 = ln.getEngine().currentUserChoices[verbChoice].arguments[0].values[argument1].it;
+			Image a1i = argue1Icon.GetComponent<Image>();
+			a1i.color = new Vector4((float)itA1.red/255f, (float)itA1.green/255f, (float)itA1.blue/255f, 1f);
+			
+			Text a1t = a1i.GetComponentInChildren<Text>();
+			a1t.text = itA1.text;
+			
+			if (itA1.getTextColor())
+				a1t.color = Color.black;
+			else
+				a1t.color = Color.white;
+
+			IconText itA2 = ln.getEngine().currentUserChoices[verbChoice].arguments[1].values[argument2].it;
+			Image a2i = argue2Icon.GetComponent<Image>();
+			a2i.color = new Vector4((float)itA2.red/255f, (float)itA2.green/255f, (float)itA2.blue/255f, 1f);
+			
+			Text a2t = a2i.GetComponentInChildren<Text>();
+			a2t.text = itA2.text;
+			
+			if (itA2.getTextColor())
+				a2t.color = Color.black;
+			else
+				a2t.color = Color.white;
+
+			break;
+		}
+		case 3:
+		{
+			IconText itV = ln.getEngine().currentUserChoices[verbChoice].it;
+			Image vi = verbIcon.GetComponent<Image>();
+			vi.color = new Vector4((float)itV.red/255f, (float)itV.green/255f, (float)itV.blue/255f, 1f);
+			
+			Text vt = vi.GetComponentInChildren<Text>();
+			vt.text = itV.text;
+			
+			if (itV.getTextColor())
+				vt.color = Color.black;
+			else
+				vt.color = Color.white;
+			
+			IconText itA1 = ln.getEngine().currentUserChoices[verbChoice].arguments[0].values[argument1].it;
+			Image a1i = argue1Icon.GetComponent<Image>();
+			a1i.color = new Vector4((float)itA1.red/255f, (float)itA1.green/255f, (float)itA1.blue/255f, 1f);
+			
+			Text a1t = a1i.GetComponentInChildren<Text>();
+			a1t.text = itA1.text;
+			
+			if (itA1.getTextColor())
+				a1t.color = Color.black;
+			else
+				a1t.color = Color.white;
+			
+			IconText itA2 = ln.getEngine().currentUserChoices[verbChoice].arguments[1].values[argument2].it;
+			Image a2i = argue2Icon.GetComponent<Image>();
+			a2i.color = new Vector4((float)itA2.red/255f, (float)itA2.green/255f, (float)itA2.blue/255f, 1f);
+			
+			Text a2t = a2i.GetComponentInChildren<Text>();
+			a2t.text = itA2.text;
+			
+			if (itA2.getTextColor())
+				a2t.color = Color.black;
+			else
+				a2t.color = Color.white;
+
+			IconText itA3 = ln.getEngine().currentUserChoices[verbChoice].arguments[2].values[argument3].it;
+			Image a3i = argue3Icon.GetComponent<Image>();
+			a3i.color = new Vector4((float)itA3.red/255f, (float)itA3.green/255f, (float)itA3.blue/255f, 1f);
+			
+			Text a3t = a3i.GetComponentInChildren<Text>();
+			a3t.text = itA3.text;
+			
+			if (itA3.getTextColor())
+				a3t.color = Color.black;
+			else
+				a3t.color = Color.white;
+
+			break;
+		}
+		case 4:
+		{
+			IconText itV = ln.getEngine().currentUserChoices[verbChoice].it;
+			Image vi = verbIcon.GetComponent<Image>();
+			vi.color = new Vector4((float)itV.red/255f, (float)itV.green/255f, (float)itV.blue/255f, 1f);
+			
+			Text vt = vi.GetComponentInChildren<Text>();
+			vt.text = itV.text;
+			
+			if (itV.getTextColor())
+				vt.color = Color.black;
+			else
+				vt.color = Color.white;
+			
+			IconText itA1 = ln.getEngine().currentUserChoices[verbChoice].arguments[0].values[argument1].it;
+			Image a1i = argue1Icon.GetComponent<Image>();
+			a1i.color = new Vector4((float)itA1.red/255f, (float)itA1.green/255f, (float)itA1.blue/255f, 1f);
+			
+			Text a1t = a1i.GetComponentInChildren<Text>();
+			a1t.text = itA1.text;
+			
+			if (itA1.getTextColor())
+				a1t.color = Color.black;
+			else
+				a1t.color = Color.white;
+			
+			IconText itA2 = ln.getEngine().currentUserChoices[verbChoice].arguments[1].values[argument2].it;
+			Image a2i = argue2Icon.GetComponent<Image>();
+			a2i.color = new Vector4((float)itA2.red/255f, (float)itA2.green/255f, (float)itA2.blue/255f, 1f);
+			
+			Text a2t = a2i.GetComponentInChildren<Text>();
+			a2t.text = itA2.text;
+			
+			if (itA2.getTextColor())
+				a2t.color = Color.black;
+			else
+				a2t.color = Color.white;
+			
+			IconText itA3 = ln.getEngine().currentUserChoices[verbChoice].arguments[2].values[argument3].it;
+			Image a3i = argue3Icon.GetComponent<Image>();
+			a3i.color = new Vector4((float)itA3.red/255f, (float)itA3.green/255f, (float)itA3.blue/255f, 1f);
+			
+			Text a3t = a3i.GetComponentInChildren<Text>();
+			a3t.text = itA3.text;
+			
+			if (itA3.getTextColor())
+				a3t.color = Color.black;
+			else
+				a3t.color = Color.white;
+
+			IconText itA4 = ln.getEngine().currentUserChoices[verbChoice].arguments[3].values[argument4].it;
+			Image a4i = argue4Icon.GetComponent<Image>();
+			a4i.color = new Vector4((float)itA4.red/255f, (float)itA4.green/255f, (float)itA4.blue/255f, 1f);
+			
+			Text a4t = a4i.GetComponentInChildren<Text>();
+			a4t.text = itA4.text;
+			
+			if (itA4.getTextColor())
+				a4t.color = Color.black;
+			else
+				a4t.color = Color.white;
+
+			break;
+		}
+		}
+		/*
+		switch(argueCount)
+		{
+		case 0:
+		{
 			Image vi = verbIcon.GetComponent<Image>();
 			vi.sprite = Resources.Load<Sprite>(ln.getEngine().currentUserChoices[verbChoice].icon);
 			break;
@@ -224,7 +431,7 @@ public class Book : MonoBehaviour
 			a4i.sprite = Resources.Load<Sprite>(ln.getEngine().currentUserChoices[verbChoice].arguments[3].values[argument4].icon);
 			break;
 		}
-		}
+		}*/
 	}
 
 	//Functions that handle user verb choosing
@@ -357,6 +564,71 @@ public class Book : MonoBehaviour
 				argument4 = ln.getEngine().currentUserChoices[verbChoice].arguments[3].values.Count - 1;	
 
 			redrawUI(ln.getEngine().currentUserChoices[verbChoice].arguments.Count);
+		}
+	}
+
+	public void speakVerb()
+	{
+		//TTS go!
+		if (useTTS)
+		{
+			if (TTSManager.IsInitialized())
+			{
+				TTSManager.Stop();
+				TTSManager.Speak(ln.getEngine().currentUserChoices[verbChoice].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+			}
+		}
+	}
+
+	public void speakArgument1()
+	{
+		//TTS go!
+		if (useTTS)
+		{
+			if (TTSManager.IsInitialized())
+			{
+				TTSManager.Stop();
+				TTSManager.Speak(ln.getEngine().currentUserChoices[verbChoice].arguments[0].values[argument1].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+			}
+		}
+	}
+
+	public void speakArgument2()
+	{
+		//TTS go!
+		if (useTTS)
+		{
+			if (TTSManager.IsInitialized())
+			{
+				TTSManager.Stop();
+				TTSManager.Speak(ln.getEngine().currentUserChoices[verbChoice].arguments[1].values[argument2].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+			}
+		}
+	}
+
+	public void speakArgument3()
+	{
+		//TTS go!
+		if (useTTS)
+		{
+			if (TTSManager.IsInitialized())
+			{
+				TTSManager.Stop();
+				TTSManager.Speak(ln.getEngine().currentUserChoices[verbChoice].arguments[2].values[argument3].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+			}
+		}
+	}
+
+	public void speakArgument4()
+	{
+		//TTS go!
+		if (useTTS)
+		{
+			if (TTSManager.IsInitialized())
+			{
+				TTSManager.Stop();
+				TTSManager.Speak(ln.getEngine().currentUserChoices[verbChoice].arguments[3].values[argument4].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+			}
 		}
 	}
 
@@ -626,6 +898,14 @@ public class Book : MonoBehaviour
 	void Start() 
 	{
 		ln = GetComponent<LudoNarrare>();
+		if (useTTS)
+			TTSManager.Initialize(transform.name, "OnTTSInit");
+	}
+
+	void OnDestroy()
+	{
+		if (useTTS)
+			TTSManager.Shutdown();
 	}
 
 	// Update is called once per frame
@@ -658,6 +938,19 @@ public class Book : MonoBehaviour
 				fadeTimer = 0f;
 				fadeIn = false;
 				waitingForInput = true;
+
+				//TTS go!
+				if (useTTS)
+				{
+					if (TTSManager.IsInitialized())
+					{
+						if (!story[pageIndex].isInputPage)
+						{
+							TTSManager.Stop();
+							TTSManager.Speak(story[pageIndex].drawList.Find(x => x.isText == true).text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+						}
+					}
+				}
 			}
 		}
 
@@ -673,6 +966,19 @@ public class Book : MonoBehaviour
 				setUIArguments(ln.getEngine().currentUserChoices[verbChoice].arguments.Count);
 				redrawUI(ln.getEngine().currentUserChoices[verbChoice].arguments.Count);
 				waitingForInput = true;
+
+				//TTS go!
+				if (useTTS)
+				{
+					if (TTSManager.IsInitialized())
+					{
+						if (!story[pageIndex].isInputPage)
+						{
+							TTSManager.Stop();
+							TTSManager.Speak(story[pageIndex].drawList.Find(x => x.isText == true).text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+						}
+					}
+				}
 			}
 		}
 		else
@@ -711,6 +1017,8 @@ public class Book : MonoBehaviour
 							
 							flippingLeft = true; 
 							settledLeft = false;
+
+							pageAtTouch = pageIndex;
 						}
 						else if (settledLeft && !flippingRight && !flippingLeft && Input.mousePosition.x > Screen.width/2 && pageIndex != story.Count - 1)
 						{
@@ -724,6 +1032,8 @@ public class Book : MonoBehaviour
 
 							flippingRight = true; 
 							settledRight = false;
+
+							pageAtTouch = pageIndex;
 						}
 						else if (flippingLeft && mouseHingeLeft - Input.mousePosition.x < 0)
 						{
@@ -780,12 +1090,25 @@ public class Book : MonoBehaviour
 					else if (currentLeftPage.transform.eulerAngles.y > 180.0f)
 					{
 						settledLeft = true;
-
+					
 						//Once settled remove input dummy
 						if (story[pageIndex].isInputPage)
 						{
 							inputCanvas.transform.localScale = new Vector3(1f*inputScale, 1f*inputScale, 1f);
 							inputCanvas.transform.position = new Vector3(0f, 0f, -1f);
+						}
+
+						//TTS go!
+						if (useTTS)
+						{
+							if (TTSManager.IsInitialized())
+							{
+								if (pageIndex != pageAtTouch && !story[pageIndex].isInputPage)
+								{
+									TTSManager.Stop();
+									TTSManager.Speak(story[pageIndex].drawList.Find(x => x.isText == true).text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+								}
+							}
 						}
 
 						currentLeftPage.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
@@ -830,6 +1153,19 @@ public class Book : MonoBehaviour
 					{
 						settledRight = true;
 
+						//TTS go!
+						if (useTTS)
+						{
+							if (TTSManager.IsInitialized())
+							{
+								if (pageIndex != pageAtTouch && !story[pageIndex].isInputPage)
+								{
+									TTSManager.Stop();
+									TTSManager.Speak(story[pageIndex].drawList.Find(x => x.isText == true).text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+								}
+							}
+						}
+						
 						currentRightPage.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
 						nextLeftPage.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
 

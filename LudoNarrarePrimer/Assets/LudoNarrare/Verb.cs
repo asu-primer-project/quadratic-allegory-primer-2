@@ -14,6 +14,7 @@ public class Verb
 	public List<Discriminator> discriminators;
 	public DynamicVerbTreeNode root;
 	public string icon;
+	public IconText it;
 
     /* Functions */
     public Verb(string _name)
@@ -26,6 +27,7 @@ public class Verb
 		discriminators = new List<Discriminator>();
 		root = null;
 		icon = "";
+		it = null;
     }
 
     public void applyPath(List<string> path)
@@ -102,6 +104,16 @@ public class Verb
 			}
 
 			verb.icon = icon;
+
+			if (it != null)
+			{
+				IconText tempI = new IconText("");
+				it.copyTo(tempI);
+				verb.it = tempI;
+			}
+			else
+				verb.it = null;
+
         }
     }
 }

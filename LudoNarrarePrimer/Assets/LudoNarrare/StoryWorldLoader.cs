@@ -467,6 +467,31 @@ public class StoryWorldLoader : MonoBehaviour
 				return 18;
 			}
 			c = swText[readLoc];
+
+			if (c == '/')
+			{
+				readLoc++;
+				if (readLoc > endLoc)
+				{
+					type = 14;
+					return 14;
+				}
+				c = swText[readLoc];
+
+				while (c != '\n')
+				{
+					readLoc++;
+					if (readLoc > endLoc)
+					{
+						type = -3;
+						return -3;
+					}
+					c = swText[readLoc];
+				}
+
+				print("Read comment\n");
+				return getToken();
+			}
 			
 			print("Read /\n");
 			type = 18;
@@ -1681,6 +1706,86 @@ public class StoryWorldLoader : MonoBehaviour
 		return true;
 	}
 
+	//Parse Icon text
+	public bool parseIconText(Entity e, Verb v)
+	{
+		if (getToken() == 6)
+		{
+			if (getToken() == 1)
+			{
+				if (e != null)
+				{
+					e.it = new IconText(currentToken);
+
+					if (getToken() == 8)
+					{
+						if (getToken() == 2)
+						{
+							if (Int32.TryParse(currentToken, out e.it.red))
+							{
+								if (getToken() == 8)
+								{
+									if (getToken() == 2)
+									{
+										if (Int32.TryParse(currentToken, out e.it.green))
+										{
+											if (getToken() == 8)
+											{
+												if (getToken() == 2)
+												{
+													if (Int32.TryParse(currentToken, out e.it.blue))
+													{
+														if (getToken() == 7)
+															return false;
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				else if (v != null)
+				{
+					v.it = new IconText(currentToken);
+					
+					if (getToken() == 8)
+					{
+						if (getToken() == 2)
+						{
+							if (Int32.TryParse(currentToken, out v.it.red))
+							{
+								if (getToken() == 8)
+								{
+									if (getToken() == 2)
+									{
+										if (Int32.TryParse(currentToken, out v.it.green))
+										{
+											if (getToken() == 8)
+											{
+												if (getToken() == 2)
+												{
+													if (Int32.TryParse(currentToken, out v.it.blue))
+													{
+														if (getToken() == 7)
+															return false;
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	//Parse Entity
 	public bool parseEntity(Entity e)
 	{
@@ -1746,6 +1851,8 @@ public class StoryWorldLoader : MonoBehaviour
 						}
 						else if (currentToken == "icon")
 							error = parseIcon(e, null);
+						else if (currentToken == "icontext")
+							error = parseIconText(e, null);
 						else if (currentToken == "page")
 						{
 							Page temp = new Page("");
@@ -2001,7 +2108,9 @@ public class StoryWorldLoader : MonoBehaviour
 					if (type == 0 && !error)
 					{
 						if (currentToken == "icon")
-							error = parseIcon(null, v);							
+							error = parseIcon(null, v);		
+						else if (currentToken == "icontext")
+							error = parseIconText(null, v);
 						else if (currentToken == "variable")
 						{
 							Variable temp = new Variable("");

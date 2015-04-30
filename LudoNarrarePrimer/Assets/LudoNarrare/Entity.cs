@@ -16,6 +16,7 @@ public class Entity
     public List<Behavior> behaviors;
 	public List<ImageDef> images;
 	public string icon;
+	public IconText it;
 	public Page page;
 
     /* Functions */
@@ -32,5 +33,6 @@ public class Entity
 		images = new List<ImageDef>();
 		icon = "";
 		page = new Page("entity");
-    }
+		it = null;
+	}
 }

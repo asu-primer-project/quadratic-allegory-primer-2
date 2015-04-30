@@ -938,7 +938,7 @@ public class Engine : MonoBehaviour
 						break;
 					case 4:
 						//Currently there is no support for obligation enumeration via variable lists; recursive solution needed.
-						if (e.obligations.Find(x => x.name == o.obligation.name && x.verb == o.obligation.verb && x.arguments.SequenceEqual(o.obligation.arguments)) == null)
+						if (e.obligations.Find(x => x.name == o.obligation.name && x.verb == o.obligation.verb && x.arguments.SequenceEqual(o.obligation.arguments)) == null && e.name != storyWorld.userEntity)
 						{
 							Obligation temp = new Obligation("","");
 							o.obligation.copyTo(temp);
@@ -946,7 +946,7 @@ public class Engine : MonoBehaviour
 						}
 						break;
 					case 5:
-						if (e.goals.Find(x => x.name == o.goal.name) == null)
+						if (e.goals.Find(x => x.name == o.goal.name) == null && e.name != storyWorld.userEntity)
 						{
 							Goal temp = new Goal("","",0);
 							o.goal.copyTo(temp);
@@ -955,7 +955,7 @@ public class Engine : MonoBehaviour
 						break;
 					case 6:
 						//Currently there is no support for behavior enumeration via variable lists; recursive solution needed.
-						if (e.behaviors.Find(x => x.name == o.behavior.name && x.verb == o.behavior.verb && x.chance == o.behavior.chance && x.arguments.SequenceEqual(o.behavior.arguments)) == null)
+						if (e.behaviors.Find(x => x.name == o.behavior.name && x.verb == o.behavior.verb && x.chance == o.behavior.chance && x.arguments.SequenceEqual(o.behavior.arguments)) == null  && e.name != storyWorld.userEntity)
 						{
 							Behavior temp = new Behavior("","",0);
 							o.behavior.copyTo(temp);
@@ -1009,6 +1009,8 @@ public class Engine : MonoBehaviour
 						
 						if (n != null)
 							n.value = n.value + o.num.value;
+						else
+							e.numbers.Add(new Number(o.num.name, 0 + o.num.value));
 					}
 					else return;
 					break;
@@ -1020,6 +1022,8 @@ public class Engine : MonoBehaviour
 						
 						if (n != null)
 							n.value = n.value - o.num.value;
+						else
+							e.numbers.Add(new Number(o.num.name, 0 - o.num.value));
 					}
 					else return;
 					break;
@@ -1031,6 +1035,8 @@ public class Engine : MonoBehaviour
 						
 						if (n != null)
 							n.value = n.value * o.num.value;
+						else
+							e.numbers.Add(new Number(o.num.name, 0));
 					}
 					else return;
 					break;
@@ -1042,6 +1048,8 @@ public class Engine : MonoBehaviour
 						
 						if (n != null)
 							n.value = n.value / o.num.value;
+						else
+							e.numbers.Add(new Number(o.num.name, 0));
 					}
 					else return;
 					break;
@@ -1053,6 +1061,8 @@ public class Engine : MonoBehaviour
 
 						if (n != null)
 							n.value = o.num.value;
+						else
+							e.numbers.Add(new Number(o.num.name, o.num.value));
 					}
 					else return;
 					break;

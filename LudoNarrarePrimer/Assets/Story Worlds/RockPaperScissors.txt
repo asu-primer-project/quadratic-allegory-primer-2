@@ -54,7 +54,7 @@ storyworld RockPaperScissors
 	
 	verb ThrowRock
 	{
-		icon: throwRockIcon;
+		icontext: "Throw Rock", 13, 147, 224;
 		
 		case player1
 		{
@@ -91,7 +91,7 @@ storyworld RockPaperScissors
 	
 	verb ThrowPaper
 	{
-		icon: throwPaperIcon;
+		icontext: "Throw Paper", 28, 184, 178;
 		
 		preconditions
 		{
@@ -133,7 +133,7 @@ storyworld RockPaperScissors
 	
 	verb ThrowScissors
 	{
-		icon: throwScissorsIcon;
+		icontext: "Throw Scissors", 113, 138, 201;
 		
 		preconditions
 		{
