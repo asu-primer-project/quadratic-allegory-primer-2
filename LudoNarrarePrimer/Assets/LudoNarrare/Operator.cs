@@ -17,6 +17,8 @@ public class Operator
     public Obligation obligation;
     public Goal goal;
     public Behavior behavior;
+	public string subject2;
+	public string numRef2;
 
     /* Functions */
     public Operator()
@@ -31,6 +33,8 @@ public class Operator
         obligation = null;
         goal = null;
         behavior = null;
+		subject2 = "";
+		numRef2 = "";
     }
 
     public void replaceWith(string replace, string with)
@@ -52,12 +56,14 @@ public class Operator
         }
         if (behavior != null)
         {
-            for (int i = 0; i < obligation.arguments.Count; i++)
+            for (int i = 0; i < behavior.arguments.Count; i++)
             {
-                if (obligation.arguments[i] == replace)
-                    obligation.arguments[i] = with;
+                if (behavior.arguments[i] == replace)
+                    behavior.arguments[i] = with;
             }
-        }           
+        }
+		if (subject2 == replace)
+			subject2 = with;
     }
 
 	public int getType()
@@ -122,6 +128,8 @@ public class Operator
 				o.behavior = new Behavior("", "", 0);
                 behavior.copyTo(o.behavior);
 			}
+			o.subject2 = subject2;
+			o.numRef2 = numRef2;
         }
     }
 }

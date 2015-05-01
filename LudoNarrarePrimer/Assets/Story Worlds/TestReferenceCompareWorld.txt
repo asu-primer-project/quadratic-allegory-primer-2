@@ -1,0 +1,66 @@
+storyworld testRefCompare
+{
+	user: A;
+
+	entity A
+	{
+		icontext: "A", 25, 25, 25;
+		string: name, "A";
+		num: id, 0;
+	}
+	
+	entity B
+	{
+		icontext: "B", 25, 25, 25;
+		string: name, "B";
+		num: id, 1;
+	}
+	
+	entity C
+	{
+		icontext: "C", 25, 25, 25;
+		string: name, "C";
+		num: id, 2;
+	}
+	
+	input
+	{
+		text: "Do what?";
+	}
+	
+	verb Verb1
+	{
+		icontext: "1", 50, 50, 50;
+		
+		argument ?target
+		{
+			where: ?target.name != string ?me.name;
+		}
+		
+		case d
+		{
+			page verb
+			{
+				text:  "?target.name is not ?me.name.";
+			}
+		}
+	}
+	
+	verb Verb2
+	{
+		icontext: "2", 50, 50, 50;
+		
+		argument ?target
+		{
+			where: ?target.id != num ?me.id;
+		}
+		
+		case d
+		{
+			page verb
+			{
+				text:  "?target.name is not ?me.name.";
+			}
+		}
+	}
+}

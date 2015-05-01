@@ -607,6 +607,7 @@ public class StoryWorldLoader : MonoBehaviour
 		
 		if (getToken() == 6)
 		{
+			print("A");
 			getToken();
 			bool gotAO = false;
 
@@ -625,6 +626,7 @@ public class StoryWorldLoader : MonoBehaviour
 
 			if (type == 0 || type == 3)
 			{
+				print("A");
 				c.conditionSubject = currentToken;
 				int firstType = type;
 				getToken();
@@ -701,6 +703,7 @@ public class StoryWorldLoader : MonoBehaviour
 				}
 				else if (type == 19)
 				{
+					print("A");
 					if (getToken() == 0)
 					{
 						tempRef = currentToken;
@@ -745,19 +748,59 @@ public class StoryWorldLoader : MonoBehaviour
 								}
 								else
 								{
-									c.relateRef = tempRef;
-									c.relateObject = currentToken;
-									
-									if (getToken() == 7)
+									string name = currentToken;
+									getToken();
+								
+									if (type == 7)
+									{
+										c.relateRef = tempRef;
+										c.relateObject = name;
 										return false;
+									}
+									else if (type == 0 || type == 3)
+									{
+										if (name == "num")
+										{
+											c.numRef = tempRef;
+											c.subject2 = currentToken;
+
+											if (getToken() == 19)
+											{
+												if (getToken() == 0)
+												{
+													c.numRef2 = currentToken;
+
+													if (getToken() == 7)
+														return false;
+												}
+											}
+										}
+										else if (name == "string")
+										{
+											c.stringRef = tempRef;
+											c.subject2 = currentToken;
+
+											if (getToken() == 19)
+											{
+												if (getToken() == 0)
+												{
+													c.stringRef2 = currentToken;
+
+													if (getToken() == 7)
+														return false;
+												}
+											}
+										}
+									}
 								}
 							}
 							else if (type == 1)
 							{
 								c.stringRef = tempRef;
 								c.stringCompare = currentToken;
-								
-								if (getToken() == 7)
+
+								getToken();
+								if (type == 7)
 									return false;
 							}
 							else if (type == 2)
@@ -774,11 +817,12 @@ public class StoryWorldLoader : MonoBehaviour
 							else
 								return true;
 						}
-						else if (getToken() == 11)
+						else if (type == 11)
 						{
 							c.comparison = 4;
-							
-							if (getToken() == 2)
+
+							getToken();
+							if (type == 2)
 							{
 								c.numRef = tempRef;
 								if (Int32.TryParse(currentToken, out c.numCompare))
@@ -786,15 +830,38 @@ public class StoryWorldLoader : MonoBehaviour
 									if (getToken() == 7)
 										return false;
 								}
-								else
-									return true;
 							}
+							else if (type == 0)
+							{
+								if (currentToken == "num")
+								{
+									getToken();
+									if (type == 0 || type == 3)
+									{
+										c.numRef = tempRef;
+										c.subject2 = currentToken;
+										
+										if (getToken() == 19)
+										{
+											if (getToken() == 0)
+											{
+												c.numRef2 = currentToken;
+												
+												if (getToken() == 7)
+													return false;
+											}
+										}
+									}
+								}
+							}
+							return true;
 						}
-						else if (getToken() == 12)
+						else if (type == 12)
 						{
 							c.comparison = 5;
 							
-							if (getToken() == 2)
+							getToken();
+							if (type == 2)
 							{
 								c.numRef = tempRef;
 								if (Int32.TryParse(currentToken, out c.numCompare))
@@ -802,15 +869,38 @@ public class StoryWorldLoader : MonoBehaviour
 									if (getToken() == 7)
 										return false;
 								}
-								else
-									return true;
 							}
+							else if (type == 0)
+							{
+								if (currentToken == "num")
+								{
+									getToken();
+									if (type == 0 || type == 3)
+									{
+										c.numRef = tempRef;
+										c.subject2 = currentToken;
+										
+										if (getToken() == 19)
+										{
+											if (getToken() == 0)
+											{
+												c.numRef2 = currentToken;
+												
+												if (getToken() == 7)
+													return false;
+											}
+										}
+									}
+								}
+							}
+							return true;
 						}
-						else if (getToken() == 13)
+						else if (type == 13)
 						{
 							c.comparison = 6;
 							
-							if (getToken() == 2)
+							getToken();
+							if (type == 2)
 							{
 								c.numRef = tempRef;
 								if (Int32.TryParse(currentToken, out c.numCompare))
@@ -818,15 +908,38 @@ public class StoryWorldLoader : MonoBehaviour
 									if (getToken() == 7)
 										return false;
 								}
-								else
-									return true;
 							}
+							else if (type == 0)
+							{
+								if (currentToken == "num")
+								{
+									getToken();
+									if (type == 0 || type == 3)
+									{
+										c.numRef = tempRef;
+										c.subject2 = currentToken;
+										
+										if (getToken() == 19)
+										{
+											if (getToken() == 0)
+											{
+												c.numRef2 = currentToken;
+												
+												if (getToken() == 7)
+													return false;
+											}
+										}
+									}
+								}
+							}
+							return true;
 						}
-						else if (getToken() == 14)
+						else if (type == 14)
 						{
 							c.comparison = 7;
 							
-							if (getToken() == 2)
+							getToken();
+							if (type == 2)
 							{
 								c.numRef = tempRef;
 								if (Int32.TryParse(currentToken, out c.numCompare))
@@ -834,9 +947,32 @@ public class StoryWorldLoader : MonoBehaviour
 									if (getToken() == 7)
 										return false;
 								}
-								else
-									return true;
 							}
+							else if (type == 0)
+							{
+								print("A");
+								if (currentToken == "num")
+								{
+									getToken();
+									if (type == 0 || type == 3)
+									{
+										c.numRef = tempRef;
+										c.subject2 = currentToken;
+										print("A");
+										if (getToken() == 19)
+										{
+											if (getToken() == 0)
+											{
+												c.numRef2 = currentToken;
+												print("A");
+												if (getToken() == 7)
+													return false;
+											}
+										}
+									}
+								}
+							}
+							return true;
 						}
 						else
 							return true;
@@ -1332,52 +1468,99 @@ public class StoryWorldLoader : MonoBehaviour
 					else
 					{
 						o.num = new Number(currentToken, 0);
+						print("A");
 						getToken();
-
 						if (type == 15)
 						{
 							o.op = 2;
-
-							if (getToken() == 2)
+							getToken();
+							if (type == 2)
 							{
 								if (Int32.TryParse(currentToken, out o.num.value))
 								{
 									if (getToken() == 7)
 										return false;
+								}
+							}
+							else if (type == 0 || type == 3)
+							{
+								o.subject2 = currentToken;
+
+								if (getToken() == 19)
+								{
+									if (getToken() == 0)
+									{
+										o.numRef2 = currentToken;
+
+										if (getToken() == 7)
+											return false;
+									}
 								}
 							}
 						}
 						else if (type == 16)
 						{
 							o.op = 3;
-
-							if (getToken() == 2)
+							print("A");
+							getToken();
+							if (type == 2)
 							{
 								if (Int32.TryParse(currentToken, out o.num.value))
 								{
 									if (getToken() == 7)
 										return false;
+								}
+							}
+							else if (type == 0 || type == 3)
+							{
+								o.subject2 = currentToken;
+								print("A");
+								if (getToken() == 19)
+								{
+									if (getToken() == 0)
+									{
+										print("A");
+										o.numRef2 = currentToken;
+										
+										if (getToken() == 7)
+											return false;
+									}
 								}
 							}
 						}
 						else if (type == 17)
 						{
 							o.op = 4;
-
-							if (getToken() == 2)
+							getToken();
+							if (type == 2)
 							{
 								if (Int32.TryParse(currentToken, out o.num.value))
 								{
 									if (getToken() == 7)
 										return false;
+								}
+							}
+							else if (type == 0 || type == 3)
+							{
+								o.subject2 = currentToken;
+								
+								if (getToken() == 19)
+								{
+									if (getToken() == 0)
+									{
+										o.numRef2 = currentToken;
+										
+										if (getToken() == 7)
+											return false;
+									}
 								}
 							}
 						}
 						else if (type == 18)
 						{
 							o.op = 5;
-
-							if (getToken() == 2)
+							getToken();
+							if (type == 2)
 							{
 								if (Int32.TryParse(currentToken, out o.num.value))
 								{
@@ -1385,17 +1568,47 @@ public class StoryWorldLoader : MonoBehaviour
 										return false;
 								}
 							}
+							else if (type == 0 || type == 3)
+							{
+								o.subject2 = currentToken;
+								
+								if (getToken() == 19)
+								{
+									if (getToken() == 0)
+									{
+										o.numRef2 = currentToken;
+										
+										if (getToken() == 7)
+											return false;
+									}
+								}
+							}
 						}
 						else if (type == 9)
 						{
 							o.op = 6;
-
-							if (getToken() == 2)
+							getToken();
+							if (type == 2)
 							{
 								if (Int32.TryParse(currentToken, out o.num.value))
 								{
 									if (getToken() == 7)
 										return false;
+								}
+							}
+							else if (type == 0 || type == 3)
+							{
+								o.subject2 = currentToken;
+								
+								if (getToken() == 19)
+								{
+									if (getToken() == 0)
+									{
+										o.numRef2 = currentToken;
+										
+										if (getToken() == 7)
+											return false;
+									}
 								}
 							}
 						}

@@ -23,6 +23,9 @@ public class Condition
 	public int numCompare;
 	public string stringCompare;
 	public string variableObject;
+	public string subject2;
+	public string stringRef2;
+	public string numRef2;
 
     /* Functions */
     public Condition()
@@ -43,6 +46,9 @@ public class Condition
 		numCompare = 0;
 		stringCompare = "";
 		variableObject = "";
+		subject2 = "";
+		stringRef2 = "";
+		numRef2 = "";
     }
 
     public void replaceWith(string replace, string with)
@@ -51,11 +57,17 @@ public class Condition
             conditionSubject = with;
         if (relateObject == replace)
             relateObject = with;
+		if (subject2 == replace)
+			subject2 = with;
     }
 
 	public int getType()
 	{
-		if (tagRef != "")
+		if (numRef2 != "")
+			return 8;
+		else if (stringRef2 != "")
+			return 9;
+		else if (tagRef != "")
 			return 0;
 		else if (relateRef != "")
 			return 1;
@@ -95,6 +107,9 @@ public class Condition
 			c.numCompare = numCompare;
 			c.stringCompare = stringCompare;
 			c.variableObject = variableObject;
+			c.subject2 = subject2;
+			c.stringRef2 = stringRef2;
+			c.numRef2 = numRef2;
         }
     }
 }

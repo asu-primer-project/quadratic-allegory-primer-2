@@ -1,0 +1,500 @@
+//Three Little Pigs Demo Story World
+//Used to show a very basic story world that mixes proc-gen and interactive to have dynamic results.
+//Also demonstrates the subtle integration of educational material into these types of worlds, in this
+//case namely education in basic arithmetic and finance. Subversive and dark in that the user controls
+//the wolf trying to eat the pigs.
+
+storyworld ThreeLittlePigs
+{
+	user: Wolf;
+	
+	beginning
+	{
+		page title
+		{
+			text: "The Three Little Pigs";
+		}
+		
+		page beginA
+		{
+			text: "There once lived three little pigs.";
+		}
+		
+		page beginB
+		{
+			text: "One was called Little Pig.";
+		}
+		
+		page beginC
+		{
+			text: "Another was called Littler Pig.";
+		}
+		
+		page beginD
+		{
+			text: "The last was called Littlest Pig.";
+		}
+		
+		page beginE
+		{
+			text: "These three pigs knew they lived in wolf country, so they decided to build homes for protection.";
+		}
+	}
+	
+	input
+	{
+		text: "What does Wolf do?";
+	}
+	
+	//Abstract
+	entity Story
+	{
+		tag: story;
+	}
+	
+	//Characters
+	entity Wolf
+	{
+		string: name, "Wolf";
+		num: money, 20;
+		tag: wolf;
+	}
+	
+	entity LittlestPig
+	{
+		string: name, "Littlest Pig";
+		num: money, 10;
+		tag: pig;
+		tag: active;
+		relate: home, LittlestPigHouse;
+		
+		behavior: BuySupplies, BuySupplies, 8, any;
+		behavior: FindMoney, FindMoney, 1, any;
+		behavior: CheckWallet, CheckWallet, 3, any;
+		behavior: AskForSuppliesPrice, AskForSuppliesPrice, 3, any;
+	}
+	
+	entity LittlerPig
+	{
+		string: name, "Littler Pig";
+		num: money, 10;
+		tag: pig;
+		tag: active;
+		relate: home, LittlerPigHouse;
+		
+		behavior: BuySupplies, BuySupplies, 8, any;
+		behavior: FindMoney, FindMoney, 2, any;
+		behavior: CheckWallet, CheckWallet, 1, any;
+		behavior: AskForSuppliesPrice, AskForSuppliesPrice, 1, any;
+	}
+	
+	entity LittlePig
+	{
+		string: name, "Little Pig";
+		num: money, 10;
+		tag: pig;
+		tag: active;
+		relate: home, LittlePigHouse;
+		
+		behavior: BuySupplies, BuySupplies, 8, any;
+		behavior: FindMoney, FindMoney, 1, any;
+		behavior: CheckWallet, CheckWallet, 2, any;
+		behavior: AskForSuppliesPrice, AskForSuppliesPrice, 2, any;
+	}
+	
+	//Places
+	entity Store
+	{
+		tag: place;
+		string: name, "the store";
+	}
+	
+	entity LittlestPigHouse
+	{
+		tag: place;
+		tag: home;
+		string: name, "Littlest Pig's house";
+	}
+	
+	entity LittlerPigHouse
+	{
+		tag: place;
+		tag: home;
+		string: name, "Littler Pig's house";
+	}
+	
+	entity LittlePigHouse
+	{
+		tag: place;
+		tag: home;
+		string: name, "Little Pig's house";
+	}
+	
+	//Supplies
+	entity Wood
+	{
+		string: name, "wood";
+		num: cost, 5;
+		tag: supplies;
+	}
+	
+	entity Straw
+	{
+		string: name, "straw";
+		num: cost, 2;
+		tag: supplies;
+	}
+	
+	entity Brick
+	{
+		string: name,"brick";
+		num: cost, 10;
+		tag: supplies;
+	}	
+	
+	entity Glass
+	{
+		string: name, "glass";
+		num: cost, 20;
+		tag: supplies;
+	}
+	
+	entity Steel
+	{
+		string: name, "steel";
+		num: cost, 30;
+		tag: supplies;
+	}
+	
+	entity Diamond
+	{
+		string: name, "diamond";
+		num: cost, 1000000;
+		tag: supplies;
+	}
+	
+	entity Gold
+	{
+		string: name, "gold";
+		num: cost, 1000000;
+		tag: supplies;
+	}
+	
+	entity Canvas
+	{
+		string: name, "canvas";
+		num: cost, 5;
+		tag: supplies;
+	}
+	
+	entity Cardboard
+	{
+		string: name, "cardboard";
+		num: cost, 2;
+		tag: supplies;
+	}
+	
+	entity Air
+	{
+		string: name, "air";
+		num: cost, 10;
+		tag: supplies;
+	}
+	
+	//Traps
+	entity Candy
+	{
+		string: name, "fancy candy";
+		num: cost, 10;
+		tag: trap;
+		tag: item;
+	}
+	
+	entity Apple
+	{
+		string: name, "apple";
+		num: cost, 2;
+		tag: trap;		
+		tag: item;
+	}
+	
+	entity Pork
+	{
+		string: name, "pork";
+		num: cost, 7;
+		tag: trap;		
+		tag: item;
+	}
+	
+	entity Cheese
+	{
+		string: name, "cheese";
+		num: cost, 5;
+		tag: trap;		
+		tag: item;
+	}
+	
+	//Tools
+	entity Scissors
+	{
+		string: name, "scissors";
+		num: cost, 3;
+		tag: tool;		
+		tag: item;
+	}
+	
+	entity Vacuum	
+	{
+		string: name, "vacuum";
+		num: cost, 7;
+		tag: tool;		
+		tag: item;
+	}
+	
+	entity TNT
+	{
+		string: name, "TNT";
+		num: cost, 20;
+		tag: tool;				
+		tag: item;
+	}
+	
+	entity Sledgehammer
+	{
+		string: name, "sledgehammer";
+		num: cost, 10;
+		tag: tool;		
+		tag: item;
+	}
+	
+	entity Flamethrower
+	{
+		string: name, "flamethrower";
+		num: cost, 30;
+		tag: tool;		
+		tag: item;
+	}
+	
+	entity NuclearWarhead
+	{
+		string: name, "nuclear warhead";
+		num: cost, 1000000;
+		tag: tool;
+		tag: item;
+	}
+	
+	//Money
+	entity dollar5
+	{
+		string: name, "five dollars";
+		num: value, 5;
+		tag: money;
+	}
+	
+	entity dollar10
+	{
+		string: name, "ten dollars";
+		num: value, 10;
+		tag: money;
+	}
+
+	entity dollar20
+	{
+		string: name, "twenty dollars";
+		num: value, 20;
+		tag: money;
+	}
+	
+	entity dollar1000000
+	{
+		string: name, "one million dollars";
+		num: value, 1000000;
+		tag: money;
+	}
+	
+	//Verbs
+	verb Update
+	{
+		variable ?pigs
+		{
+			where: ?pigs has tag pig;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag story;
+			where: Wolf missing tag active;
+		}
+		
+		case WolfBecomesActive
+		{
+			where: all ?pigs missing behavior BuySupplies;
+			where: all ?pigs missing behavior BuildHouse;
+			
+			do: Wolf add tag active;
+			do: ?pigs remove behavior FindMoney;
+			do: ?pigs remove behavior CheckWallet;
+			do: ?pigs remove behavior AskForSuppliesPrice;
+			
+			page verb 
+			{
+				text: "Wolf wakes up. He is hungry. How about some pig?";
+			}
+		}
+	}
+	
+	verb BuySuppliesOld
+	{
+		argument ?supplies
+		{
+			where: ?supplies has tag supplies;
+			where: ?supplies missing tag bought;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+		}
+		
+		case buy
+		{
+			do: ?me add relate has, ?supplies;
+			do: ?me remove behavior BuySupplies;
+			do: ?me add behavior BuildHouse, BuildHouse, 8;
+			do: ?supplies add tag bought;
+			
+			page verb
+			{
+				text: "?me.name bought some ?supplies.name.";
+			}
+		}
+	}
+	
+	verb BuySupplies
+	{
+		argument ?supplies
+		{
+			where: ?supplies has tag supplies;
+			where: ?supplies missing tag bought;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+		}
+		
+		case enoughMoney
+		{
+			where: ?me.money >= num ?supplies.cost;
+			
+			do: ?me money - ?supplies.cost;
+			do: ?me add relate has, ?supplies;
+			do: ?me add behavior BuildHouse, BuildHouse, 7;
+			do: ?supplies add tag bought;
+			
+			page verb
+			{
+				text: "?me.name spent $?supplies.cost to buy the ?supplies.name. He now only has $?me.money";
+			}
+		}
+		
+		case notEnoughMoney
+		{
+			where: ?me.money < num ?supplies.cost;
+			
+			page verb
+			{
+				text: "?me.name tried to buy the ?supplies.name, but it was too expensive at $?supplies.cost.";
+			}
+		}
+	}
+	
+	verb BuildHouse
+	{
+		variable ?supplies
+		{
+			where: ?me.has = ?supplies;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+		}
+		
+		case build
+		{
+			do: ?me add relate inHouse, ?supplies;
+			do: ?me remove relate has, ?supplies;
+			do: ?me remove behavior BuildHouse;
+			
+			page verb
+			{
+				text: "?me.name built a house of ?supplies.name.";
+			}
+		}
+	}
+	
+	verb FindMoney
+	{
+		argument ?money
+		{
+			where: ?money has tag money;
+		}
+		
+		preconditions
+		{
+			where: ?me missing relate inHouse;
+			where: ?me has tag pig;
+		}
+		
+		case find5
+		{
+			where: ?money.value = 5;
+			
+			do: ?me money + 5;
+			
+			page verb
+			{
+				text: "?me.name found ?money.name while walking around.";
+			}
+		}
+		
+		case find10
+		{
+			where: ?money.value = 10;
+			
+			do: ?me money + 10;
+			
+			page verb
+			{
+				text: "?me.name found ?money.name while walking around.";
+			}
+		}
+		
+		case find20
+		{
+			where: ?money.value = 20;
+			
+			do: ?me money + 20;
+			
+			page verb
+			{
+				text: "?me.name found ?money.name while walking around.";
+			}
+		}
+		
+		case find1000000
+		{
+			where: ?money.value = 1000000;
+			
+			do: ?me money + 1000000;
+			
+			page verb
+			{
+				text: "?me.name found ?money.name while walking around.";
+			}
+		}
+	}
+	
+
+}

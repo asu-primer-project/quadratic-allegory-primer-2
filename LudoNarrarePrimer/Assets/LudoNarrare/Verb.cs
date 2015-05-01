@@ -33,7 +33,7 @@ public class Verb
     public void applyPath(List<string> path)
     {
         if (path != null)
-            for (int i = 1; i < path.Count; i++)
+            for (int i = 0; i < path.Count; i++)
                 replaceWith(arguments[i].name, path[i]);
     }
 

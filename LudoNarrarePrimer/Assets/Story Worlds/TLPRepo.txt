@@ -1,0 +1,362 @@
+TLP Repository
+
+	verb Goto
+	{
+		argument ?to
+		{
+			where: ?to has tag place;
+			where: ?me.at != ?to;
+			where: ?to missing tag destroyed;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me has tag active;
+		}
+		
+		case goto
+		{
+			do: ?me add relate at, ?to;
+			
+			page verb
+			{
+				text: "The wolf runs off towards ?to.name";
+			}
+		}
+	}
+	
+	verb CheckWallet
+	{
+		preconditions
+		{
+			where: ?me has num money;
+			where: ?me has tag active;
+		}
+		
+		case someAmount
+		{
+			where: ?me.money > 0;
+			
+			do: ?me remove behavior CheckWallet;
+			
+			page verb
+			{
+				text: "?me.name has $?me.money in their wallet.";
+			}
+		}
+		
+		case noAmount
+		{
+			where: ?me.money <= 0;
+			
+			do: ?me remove behavior CheckWallet;
+			
+			page verb
+			{
+				text: "?me.name has no money in their wallet";
+			}
+		}
+	}
+	
+	verb AskForSuppliesPrice
+	{
+		argument ?supplies
+		{
+			where: ?supplies has tag supplies;
+			where: ?supplies missing tag bought;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+			where: ?me has behavior BuySupplies;
+		}
+		
+		case tell
+		{
+			do: ?me remove behavior AskForSuppliesPrice;
+			
+			page verb
+			{
+				text: "The ?supplies.name costs $?supplies.cost.";
+			}
+		}
+	}
+
+	verb AskForItemPrice
+	{
+		argument ?tool
+		{
+			where: ?tool has tag item;
+			where: ?tool missing tag bought;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me.at = Store;
+			where: ?me has tag active;
+		}
+		
+		case tell
+		{
+			page verb
+			{
+				text: "The ?tool.name costs $?tool.cost.";
+			}
+		}
+	}
+	
+	verb BuyItem
+	{
+		argument ?tool
+		{
+			where: ?tool has tag item;
+			where: ?tool missing tag bought;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me.at = Store;
+			where: ?me has tag active;
+		}
+		
+		case enoughMoney
+		{
+			where: ?me.money >= num ?tool.cost;
+			
+			do: ?me money - ?tool.cost;
+			do: ?me add relate has, ?tool;
+			do: ?tool add tag bought;
+			
+			page verb
+			{
+				text: "?me.name spent $?tool.cost to buy the ?tool.name. He now only has $?me.money";
+			}
+		}
+		
+		case notEnoughMoney
+		{
+			where: ?me.money < num ?tool.cost;
+			
+			page verb
+			{
+				text: "?me.name tried to buy the ?tool.name, but it was too expensive at $?tool.cost.";
+			}
+		}
+	}
+
+	verb DestroyHome
+	{
+		variable ?home
+		{
+			where: ?me.at = ?home;
+			where: ?home has tag home;
+		}
+		
+		variable ?pig
+		{
+			where: ?pig has tag pig;
+			where: ?pig.home = one ?home;
+		}
+		
+		variable ?pigs
+		{
+			where: ?pigs has tag pig;
+		}
+		
+		variable ?material
+		{
+			where: ?material has tag supplies;
+			where: ?pig.inHouse = ?material;
+		}
+		
+		argument ?tool
+		{
+			where: ?tool has tag tool;
+			where: ?me.has = ?tool;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me has tag active;
+			where: ?material != null;
+		}
+		
+			where: ?tool.name = "scissors";
+			where: ?tool.name = "vacuum";
+			where: ?tool.name = "TNT";
+			where: ?tool.name = "sledgehammer";
+			where: ?tool.name = "flamethrower";
+			where: ?tool.name = "nuclear warhead";
+		
+		case failWood
+		{
+			where: ?material.name = "wood";
+			
+			page verb
+			{
+				text: "?me.name tried to destroy ?pig.name's house of ?material.name with the ?tool.name, but he could not.";
+			}
+		}
+		
+		case destoryWood
+		{
+			where: ?material.name = "wood";
+			
+			do: ?home add tag destroyed;
+			do: ?pig remove relate inHouse, ?material;
+			do: ?pigs add behavior Wait, Wait, 2;
+			do: ?pigs add behavior RunAway, RunAway, 2;
+			do: ?pigs add tag exposed;
+			
+			page verb
+			{
+				text: "?me.name destroyed ?pig.name's house of ?material.name with the ?tool.name, leaving him exposed.";
+			}
+		}
+		
+		case obliterateWood
+		{
+			where: ?material.name = "wood";
+			
+			do: ?home add tag destroyed;
+			do: ?pigs add tag dead;
+			
+			page verb
+			{
+				text: "?me.name obliterated ?pig.name's house of ?material.name with the ?tool.name, leaving nothing.";
+			}
+		}
+		
+		case failStraw
+		{
+			
+		}
+		
+		case destroyStraw
+		{
+			
+		}
+		
+		case obliterateStraw
+		{
+			
+		}
+		
+		case failBrick
+		{
+			
+		}
+		
+		case destoryBrick
+		{
+			
+		}
+		
+		case obliterateBrick
+		{
+			
+		}
+		
+		case failGlass
+		{
+			
+		}
+		
+		case failSteel
+		{
+			
+		}
+		
+		case failDiamond
+		{
+			
+		}
+		
+		case failGold
+		{
+			
+		}
+		
+		case failCanvas
+		{
+			
+		}
+		
+		case failCardboard
+		{
+			
+		}
+		
+		case obliterateAir
+		{
+			
+		}
+	}
+	
+	verb SetTrap
+	{
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me has tag active;
+		}	
+	}
+	
+	verb StealMoney
+	{
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me has tag active;
+		}	
+	}
+	
+	verb Eat
+	{
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me has tag active;
+		}
+	}
+	
+	verb RunAway
+	{
+		preconditions
+		{
+			where: ?me has tag pig;
+		}	
+	}
+	
+	verb FallForTrap
+	{
+		preconditions
+		{
+			where: ?me has tag pig;
+		}
+	}
+	
+	ending EatNoPigs
+	{
+		
+	}
+	
+	ending EatOnePig
+	{
+		
+	}
+	
+	ending EatTwoPigs
+	{
+		
+	}
+	
+	ending EatAllPigs
+	{
+		
+	}

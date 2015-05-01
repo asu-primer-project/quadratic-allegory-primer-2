@@ -16,7 +16,7 @@ public class Obligation
         name = _name;
         verb = _verb;
         arguments = new List<string>();
-        arguments.Add("?me");
+        //arguments.Add("?me");
     }
 
     public void copyTo(Obligation ob)

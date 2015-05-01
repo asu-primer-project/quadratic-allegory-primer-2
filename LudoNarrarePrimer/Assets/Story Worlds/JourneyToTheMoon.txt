@@ -78,34 +78,50 @@ storyworld JourneyToTheMoon
 	
 	entity Linus
 	{
+		icontext: "Linus", 35, 148, 244;
 		tag: person;
 		tag: canWalk;
 		string: name, "Linus";
 		relate: at, Crater;
+		
+		num: mood, 3;
+		num: skill, 2;
 	}
 	
 	entity April
 	{
+		icontext: "April", 244, 35, 178;
 		tag: person;
 		tag: canWalk;
 		string: name, "April";
 		relate: at, Crater;
+		
+		num: mood, -1;
+		num: skill, 3;
 	}
 	
 	entity Whitney
 	{
+		icontext: "Whitney", 241, 198, 26;
 		tag: person;
 		tag: canWalk;
 		string: name, "Whitney";
 		relate: at, Crater;
+		
+		num: mood, 4;
+		num: skill, 0;
 	}
 	
 	entity Randal
 	{
+		icontext: "Randal", 90, 196, 32;
 		tag: person;
 		tag: canWalk;
 		string: name, "Randal";
 		relate: at, Crater;
+		
+		num: mood, -3;
+		num: skill, 5;
 	}
 	
 	//Places
@@ -237,6 +253,49 @@ storyworld JourneyToTheMoon
 		relate: connected, MoonBaseLivingQuarters;
 	}
 	
+	//Abstract
+	//Insults
+	entity Insult1
+	{
+		icontext: "Poopy Face", 112, 64, 21;
+		tag: insult;
+		tag: insult1;
+	}
+	
+	entity Insult2
+	{
+		icontext: "Dumb Baby", 125, 208, 255;
+		tag: insult;
+		tag: insult2;
+	}
+	
+	entity Insult3
+	{
+		icontext: "Disgusting Jerk", 57, 88, 23;
+		tag: insult;
+		tag: insult3;
+	}
+	
+	entity Insult4
+	{
+		icontext: "Mustard-Stained Underpants", 181, 145, 0;
+		tag: insult;
+		tag: insult4;
+	}
+	
+	entity Jokes
+	{
+		tag: canyonJoke;  
+		tag: craterJoke;
+		tag: personFrozenJoke;
+		tag: flatscapesJoke;
+		tag: hillsJoke;
+		tag: pitsJoke;
+		tag: hallwayJoke;
+		tag: labJoke;
+		tag: hiddenStorageJoke;
+	}
+	
 	////////////////////////////////////////////////////
 	// Verbs //////////////////////////////////////////
 	////////////////////////////////////////////////////
@@ -261,15 +320,120 @@ storyworld JourneyToTheMoon
 	
 	//}
 	
-	//verb Insult
-	//{
+	verb Insult
+	{
+		icontext: "Insult", 255, 219, 20;
 	
-	//}
+		variable ?myLocation
+		{
+			where: ?myLocation has tag place;
+			where: ?me.at = ?myLocation;
+		}
+
+		argument ?jerk
+		{
+			where: ?jerk has tag person;
+			where: ?jerk.at = ?myLocation;
+			where: ?jerk.name != string ?me.name;
+		}
+		
+		argument ?insult
+		{
+			where: ?insult has tag insult;
+		}
+
+		case Insult1
+		{
+			where: ?insult has tag insult1;
+			
+			page verb
+			{
+				text: "?me calls ?jerk a poopy face.";
+			}
+		}
+		
+		case Insult2
+		{
+			where: ?insult has tag insult2;
+			
+			page verb
+			{
+				text: "?me calls ?jerk a dumb baby.";
+			}
+		}
+		
+		case Insult3
+		{
+			where: ?insult has tag insult3;
 	
-	//verb HighFive
-	//{
+			page verb
+			{
+				text: "?me calls ?jerk a disgusting jerk.";
+			}
+		}
+		
+		case Insult4
+		{
+			where: ?insult has tag insult4;
+			
+			page verb
+			{
+				text: "?me says ?jerk is worse than mustard-stained underpants.";
+			}
+		}
+		
+		discriminator userInRoom
+		{
+			where: Linus.at = ?myLocation;
+		}		
+	}
 	
-	//}
+	verb HighFive
+	{
+		icontext: "High Five", 239, 134, 40;
+	
+		variable ?myLocation
+		{
+			where: ?myLocation has tag place;
+			where: ?me.at = ?myLocation;
+		}
+	
+		argument ?buddy
+		{
+			where: ?buddy has tag person;
+			where: ?buddy.at = ?myLocation;
+		}
+		
+		preconditions
+		{
+			where: ?me.skill > 1;
+		}
+		
+		case hit
+		{
+			where: ?buddy.skill > 1;
+			
+			page verb
+			{
+				text: "?me high fives ?buddy and it is totally awesome!";
+			}
+		}
+		
+		case miss
+		{
+			where: ?buddy.skill <= 0;
+			
+			page verb
+			{
+				text: "?me tries to high five ?buddy but it clumsily misses.";
+			}
+		}
+		
+		discriminator userInRoom
+		{
+			where: Linus.at = ?myLocation;
+		}		
+	}
 	
 	verb Goto
 	{
@@ -304,6 +468,16 @@ storyworld JourneyToTheMoon
 				text: "?me.name goes from ?fromLocation.name to ?toLocation.name.";
 			}
 		}	
+		
+		discriminator userInRoom
+		{
+			where: Linus.at = ?fromLocation;
+		}
+		
+		discriminator userInNextRoom
+		{
+			where: Linus.at = ?toLocation;
+		}
 	}
 	
 	//verb MakeChemical
@@ -396,10 +570,159 @@ storyworld JourneyToTheMoon
 	
 	//}
 
-	//verb Joke
-	//{
+	verb Joke
+	{
+		icontext: "Joke", 100, 40, 174;
 	
-	//}
+		variable ?myLocation
+		{
+			where: ?myLocation has tag place;
+			where: ?me.at = ?myLocation;
+		}
+	
+		variable ?allInArea
+		{
+			where: ?allInArea has tag person;
+			where: ?allInArea.at = ?myLocation;
+		}
+	
+		preconditions
+		{
+			//where: ?me.mood > 1;
+		}
+		
+		case canyonJoke
+		{
+			where: ?me.at = Canyon;
+			where: Jokes has tag canyonJoke;
+			
+			do: Jokes remove tag canyonJoke;
+			do: ?allInArea mood + 2;
+			
+			page verb
+			{
+				text: "?me jokes, 'Something smells a bit too cheesey!'";
+			}
+		}
+		
+		case craterJoke
+		{
+			where: ?me.at = Crater;
+			where: Jokes has tag craterJoke;
+			
+			do: Jokes remove tag craterJoke;
+			do: ?allInArea mood + 2;
+			
+			page verb
+			{
+				text: "?me jokes, 'I can see my house from here!'";
+			}			
+		}
+		
+		case personFrozenJoke
+		{
+			where: one ?allInArea has tag frozen;
+			where: Jokes has tag craterJoke;
+			
+			do: Jokes remove tag craterJoke;
+			do: ?allInArea mood + 2;
+			
+			page verb
+			{
+				text: "?me jokes, 'Looks like someone is a bit chilly!'";
+			}			
+		}
+		
+		case flatscapesJoke
+		{
+			where: ?me.at = Flatscape;
+			where: Jokes has tag flatscapesJoke;
+			where: ?allInArea != null;
+			
+			do: Jokes remove tag flatscapesJoke;
+			do: ?allInArea mood + 2;
+			
+			page verb
+			{
+				text: "?me jokes, 'This area is flat, but not as flat as ?allInArea's humor!'";
+			}	
+		}
+		
+		case hillsJoke
+		{
+			where: ?me.at = Hills;
+			where: Jokes has tag hillsJoke;
+			
+			do: Jokes remove tag hillsJoke;
+			do: ?allInArea mood + 2;
+			
+			page verb
+			{
+				text: "?me jokes, 'Look, the moon has goosebumps!'";
+			}			
+		}
+		
+		case pitsJoke
+		{
+			where: ?me.at = Pits;
+			where: Jokes has tag pitsJoke;
+			
+			do: Jokes remove tag pitsJoke;
+			do: ?allInArea mood + 2;
+			
+			page verb
+			{
+				text: "?me jokes, 'Don't fall in. You might end up in China!'";
+			}	
+		}
+		
+		case hallwayJoke
+		{
+			where: ?me.at = MoonBaseHallway;
+			where: Jokes has tag hallwayJoke;
+			
+			do: Jokes remove tag hallwayJoke;
+			do: ?allInArea mood + 2;
+			
+			page verb
+			{
+				text: "?me jokes, 'Not the most spacious home, huh?'";
+			}	
+		}
+		
+		case labJoke
+		{
+			where: ?me.at = MoonBaseLab;
+			where: Jokes has tag labJoke;
+			
+			do: Jokes remove tag labJoke;
+			do: ?allInArea mood + 2;
+			
+			page verb
+			{
+				text: "?me jokes, 'Let us make a science!'";
+			}	
+		}
+		
+		case hiddenStorageJoke
+		{
+			where: ?me.at = MoonBaseHiddenStorage;
+			where: Jokes has tag hiddenStorageJoke;
+			
+			do: Jokes remove tag hiddenStorageJoke;
+			do: ?allInArea mood + 2;
+			
+			page verb
+			{
+				text: "?me jokes, 'Why is this storage hidden? Is the owner afraid of looters?'";
+			}	
+		}
+		
+		discriminator userInRoom
+		{
+			where: Linus.at = ?myLocation;
+		}
+	}
 	
 	//verb Trip
 	//{
