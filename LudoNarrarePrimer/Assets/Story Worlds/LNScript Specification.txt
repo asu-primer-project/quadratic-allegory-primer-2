@@ -1,0 +1,393 @@
+V2.0
+
+LNScript Tokens
+-------------------
+VALUES
+string: "+All^*+"
+word: [a-z]U[A-Z]U_^++([a-z]U[A-Z]U_U[0-9]UEmpty)^*
+integer: -[0-9]^+U[0-9]^+
+variable: ?+word
+
+KEYWORDS
+storyworld
+user
+beginning
+page
+draw
+text
+entity
+tag
+relate
+num
+string
+obligation
+goal
+behavior
+image
+verb
+variable
+input
+preconditions
+case
+discriminator
+where
+do
+argument
+ending
+has
+missing
+add
+remove
+icon
+one
+all
+icontext
+
+SYMBOLS
+{
+}
+:
+;
+,
+=
+!=
+<
+>
+<=
+>=
++
+-
+*
+/
+
+TOKEN TYPE INDEXES
+0 - word
+1 - string
+2 - integer
+3 - variable
+4 - {
+5 - }
+6 - :
+7 - ;
+8 - ,
+9 - =
+10 - !=
+11 - <
+12 - >
+13 - <=
+14 - >=
+15 - +
+16 - -
+17 - *
+18 - /
+19 - .
+
+LNScript Syntax
+------------------
+storyworld <NAME>
+{
+	user: <ENTITYREF>;
+	
+	beginning
+	{
+		page <NAME>
+		{
+			draw: <ENTITYREF>.<IMAGEREF>, <INT>, <INT>;
+			text: <STRING>;
+		}
+	}
+	
+	entity <NAME>
+	{
+		icon: <UNITYASSETREF>;
+		icontext: <STRING>, <INT>, <INT>, <INT>;
+		
+		tag: <NAME>;
+		relate: <NAME>, <ENTITYREF>;
+		num: <NAME>, <INT>;
+		string: <NAME>, <STRING>;
+		
+		obligation: <NAME>, <VERBREF>, <ENTITYREF>...;		
+		goal: <NAME>, <OPERATOR>;
+		behavior: <NAME>, <VERBREF>, <INT>, <ENTITYREF>...;
+		
+		image: <NAME>, <UNITYASSETREF>;
+		icon: <UNITYASSETREF>;
+
+		page entity 
+		{
+			draw: <ENTITYREF>.<IMAGEREF>, <INT>, <INT>;
+			text: <STRING>;			
+		}
+	}
+	
+	input
+	{
+		draw: <ENTITYREF>.<IMAGEREF>, <INT>, <INT>;
+		text: <STRING>;
+	}
+	
+	/*
+	//Limit of 4 arguments at the moment.
+	
+	//Verb Flow
+	List of Possible Verbs -> Verb Selection -> Verb Execution
+	
+	//Listing Possible Verbs
+	Enumerate each variable; for each entity, check if the entity matches the variable conditions. If it matches all of them, add it to the variable's value list.
+	Do the same for arguments. If any of the argument value lists is null, the verb is not possible to execute.
+	Then find all given path combinations of arguments for which there is at least one possible case. A possible case is evaluated by checking the case conditions along with the preconditions with the given argument values.
+	If there exists at least one combination of arguments for which there is at least one possible case, the verb is possible.
+	
+	//Verb Selection
+	There are two types of verb selection; user and AI. For the first, a user selects from their list of possible verbs and then selects arguments via a tree. They then press a button to start execution.
+	The user interface can change to match the available verbs in two ways. The currently selected verb will have a number of arguments ranging from 0 to 4, so the number of argument tabs changes. 
+	If an argument has only one option (parent has only one child), then there are no argument selection buttons displayed.
+	When an AI is ready to select a verb, they go through the obligation, goal, behavior hierarchy. This has already been detailed. Goals are chosen if the first possible case, under the given arguments, accomplishes the goal.
+	
+	//Note: current implementation allows for goal error where a verb is chosen by a goal because a case contains the operator, but that case may not be executed.
+	
+	If the only possible verb is the Wait verb, then the entity in question automatically chooses it.
+	
+	//Verb Execution
+	The given arguments are applied to the verb and then each operator of the variable is executed. The page associated with the case chosen is added to the story stack.
+	*/
+	
+	verb <NAME>
+	{
+		icon: <UNITYASSETREF>;
+		icontext: <STRING>, <INT>, <INT>, <INT>;
+	
+		variable <VARIABLE>
+		{
+			where: <CONDITON>;
+		}
+		
+		/*
+		variable is a list of all entities that satisfy the given conditions
+		list can be null, have one item, or many
+		any condition that does not contain variable is ignored
+		<ENTITYREF> is either <NAME> or <VARIABLE>
+		can't reference variable not yet evaluated
+		*/
+		
+		argument <VARIABLE>
+		{
+			text: <STRING>;
+			where: <CONDITION>;
+		}
+
+		precondition
+		{
+			where: <CONDITION>;
+		}
+		
+		case <NAME> //default needed as last
+		{
+			where: <CONDITION>;
+			do: <OPERATOR>;
+			
+			page verb
+			{
+				draw: <ENTITYREF>.<IMAGEREF>, <INT>, <INT>;
+				text: <STRING>;
+			}
+		}
+		
+		discriminator <NAME>
+		{
+			where: <CONDITION>;
+		}
+	}
+	
+	ending <NAME>
+	{
+		where: <CONDITON>;
+		
+		page <NAME>
+		{
+			draw: <ENTITYREF>.<IMAGEREF>, <INT>, <INT>;
+			text: <STRING>;
+		}
+	}
+}
+
+<NAME>, <...REF> = word
+<VARIABLE> = variable
+<STRING> = string
+<INT> = integer
+<COMPARISON> = = || != || < || > || <= || >=
+<CONDITION> =
+	//Static and variable definition
+	<ENTITYREF> has tag <TAGREF> || relate <RELATEREF> || num <NUMREF> || string <STRINGREF> || obligation <OBLIGATIONREF> || goal <GOALREF> || behavior <BEHAVIORREF>
+	<ENTITYREF> missing tag <TAGREF> || relate <RELATEREF> || num <NUMREF> || string <STRINGREF> || obligation <OBLIGATIONREF> || goal <GOALREF> || behavior <BEHAVIORREF>
+	<ENTITYREF>.<RELATEREF> = <ENTITYREF>
+	<ENTITYREF>.<RELATEREF> != <ENTITYREF>	
+	<ENTITYREF>.<NUMREF> <COMPARISON> <INT>
+	<ENTITYREF>.<NUMREF> <COMPARISON> num <ENTITYREF>.<NUMREF>
+	<ENTITYREF>.<STRINGREF> = <STRING>
+	<ENTITYREF>.<STRINGREF> = string <ENTITYREF>.<STRINGREF>
+	<ENTITYREF>.<STRINGREF> != <STRING>
+	<ENTITYREF>.<STRINGREF> != string <ENTITYREF>.<STRINGREF>
+	
+	//Variable outside definition
+	(one || all) <VARIABLE>...
+	
+	<VARIABLE> = null //Check if list is null or not
+	<VARIABLE> != null
+	<VARIABLE> = <VARIABLE> //Check if entity lists are the same or not
+	<VARIABLE> != <VARIABLE>
+	
+<OP> = = || + || - || * || /
+<OPERATOR>
+	<ENTITYREF> add tag <TAGREF>
+	<ENTITYREF> remove tag <TAGREF>
+	<ENTITYREF> add relate <RELATEREF>, <ENTITYREF>
+	<ENTITYREF> remove relate <RELATEREF>, <ENTITYREF>
+	<ENTITYREF> add num <NUMREF>, <INT>
+	<ENTITYREF> remove num <NUMREF>
+	<ENTITYREF> add string <STRINGREF>, <STRING>
+	<ENTITYREF> remove string <STRINGREF>
+	<ENTITYREF> <NUMREF> <OP> <INT>
+	<ENTITYREF> <NUMREF> <OP> <ENTITYREF>.<NUMREF>
+	<ENTITYREF> add obligation <NAME>, <VERBREF>, <ENTITYREF>...
+	<ENTITYREF> remove obligation <NAME>
+	<ENTITYREF> add goal <NAME>, <OPERATOR>
+	<ENTITYREF> remove goal <NAME>
+	<ENTITYREF> add behavior <NAME>, <VERBREF>, <INT>, <ENTITYREF>...
+	<ENTITYREF> remove behavior <NAME>
+	
+	//If entityref is variable, apply to all
+	
+discriminator never;
+
+//Reference variable in draw and text gets random entity from list
+
+//String references: <ENTITYREF>.<STRINGREF> || <ENTITYREF>.<NUMREF> are replaced with respective values in a <STRING>.
+	
+Built-in Variables
+--------------------
+?me
+any
+?null
+Wait
+
+V2.1
+
+KEYWORDS
+change
+
+<OPERATOR>
+	<ENTITYREF> change image <NAME>, <UNITYASSETREF>
+	
+	
+	
+	
+	
+	
+	
+LNScript Context Free Grammar
+------------------------------------------
+<STORYWORLD> is starting non-terminal.
+
+<STORYWORLD>                ==> storyworld WORD <STORYWORLDBLOCK>
+
+<STORYWORLDBLOCK>           ==> { <USERDEF> <INPUTDEF> <BEGINDEF> <ENTITYDEFLIST> <VERBDEFLIST> <ENDDEFLIST> }
+
+<USERDEF>                   ==> user: WORD;
+
+<INPUTDEF>					==> input { <DRAWDEFLIST> <TEXTDEF> }
+
+<DRAWDEFLIST>               ==> <DRAWDEF> <DRAWDEFLIST> || <DRAWDEF>
+
+<DRAWDEF>                   ==> draw: WORD image WORD, <EXPRESSION>, <EXPRESSION>;
+
+<TEXTDEF>                   ==> text: STRING;
+
+<BEGINDEF>                  ==> beginning { <PAGEDEFLIST> }
+
+<PAGEDEFLIST>               ==> <PAGEDEF> <PAGEDEFLIST> || <PAGEDEF>
+
+<PAGEDEF>                   ==> page WORD { <DRAWDEFLIST> <TEXTDEF> }
+
+<ENTITYDEFLIST>             ==> <ENTITYDEF> <ENTITYDEFLIST> || <ENTITYDEF>
+
+<ENTITYDEF>                 ==> entity WORD { <ICONDEF> <ATTRIBUTELIST> }
+
+<ICONDEF>                   ==> icon: STRING, <EXPRESSION>, <EXPRESSION>, <EXPRESSION>;
+
+<ATTRIBUTELIST>             ==> <ATTRIBUTE> <ATTRIBUTELIST> || <ATTRIBUTE>
+
+<ATTRIBUTE>                 ==> <TAGATTR> || <RELATEATTR> || <STRINGATTR> || <NUMBERATTR> || <IMAGEATTR>
+
+<TAGATTR>                   ==> tag: WORD;
+
+<RELATEATTR>                ==> relate: WORD, WORD;
+
+<STRINGATTR>                ==> string: WORD, STRING;
+
+<NUMBERATTR>                ==> num: WORD, <EXPRESSION>;
+
+<IMAGEATTR>                 ==> image: WORD, WORD;
+
+<EXPRESSION>                ==> NUMBER || (<EXPRESSION> <NUMOPERATOR> <EXPRESSION>)
+
+<NUMOPERATOR>               ==> + || - || * || /
+
+<VERBDEFLIST>               ==> <VERBDEF> <VERBDEFLIST> || <VERBDEF>
+
+<VERBDEF>                   ==> verb WORD { <ICONDEF> <VARIABLELIST> <ARGUMENTLIST> <PRECONDITIONLIST> <CASELIST> <DISCRIMINATORLIST> }
+
+<VARIABLELIST>              ==> <VARIABLE> <VARIABLELIST> || EMPTY
+
+<VARIABLE>                  ==> variable VARIABLE { <CONDITIONLIST> }
+
+<ARGUMENTLIST>              ==> <ARGUMENT> <ARGUMENTLIST> || EMPTY
+
+<ARGUMENT>                  ==> argument VARIABLE { <TEXTDEF> <CONDITIONLIST> }
+
+<PRECONDITIONLIST>          ==> <PRECONDITION> <PRECONDITIONLIST> || EMPTY
+
+<PRECONDITION>              ==> precondition { <CONDITIONLIST> }
+
+<CASELIST>                  ==> <CASE> <CASELIST> || <CASE>
+
+<CASE>                      ==> case WORD { <CONDITIONLIST> <OPERATORLIST> <PAGEDEFLIST> }
+
+<DISCRIMINATORLIST>         ==> <DISCRIMINATOR> <DISCRIMINATORLIST> || EMPTY
+
+<DISCRIMINATOR>             ==> discriminator never || discriminator WORD { <CONDITIONLIST> }
+
+<CONDITIONLIST>             ==> <CONDITION> <CONDITIONLIST> || EMPTY
+
+<CONDITION>                 ==> where: <CONDITIONDEF>; 
+
+<CONDITIONDEF>              ==> <REFERENCE> has tag WORD || <REFERENCE> has relate WORD || <REFERENCE> has string WORD || <REFERENCE> has num WORD
+
+<CONDITIONDEF>              ==> <REFERENCE> WORD <REFERENCE> || <REFERENCE> not WORD <REFERENCE>
+
+<CONDITIONDEF>              ==> <REFERENCE> WORD <COMPARISON> <EXPRESSIONVERB>
+
+<CONDITIONDEF>              ==> <REFERENCE> WORD matches STRING || <REFERENCE> WORD matches <REFERENCE> WORD || <REFERENCE> WORD not matches STRING || <REFERENCE> WORD not matches <REFERENCE> WORD
+
+<CONDITIONDEF>              ==> VARIABLE empty || VARIABLE not empty || VARIABLE same VARIABLE || VARIABLE not same VARIABLE
+
+<COMPARISON>                ==> = || != || < || > || <= || >=
+
+<EXPRESSIONVERB>            ==> NUMBER || (<EXPRESSIONVERB> <NUMOPERATOR> <EXPRESSIONVERB>) || <REFERENCEOP> WORD
+
+<REFERENCE>                 ==> WORD || one VARIABLE || all VARIABLE
+
+<REFERENCEOP>               ==> WORD || VARIABLE
+
+<OPERATORLIST>              ==> <OPERATOR> <OPERATORLIST> || EMPTY
+
+<OPERATOR>                  ==> do: <OPERATORDEF>;
+
+<OPERATORDEF>               ==> <REFERENCEOP> add tag WORD || <REFERENCEOP> add relate WORD, <REFERENCEOP> || <REFERENCEOP> add string WORD, STRING || <REFERENCEOP> add num WORD, <EXPRESSIONVERB> || <REFERENCEOP> add image WORD, WORD
+
+<OPERATORDEF>               ==> <REFERENCEOP> remove tag WORD || <REFERENCEOP> remove relate WORD, <REFERENCEOP> || <REFERENCEOP> remove string WORD || <REFERENCEOP> remove num WORD
+
+<ENDDEFLIST>                ==> <ENDDEF> <ENDDEFLIST> || <ENDDEF>
+
+<ENDDEF>                    ==> ending WORD { <CONDITIONLIST> <PAGEDEFLIST> }
