@@ -9,19 +9,24 @@ public class IconText
 {
 	/* Variables */
 	public string text;
-	public int red;
-	public int green;
-	public int blue;
+	public Expression red;
+	public Expression green;
+	public Expression blue;
 
 	/* Functions */
 	public IconText(string _text)
 	{
 		text = _text;
-		red = 255;
-		green = 255;
-		blue = 255;
+		red = new Expression(0);
+		red.number = 255;
+		green = new Expression(0);
+		green.number = 255;
+		blue = new Expression(0);
+		blue.number = 255;
 	}
 
+	/*
+	 *Implement in engine for full context access
 	//false = white, true = black
 	public bool getTextColor()
 	{
@@ -32,15 +37,19 @@ public class IconText
 		else
 			return true;
 	}
+	*/
 
 	public void copyTo(IconText it)
 	{
 		if (it != null)
 		{
 			it.text = text;
-			it.red = red;
-			it.green = green;
-			it.blue = blue;
+			it.red = new Expression(red.type);
+			red.copyTo(it.red);
+			it.green = new Expression(green.type);
+			green.copyTo(it.green);
+			it.blue = new Expression(blue.type);
+			blue.copyTo(it.blue);
 		}
 	}
 }

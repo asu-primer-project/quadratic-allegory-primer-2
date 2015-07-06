@@ -17,15 +17,11 @@ public class Condition
 	public string relateObject;
 	public string numRef;
 	public string stringRef;
-	public string obligationRef;
-	public string goalRef;
-	public string behaviorRef;
-	public int numCompare;
+	public Expression numCompare;
 	public string stringCompare;
 	public string variableObject;
 	public string subject2;
 	public string stringRef2;
-	public string numRef2;
 
     /* Functions */
     public Condition()
@@ -40,15 +36,11 @@ public class Condition
 		relateObject = "";
 		numRef = "";
 		stringRef = "";
-		obligationRef = "";
-		goalRef = "";
-		behaviorRef = "";
-		numCompare = 0;
+		numCompare = null;
 		stringCompare = "";
 		variableObject = "";
 		subject2 = "";
 		stringRef2 = "";
-		numRef2 = "";
     }
 
     public void replaceWith(string replace, string with)
@@ -59,14 +51,14 @@ public class Condition
             relateObject = with;
 		if (subject2 == replace)
 			subject2 = with;
+		if (numCompare != null)
+			numCompare.replaceWith(replace, with);
     }
 
 	public int getType()
 	{
-		if (numRef2 != "")
-			return 8;
-		else if (stringRef2 != "")
-			return 9;
+		if (stringRef2 != "")
+			return 5;
 		else if (tagRef != "")
 			return 0;
 		else if (relateRef != "")
@@ -75,14 +67,8 @@ public class Condition
 			return 2;
 		else if (stringRef != "")
 			return 3;
-		else if (obligationRef != "")
-			return 4;
-		else if (goalRef != "")
-			return 5;
-		else if (behaviorRef != "")
-			return 6;
 		else if (variableObject != "")
-			return 7;
+			return 4;
 		else
 			return -1;
 	}
@@ -101,15 +87,17 @@ public class Condition
 			c.relateObject = relateObject;
 			c.numRef = numRef;
 			c.stringRef = stringRef;
-			c.obligationRef = obligationRef;
-			c.goalRef = goalRef;
-			c.behaviorRef = behaviorRef;
-			c.numCompare = numCompare;
+			if (c.numCompare != null)
+			{
+				c.numCompare = new Expression(numCompare.type);
+				numCompare.copyTo(c.numCompare);
+			}
+			else
+				c.numCompare = null;
 			c.stringCompare = stringCompare;
 			c.variableObject = variableObject;
 			c.subject2 = subject2;
 			c.stringRef2 = stringRef2;
-			c.numRef2 = numRef2;
         }
     }
 }

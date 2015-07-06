@@ -6,14 +6,12 @@ public class Page
 {
 	/* Variables */
 	public string name;
-	public bool isInputPage;
 	public List<DrawInstruction> drawList;
 
 	/* Functions */
 	public Page(string _name)
 	{
 		name = _name;
-		isInputPage = false;
 		drawList = new List<DrawInstruction>();
 	}
 

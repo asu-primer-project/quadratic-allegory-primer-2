@@ -292,11 +292,9 @@ LNScript Context Free Grammar
 
 <STORYWORLD>                ==> storyworld WORD <STORYWORLDBLOCK>
 
-<STORYWORLDBLOCK>           ==> { <USERDEF> <INPUTDEF> <BEGINDEF> <ENTITYDEFLIST> <VERBDEFLIST> <ENDDEFLIST> }
+<STORYWORLDBLOCK>           ==> { <USERDEF> <BEGINDEF> <ENTITYDEFLIST> <VERBDEFLIST> <ENDDEFLIST> }
 
 <USERDEF>                   ==> user: WORD;
-
-<INPUTDEF>					==> input { <DRAWDEFLIST> <TEXTDEF> }
 
 <DRAWDEFLIST>               ==> <DRAWDEF> <DRAWDEFLIST> || <DRAWDEF>
 
@@ -326,11 +324,11 @@ LNScript Context Free Grammar
 
 <STRINGATTR>                ==> string: WORD, STRING;
 
-<NUMBERATTR>                ==> num: WORD, <EXPRESSION>;
+<NUMBERATTR>                ==> num: WORD, NUMBER;
 
 <IMAGEATTR>                 ==> image: WORD, WORD;
 
-<EXPRESSION>                ==> NUMBER || (<EXPRESSION> <NUMOPERATOR> <EXPRESSION>)
+<EXPRESSION>                ==> NUMBER || (<EXPRESSION> <NUMOPERATOR> <EXPRESSION>) || <REFERENCEOP> WORD
 
 <NUMOPERATOR>               ==> + || - || * || /
 
@@ -364,9 +362,11 @@ LNScript Context Free Grammar
 
 <CONDITIONDEF>              ==> <REFERENCE> has tag WORD || <REFERENCE> has relate WORD || <REFERENCE> has string WORD || <REFERENCE> has num WORD
 
+<CONDITIONDEF>              ==> <REFERENCE> missing tag WORD || <REFERENCE> missing relate WORD || <REFERENCE> missing string WORD || <REFERENCE> missing num WORD
+
 <CONDITIONDEF>              ==> <REFERENCE> WORD <REFERENCE> || <REFERENCE> not WORD <REFERENCE>
 
-<CONDITIONDEF>              ==> <REFERENCE> WORD <COMPARISON> <EXPRESSIONVERB>
+<CONDITIONDEF>              ==> <REFERENCE> WORD <COMPARISON> <EXPRESSION>
 
 <CONDITIONDEF>              ==> <REFERENCE> WORD matches STRING || <REFERENCE> WORD matches <REFERENCE> WORD || <REFERENCE> WORD not matches STRING || <REFERENCE> WORD not matches <REFERENCE> WORD
 
@@ -374,9 +374,7 @@ LNScript Context Free Grammar
 
 <COMPARISON>                ==> = || != || < || > || <= || >=
 
-<EXPRESSIONVERB>            ==> NUMBER || (<EXPRESSIONVERB> <NUMOPERATOR> <EXPRESSIONVERB>) || <REFERENCEOP> WORD
-
-<REFERENCE>                 ==> WORD || one VARIABLE || all VARIABLE
+<REFERENCE>                 ==> WORD || VARIABLE || one VARIABLE || all VARIABLE
 
 <REFERENCEOP>               ==> WORD || VARIABLE
 
@@ -384,7 +382,9 @@ LNScript Context Free Grammar
 
 <OPERATOR>                  ==> do: <OPERATORDEF>;
 
-<OPERATORDEF>               ==> <REFERENCEOP> add tag WORD || <REFERENCEOP> add relate WORD, <REFERENCEOP> || <REFERENCEOP> add string WORD, STRING || <REFERENCEOP> add num WORD, <EXPRESSIONVERB> || <REFERENCEOP> add image WORD, WORD
+<OPERATORDEF>               ==> <REFERENCEOP> add tag WORD || <REFERENCEOP> add relate WORD, <REFERENCEOP> || <REFERENCEOP> add string WORD, STRING || <REFERENCEOP> add num WORD, <EXPRESSIONVERB> 
+
+<OPERATORDEF>               ==>	<REFERENCEOP> change image WORD to WORD
 
 <OPERATORDEF>               ==> <REFERENCEOP> remove tag WORD || <REFERENCEOP> remove relate WORD, <REFERENCEOP> || <REFERENCEOP> remove string WORD || <REFERENCEOP> remove num WORD
 

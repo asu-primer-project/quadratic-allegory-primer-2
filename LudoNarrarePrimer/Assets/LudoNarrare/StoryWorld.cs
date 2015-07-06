@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,6 @@ public class StoryWorld
     public string userEntity;
 	public List<Page> beginning;
     public List<Entity> entities;
-	public Page input;
     public List<Verb> verbs;
 	public List<Ending> endings;
 
@@ -21,7 +20,6 @@ public class StoryWorld
         userEntity = _userEntity;
 		beginning = new List<Page>();
         entities = new List<Entity>();
-		input = null;
         verbs = new List<Verb>();
 
         Verb vTemp = new Verb("Wait");
@@ -32,9 +30,9 @@ public class StoryWorld
 		dTemp.neverShow = true;
 		vTemp.discriminators.Add(dTemp);
 		vTemp.it = new IconText("Wait");
-		vTemp.it.red = 80;
-		vTemp.it.green = 80;
-		vTemp.it.blue = 80;
+		vTemp.it.red.number = 80;
+		vTemp.it.green.number = 80;
+		vTemp.it.blue.number = 80;
         verbs.Add(vTemp);
 
 		endings = new List<Ending>();

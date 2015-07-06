@@ -8,17 +8,14 @@ public class Operator
     /* Variables */
     public string name;
     public string operatorSubject;
-	//0 - add, 1 - remove, 2 - +, 3 - -, 4 - *, 5 - /, 6 - =
+	//0 - add, 1 - remove
 	public int op; 
     public Tag tag;
     public Relationship relationship;
-	public Number num;
+	public string numRef;
+	public Expression num;
 	public LNString lnString;
-    public Obligation obligation;
-    public Goal goal;
-    public Behavior behavior;
-	public string subject2;
-	public string numRef2;
+	public ImageDef newImage;
 
     /* Functions */
     public Operator()
@@ -28,13 +25,10 @@ public class Operator
 		op = 0;
         tag = null;
         relationship = null;
+		numRef = "";
 		num = null;
 		lnString = null;
-        obligation = null;
-        goal = null;
-        behavior = null;
-		subject2 = "";
-		numRef2 = "";
+		newImage = null;
     }
 
     public void replaceWith(string replace, string with)
@@ -46,24 +40,8 @@ public class Operator
 		    if (relationship.other == replace)
 		        relationship.other = with;
 		}
-        if (obligation != null)
-        {
-            for (int i = 0; i < obligation.arguments.Count; i++ )
-            {
-                if (obligation.arguments[i] == replace)
-                    obligation.arguments[i] = with;
-            }
-        }
-        if (behavior != null)
-        {
-            for (int i = 0; i < behavior.arguments.Count; i++)
-            {
-                if (behavior.arguments[i] == replace)
-                    behavior.arguments[i] = with;
-            }
-        }
-		if (subject2 == replace)
-			subject2 = with;
+		if (num != null)
+			num.replaceWith(replace, with);
     }
 
 	public int getType()
@@ -76,12 +54,8 @@ public class Operator
 			return 2;
 		else if (lnString != null)
 			return 3;
-		else if (obligation != null)
+		else if (newImage != null)
 			return 4;
-		else if (goal != null)
-			return 5;
-		else if (behavior != null)
-			return 6;
 		else
 			return -1;
 	}
@@ -105,7 +79,7 @@ public class Operator
 			}
 			if (num != null)
 			{
-				o.num = new Number("",0);
+				o.num = new Expression(num.type);
 				num.copyTo(o.num);
 			}
 			if (lnString != null)
@@ -113,23 +87,11 @@ public class Operator
 				o.lnString = new LNString("","");
 				lnString.copyTo(o.lnString);
 			}
-            if (obligation != null)
+			if (ImageDef != null)
 			{
-				o.obligation = new Obligation("", "");
-                obligation.copyTo(o.obligation);
+				o.newImage = new ImageDef("","");
+				newImage.copyTo(o.newImage);
 			}
-            if (goal != null)
-			{
-				o.goal = new Goal("", "", 0);
-                goal.copyTo(o.goal);
-			}
-            if (behavior != null)
-			{
-				o.behavior = new Behavior("", "", 0);
-                behavior.copyTo(o.behavior);
-			}
-			o.subject2 = subject2;
-			o.numRef2 = numRef2;
         }
     }
 }

@@ -8,18 +8,20 @@ public class DrawInstruction
 	public string entity;
 	public string image;
 	public string text;
-	public int x;
-	public int y;
+	public Expression x;
+	public Expression y;
 
 	/* Functions */
-	public DrawInstruction(bool _isText, string _entity, string _image, string _text, int _x, int _y)
+	public DrawInstruction(bool _isText, string _entity, string _image, string _text)
 	{
 		isText = _isText;
 		entity = _entity;
 		image = _image;
 		text = _text;
-		x = _x;
-		y = _y;
+		x = new Expression(0);
+		x.number = 0;
+		y = new Expression(0);
+		y.number = 0;
 	}
 
 	public void replaceWith(string replace, string with)
@@ -28,6 +30,10 @@ public class DrawInstruction
 			entity = with;
 		if (text.Contains(replace))
 			text.Replace(replace, with);
+		if (x != null)
+			x.replaceWith(replace, with);
+		if (y != null)
+			y.replaceWith(replace, with);
 	}
 
 	public void copyTo(DrawInstruction di)
@@ -38,8 +44,10 @@ public class DrawInstruction
 			di.entity = entity;
 			di.image = image;
 			di.text = text;
-			di.x = x;
-			di.y = y;
+			di.x = new Expression(x.type);
+			x.copyTo(di.x);
+			di.y = new Expression(y.type);
+			y.copyTo(di.y);
 		}
 	}
 }
