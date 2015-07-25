@@ -24,20 +24,16 @@ public class IconText
 		blue = new Expression(0);
 		blue.number = 255;
 	}
-
-	/*
-	 *Implement in engine for full context access
-	//false = white, true = black
-	public bool getTextColor()
+	
+	public bool getTextColor(StoryWorld sw)
 	{
-		float avg = (float)(red + green + blue)/3f;
+		float avg = (float)(red.evaluate(sw) + green.evaluate(sw) + blue.evaluate(sw))/3f;
 
 		if (avg <= 255f/2f)
 			return false;
 		else
 			return true;
 	}
-	*/
 
 	public void copyTo(IconText it)
 	{

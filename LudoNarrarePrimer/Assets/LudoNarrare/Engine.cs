@@ -9,9 +9,9 @@ public class Engine : MonoBehaviour
     /* Variables */
     public StoryWorld storyWorld;
     public List<Page> output;
-    public List<Verb> currentUserChoices;
+    public List<Verb> currentAgentChoices;
     public bool ended;
-	public bool userFoundNoAction;
+	public bool agentFoundNoAction;
 	public int amountOfWaits;
 	public bool standStill;
     public System.Random rand;
@@ -21,8 +21,8 @@ public class Engine : MonoBehaviour
     {
         storyWorld = _storyWorld;
 		output = new List<Page>();
-        currentUserChoices = null;
-		userFoundNoAction = false;
+        currentAgentChoices = null;
+		agentFoundNoAction = false;
 		amountOfWaits = 0;
 		standStill = false;
         ended = false;
@@ -124,10 +124,10 @@ public class Engine : MonoBehaviour
 		}
 
 		createBeginning();
-		currentUserChoices = generatePossibleVerbs(storyWorld.entities.Find(x => x.name == storyWorld.userEntity));
+		currentAgentChoices = generatePossibleVerbs(storyWorld.entities.Find(x => x.agent == "User"));
 		
-		if (currentUserChoices.Count == 1)
-			takeInputAndProcess(currentUserChoices[0]);
+		if (currentAgentChoices.Count == 1)
+			takeInputAndProcess(currentAgentChoices[0]);
 	}
 	
 	//If check if path is longer enough and if not make it so, has side effects

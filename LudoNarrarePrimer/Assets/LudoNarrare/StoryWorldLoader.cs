@@ -13,6 +13,7 @@ public class StoryWorldLoader : MonoBehaviour
 	private int type;
 	private string currentToken;
 	private int lineCount;
+	private int tokenInt;
 
 	/* Functions */
 	//Constructor
@@ -22,6 +23,7 @@ public class StoryWorldLoader : MonoBehaviour
 		swText = "";
 		endLoc = 0;
 		lineCount = 1;
+		tokenInt = 0;
 	}
 
 	//Lexer functions
@@ -55,6 +57,7 @@ public class StoryWorldLoader : MonoBehaviour
 	//10 - not equal, 11 - less than, 12 - greater than
 	//13 - less than equal to, 14 greater than equal to, 15 - plus
 	//16 - minus, 17 - multiply, 18 - divide, 19 - period
+	//20 - left paren, 21 - right paren
 	//Return -1 - token incomplete, -2 unknown character, -3 end of file
 	public int getToken() 
 	{
@@ -149,14 +152,22 @@ public class StoryWorldLoader : MonoBehaviour
 				{
 					print("Read the integer " + currentToken + "\n");
 					type = 2;
-					return 2;
+
+					if (Int32.TryParse(currentToken, out tokenInt))
+						return 2;
+					else
+						return -1;
 				}
 				c = swText[readLoc];
 			}
 
 			print("Read the integer " + currentToken + "\n");
 			type = 2;
-			return 2;
+
+			if (Int32.TryParse(currentToken, out tokenInt))
+				return 2;
+			else
+				return -1;
 		}
 		else if (c == '?')
 		{
@@ -512,6 +523,36 @@ public class StoryWorldLoader : MonoBehaviour
 			type = 19;
 			return 19;
 		}
+		else if (c == '(')
+		{
+			currentToken += swText[readLoc].ToString();
+			readLoc++;
+			if (readLoc > endLoc)
+			{
+				type = 20;
+				return 20;
+			}
+			c = swText[readLoc];
+			
+			print("Read (\n");
+			type = 20;
+			return 20;
+		}
+		else if (c == ')')
+		{
+			currentToken += swText[readLoc].ToString();
+			readLoc++;
+			if (readLoc > endLoc)
+			{
+				type = 21;
+				return 21;
+			}
+			c = swText[readLoc];
+			
+			print("Read )\n");
+			type = 21;
+			return 21;
+		}
 		else
 		{
 			type = -2;
@@ -520,19 +561,49 @@ public class StoryWorldLoader : MonoBehaviour
 	}
 			
 	//Parser Functions
-	//Parse User Entity Reference
-	public bool parseUser(StoryWorld sw)
+	//Parse expression
+	public bool parseExpression(Expression e)
 	{
-		if (getToken() == 6)
+		getToken();
+
+		if (type == 2)
 		{
+			e.type = 0;
+			e.number = tokenInt;
+			return false;
+		}
+		else if (type == 20)
+		{
+			e.leftExp = new Expression(0);
+			if (parseExpression(e.leftExp))
+				return true;
+
+			switch (getToken())
+			{
+			case 15: e.op = 0; break;
+			case 16: e.op = 1; break;
+			case 17: e.op = 2; break;
+			case 18: e.op = 3; break;
+			}
+
+			e.rightExp = new Expression(0);
+			if (parseExpression(e.rightExp))
+				return true;
+
+			if (getToken() == 21)
+				return false;
+		}
+		else if (type == 0 || type == 3)
+		{
+			e.entRef = currentToken;
+
 			if (getToken() == 0)
 			{
-				sw.userEntity = currentToken;
-
-				if (getToken() == 7)
-					return false;
+				e.numRef = currentToken;
+				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -547,34 +618,29 @@ public class StoryWorldLoader : MonoBehaviour
 			{
 				d.entity = currentToken;
 
-				if (getToken() == 19)
+				if (getToken() == 0)
 				{
-					if (getToken() == 0)
+					if (currentToken == "image")
 					{
-						d.image = currentToken;
-
-						if (getToken() == 8)
+						if (getToken() == 0)
 						{
-							if (getToken() == 2)
+							d.image = currentToken;
+
+							if (getToken() == 8)
 							{
-								if (Int32.TryParse(currentToken, out d.x))
-								{
-									if (getToken() == 8)
-									{
-										if (getToken() == 2)
-										{
-											if (Int32.TryParse(currentToken, out d.y))
-											{
-												if (getToken() == 7)
-													return false;
-											}
-											else
-												return true;
-										}
-									}
-								}
-								else
+								d.x = new Expression(0);
+								if (parseExpression(d.x))
 									return true;
+
+								if (getToken() == 8)
+								{
+									d.y = new Expression(0);
+									if (parseExpression(d.y))
+										return true;
+
+									if (getToken() == 7)
+										return false;
+								}
 							}
 						}
 					}
@@ -607,646 +673,231 @@ public class StoryWorldLoader : MonoBehaviour
 		
 		if (getToken() == 6)
 		{
-			print("A");
 			getToken();
-			bool gotAO = false;
-
-			if (type == 0 && currentToken == "one")
+			if (type == 0)
 			{
-				c.allCS = false;
-				gotAO = true;
-				getToken();
-			}
-			else if (type == 0 && currentToken == "all")
-			{
-				c.allCS = true;
-				gotAO = true;
-				getToken();
-			}
-
-			if (type == 0 || type == 3)
-			{
-				print("A");
-				c.conditionSubject = currentToken;
-				int firstType = type;
-				getToken();
+				if (currentToken == "one")
+				{
+					c.allCS = false;
+					
+					getToken();
+					if (type == 3)
+						c.conditionSubject = currentToken;
+					else return true;
+				}
+				else if (currentToken == "all")
+				{
+					c.allCS = true;
+					
+					getToken();
+					if (type == 3)
+						c.conditionSubject = currentToken;
+					else return true;
+				}
+				else
+					c.conditionSubject = currentToken;
 				
+				if (getToken() != 0)
+					return true;
+
 				if (currentToken == "has" || currentToken == "missing")
 				{
 					if (currentToken == "has")
 						c.comparison = 0;
-					else 
+					else if (currentToken == "missing")
 						c.comparison = 1;
-					getToken();
-					
+
+					if (getToken() != 0)
+						return true;
+
 					if (currentToken == "tag")
 					{
 						if (getToken() == 0)
+						{
 							c.tagRef = currentToken;
+							if (getToken() == 7) return false;
+						}
 					}
-					else if (currentToken == "relate")
+					if (currentToken == "relate")
 					{
 						if (getToken() == 0)
+						{
 							c.relateRef = currentToken;
+							if (getToken() == 7) return false;
+						}						
 					}
-					else if (currentToken == "num")
+					if (currentToken == "string")
 					{
 						if (getToken() == 0)
-							c.numRef = currentToken;
-					}
-					else if (currentToken == "string")
-					{
-						if (getToken() == 0)
+						{
 							c.stringRef = currentToken;
+							if (getToken() == 7) return false;
+						}						
 					}
-					else if (currentToken == "obligation")
+					if (currentToken == "num")
 					{
 						if (getToken() == 0)
-							c.obligationRef = currentToken;
+						{
+							c.numRef = currentToken;
+							if (getToken() == 7) return false;
+						}						
 					}
-					else if (currentToken == "goal")
-					{
-						if (getToken() == 0)
-							c.goalRef = currentToken;
-					}
-					else if (currentToken == "behavior")
-					{
-						if (getToken() == 0)
-							c.behaviorRef = currentToken;
-					}
-					else
-						return true;
-
-					if (getToken() == 7)
-						return false;
 				}
-				else if (firstType == 3 && !gotAO && (type == 9 || type == 10))
+				else
 				{
-					if (type == 9)
-						c.comparison = 2;
-					else
-						c.comparison = 3;
+					tempRef = currentToken;
 
 					getToken();
+					if (type == 0 && (currentToken == "matches" || currentToken == "not"))
+					{
+						c.stringRef = tempRef;
 
-					if (type == 0 && currentToken == "null")
-					{
-						c.variableObject = "?null";
-					}
-					else if (type == 3)
-					{
-						c.variableObject = currentToken;
-					}
-
-					if (getToken() == 7)
-						return false;
-				}
-				else if (type == 19)
-				{
-					print("A");
-					if (getToken() == 0)
-					{
-						tempRef = currentToken;
-						getToken();
-						
-						if (type == 9 || type == 10)
+						if (currentToken == "matches")
+							c.comparison = 12;
+						else if (currentToken == "not")
 						{
-							if (type == 9)
-								c.comparison = 2;
-							else
-								c.comparison = 3;
-							
-							getToken();
-							
-							if (type == 0 || type == 3)
+							if (getToken() != "matches")
+								return true;
+							c.comparison = 13;
+						}
+
+						getToken();
+						if (type == 1)
+						{
+							c.stringCompare = currentToken;
+							if (getToken() == 7)
+								return false;
+						}
+						else if (type == 0)
+						{
+							if (currentToken == "one")
 							{
-								if (currentToken == "one")
-								{
-									c.allRO = false;
-
-									if (getToken() == 3)
-									{
-										c.relateRef = tempRef;
-										c.relateObject = currentToken;
-										
-										if (getToken() == 7)
-											return false;
-									}
-								}
-								else if (currentToken == "all")
-								{
-									c.allRO = true;
-
-									if (getToken() == 3)
-									{
-										c.relateRef = tempRef;
-										c.relateObject = currentToken;
-										
-										if (getToken() == 7)
-											return false;
-									}
-								}
-								else
-								{
-									string name = currentToken;
-									getToken();
+								c.allCO = false;
 								
-									if (type == 7)
-									{
-										c.relateRef = tempRef;
-										c.relateObject = name;
-										return false;
-									}
-									else if (type == 0 || type == 3)
-									{
-										if (name == "num")
-										{
-											c.numRef = tempRef;
-											c.subject2 = currentToken;
-
-											if (getToken() == 19)
-											{
-												if (getToken() == 0)
-												{
-													c.numRef2 = currentToken;
-
-													if (getToken() == 7)
-														return false;
-												}
-											}
-										}
-										else if (name == "string")
-										{
-											c.stringRef = tempRef;
-											c.subject2 = currentToken;
-
-											if (getToken() == 19)
-											{
-												if (getToken() == 0)
-												{
-													c.stringRef2 = currentToken;
-
-													if (getToken() == 7)
-														return false;
-												}
-											}
-										}
-									}
-								}
-							}
-							else if (type == 1)
-							{
-								c.stringRef = tempRef;
-								c.stringCompare = currentToken;
-
 								getToken();
-								if (type == 7)
-									return false;
+								if (type == 3)
+									c.conditionObject = currentToken;
+								else return true;
 							}
-							else if (type == 2)
+							else if (currentToken == "all")
 							{
-								c.numRef = tempRef;
-								if (Int32.TryParse(currentToken, out c.numCompare))
-								{
-									if (getToken() == 7)
-										return false;
-								}
-								else
-									return true;
+								c.allCO = true;
+								
+								getToken();
+								if (type == 3)
+									c.conditionObject = currentToken;
+								else return true;
 							}
 							else
+								c.conditionObject = currentToken;
+
+							if (getToken() != 0)
+								return true;
+							c.stringRef2 = currentToken;
+							if (getToken() == 7)
+								return false;
+						}
+					}
+					else if (type >= 9 && type <= 14)
+					{
+						c.numRef = tempRef;
+
+						switch(type)
+						{
+						case 9: c.comparison = 2; break;
+						case 10: c.comparison = 3; break;
+						case 11: c.comparison = 4; break;
+						case 12: c.comparison = 5; break;
+						case 13: c.comparison = 6; break;
+						case 14: c.comparison = 7; break;
+						}
+
+						c.numCompare = new Expression(0);
+						if (parseExpression(c.numCompare))
+							return true;
+						if (getToken() == 7)
+							return false;
+					}
+					else if (type == 0 || tempRef == "not")
+					{
+						if (tempRef == "not")
+						{
+							tempRef = currentToken;
+							getToken();
+							if (type != 0)
 								return true;
 						}
-						else if (type == 11)
-						{
-							c.comparison = 4;
 
-							getToken();
-							if (type == 2)
-							{
-								c.numRef = tempRef;
-								if (Int32.TryParse(currentToken, out c.numCompare))
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-							else if (type == 0)
-							{
-								if (currentToken == "num")
-								{
-									getToken();
-									if (type == 0 || type == 3)
-									{
-										c.numRef = tempRef;
-										c.subject2 = currentToken;
-										
-										if (getToken() == 19)
-										{
-											if (getToken() == 0)
-											{
-												c.numRef2 = currentToken;
-												
-												if (getToken() == 7)
-													return false;
-											}
-										}
-									}
-								}
-							}
-							return true;
-						}
-						else if (type == 12)
+						c.relateRef = tempRef;
+						if (currentToken == "one")
 						{
-							c.comparison = 5;
+							c.allCO = false;
 							
 							getToken();
-							if (type == 2)
-							{
-								c.numRef = tempRef;
-								if (Int32.TryParse(currentToken, out c.numCompare))
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-							else if (type == 0)
-							{
-								if (currentToken == "num")
-								{
-									getToken();
-									if (type == 0 || type == 3)
-									{
-										c.numRef = tempRef;
-										c.subject2 = currentToken;
-										
-										if (getToken() == 19)
-										{
-											if (getToken() == 0)
-											{
-												c.numRef2 = currentToken;
-												
-												if (getToken() == 7)
-													return false;
-											}
-										}
-									}
-								}
-							}
-							return true;
+							if (type == 3)
+								c.conditionObject = currentToken;
+							else return true;
 						}
-						else if (type == 13)
+						else if (currentToken == "all")
 						{
-							c.comparison = 6;
+							c.allCO = true;
 							
 							getToken();
-							if (type == 2)
-							{
-								c.numRef = tempRef;
-								if (Int32.TryParse(currentToken, out c.numCompare))
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-							else if (type == 0)
-							{
-								if (currentToken == "num")
-								{
-									getToken();
-									if (type == 0 || type == 3)
-									{
-										c.numRef = tempRef;
-										c.subject2 = currentToken;
-										
-										if (getToken() == 19)
-										{
-											if (getToken() == 0)
-											{
-												c.numRef2 = currentToken;
-												
-												if (getToken() == 7)
-													return false;
-											}
-										}
-									}
-								}
-							}
-							return true;
-						}
-						else if (type == 14)
-						{
-							c.comparison = 7;
-							
-							getToken();
-							if (type == 2)
-							{
-								c.numRef = tempRef;
-								if (Int32.TryParse(currentToken, out c.numCompare))
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-							else if (type == 0)
-							{
-								print("A");
-								if (currentToken == "num")
-								{
-									getToken();
-									if (type == 0 || type == 3)
-									{
-										c.numRef = tempRef;
-										c.subject2 = currentToken;
-										print("A");
-										if (getToken() == 19)
-										{
-											if (getToken() == 0)
-											{
-												c.numRef2 = currentToken;
-												print("A");
-												if (getToken() == 7)
-													return false;
-											}
-										}
-									}
-								}
-							}
-							return true;
+							if (type == 3)
+								c.conditionObject = currentToken;
+							else return true;
 						}
 						else
-							return true;
+							c.conditionObject = currentToken;
+						if (getToken() == 7)
+							return false;
 					}
 				}
-				else
-					return true;
 			}
-		}
-		return true;
-	}
-
-	//Parse Goal Operator
-	public bool parseGoalOperator(Goal g)
-	{
-		getToken();
-
-		if (type == 0 || type == 3)
-		{
-			g.operatorSubject = currentToken;
-			
-			if (getToken() == 0)
+			else if (type == 3)
 			{
-				if (currentToken == "add" || currentToken == "remove")
+				c.conditionSubject = currentToken;
+				
+				if (getToken() == 0)
 				{
-					if (currentToken == "add")
-						g.op = 0;
-					else
-						g.op = 1;
-					
-					if (getToken() == 0)
+					if (currentToken == "empty")
 					{
-						if (currentToken == "tag")
+						c.comparison = 8;
+						if (getToken() == 7) return false;
+					}
+					else if (currentToken == "same")
+					{
+						c.comparison = 10;
+						if (getToken() == 3)
 						{
-							if (getToken() == 0)
-							{
-								g.tag = new Tag(currentToken);
-								
-								if (getToken() == 7)
-									return false;
-							}
-						}
-						else if (currentToken == "relate")
-						{
-							if (getToken() == 0)
-							{
-								g.relationship = new Relationship(currentToken, "");
-								
-								if (getToken() == 8)
-								{
-									getToken();
-
-									if (type == 0 || type == 3)
-									{
-										g.relationship.other = currentToken;
-										
-										if (getToken() == 7)
-											return false;
-									}
-								}
-							}
-						}
-						else if (currentToken == "num")
-						{
-							if (getToken() == 0)
-							{
-								g.num = new Number(currentToken, 0);
-								
-								if (g.op == 0)
-								{
-									if (getToken() == 8)
-									{
-										if (getToken() == 2)
-										{
-											if (Int32.TryParse(currentToken, out g.num.value))
-											{
-												if (getToken() == 7)
-													return false;
-											}
-										}
-									}
-								}
-								else
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-						}
-						else if (currentToken == "string")
-						{
-							if (getToken() == 0)
-							{
-								g.lnString = new LNString(currentToken, "");
-								
-								if (g.op == 0)
-								{
-									if (getToken() == 8)
-									{
-										if (getToken() == 1)
-										{
-											g.lnString.text = currentToken;
-											
-											if (getToken() == 7)
-												return false;
-										}
-									}
-								}
-								else
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-						}
-						else if (currentToken == "obligation")
-						{
-							if (getToken() == 0)
-							{
-								g.obligation = new Obligation(currentToken, "");
-								
-								if (g.op == 0)
-								{
-									if (getToken() == 8)
-									{
-										if (getToken() == 0)
-										{
-											g.obligation.verb = currentToken;
-											
-											while (getToken() != 7)
-											{
-												if (type == 8)
-												{
-													getToken();
-
-													if (type == 0 || type == 3)
-														g.obligation.arguments.Add(currentToken);
-													else return true;
-												}
-												else return true;
-											}
-											return false;
-										}
-									}
-								}
-								else
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-						}
-						else if (currentToken == "behavior")
-						{
-							if (getToken() == 0)
-							{
-								g.behavior = new Behavior(currentToken, "", 0);
-								
-								if (g.op == 0)
-								{
-									if (getToken() == 8)
-									{
-										if (getToken() == 0)
-										{
-											g.behavior.verb = currentToken;
-											
-											if (getToken() == 8)
-											{
-												if (getToken() == 2)
-												{
-													if (Int32.TryParse(currentToken, out g.behavior.chance))
-													{
-														while (getToken() != 7)
-														{
-															if (type == 8)
-															{
-																getToken();
-
-																if (type == 0 || type == 3)
-																	g.behavior.arguments.Add(currentToken);
-																else return true;
-															}
-															else return true;
-														}
-														return false;
-													}
-												}
-											}
-										}
-									}
-								}
-								else
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
+							c.conditionObject = currentToken;
+							if (getToken() == 7) return false;
 						}
 					}
-				}
-				else
-				{
-					g.num = new Number(currentToken, 0);
-					getToken();
-					
-					if (type == 15)
+					else if (currentToken == "not")
 					{
-						g.op = 2;
-						
-						if (getToken() == 2)
+						if (getToken() == 0)
 						{
-							if (Int32.TryParse(currentToken, out g.num.value))
+							if (currentToken == "empty")
 							{
-								if (getToken() == 7)
-									return false;
+								c.comparison = 9;
+								if (getToken() == 7) return false;								
 							}
+							else if (currentToken == "same")
+							{
+								c.comparison = 11;
+								if (getToken() == 3)
+								{
+									c.conditionObject = currentToken;
+									if (getToken() == 7) return false;
+								}								
+							}							
 						}
 					}
-					else if (type == 16)
-					{
-						g.op = 3;
-						
-						if (getToken() == 2)
-						{
-							if (Int32.TryParse(currentToken, out g.num.value))
-							{
-								if (getToken() == 7)
-									return false;
-							}
-						}
-					}
-					else if (type == 17)
-					{
-						g.op = 4;
-						
-						if (getToken() == 2)
-						{
-							if (Int32.TryParse(currentToken, out g.num.value))
-							{
-								if (getToken() == 7)
-									return false;
-							}
-						}
-					}
-					else if (type == 18)
-					{
-						g.op = 5;
-						
-						if (getToken() == 2)
-						{
-							if (Int32.TryParse(currentToken, out g.num.value))
-							{
-								if (getToken() == 7)
-									return false;
-							}
-						}
-					}
-					else if (type == 9)
-					{
-						g.op = 6;
-						
-						if (getToken() == 2)
-						{
-							if (Int32.TryParse(currentToken, out g.num.value))
-							{
-								if (getToken() == 7)
-									return false;
-							}
-						}
-					}
-					else return true;
 				}
 			}
 		}
+		
 		return true;
 	}
 
@@ -1261,358 +912,138 @@ public class StoryWorldLoader : MonoBehaviour
 			{
 				o.operatorSubject = currentToken;
 
-				if (getToken() == 0)
-				{
-					if (currentToken == "add" || currentToken == "remove")
-					{
-						if (currentToken == "add")
-							o.op = 0;
-						else
-							o.op = 1;
+				if (getToken() != 0)
+					return true;
 
+				if (currentToken == "add")
+				{
+					o.op = 0;
+
+					if (getToken() != 0)
+						return true;
+					if (currentToken == "tag")
+					{
 						if (getToken() == 0)
 						{
-							if (currentToken == "tag")
+							o.tagRef = currentToken;
+							if (getToken() == 7) return false;
+						}
+					}
+					else if (currentToken == "relate")
+					{
+						if (getToken() == 0)
+						{
+							o.relateRef = currentToken;
+
+							if (getToken() == 8)
 							{
-								if (getToken() == 0)
+								getToken();
+								if (type == 0 || type == 3)
 								{
-									o.tag = new Tag(currentToken);
-
-									if (getToken() == 7)
-										return false;
-								}
-							}
-							else if (currentToken == "relate")
-							{
-								if (getToken() == 0)
-								{
-									o.relationship = new Relationship(currentToken, "");
-
-									if (getToken() == 8)
-									{
-										getToken();
-
-										if (type == 0 || type == 3)
-										{
-											o.relationship.other = currentToken;
-
-											if (getToken() == 7)
-												return false;
-										}
-									}
-								}
-							}
-							else if (currentToken == "num")
-							{
-								if (getToken() == 0)
-								{
-									o.num = new Number(currentToken, 0);
-
-									if (o.op == 0)
-									{
-										if (getToken() == 8)
-										{
-											if (getToken() == 2)
-											{
-												if (Int32.TryParse(currentToken, out o.num.value))
-												{
-													if (getToken() == 7)
-														return false;
-												}
-											}
-										}
-									}
-									else
-									{
-										if (getToken() == 7)
-											return false;
-									}
-								}
-							}
-							else if (currentToken == "string")
-							{
-								if (getToken() == 0)
-								{
-									o.lnString = new LNString(currentToken, "");
-
-									if (o.op == 0)
-									{
-										if (getToken() == 8)
-										{
-											if (getToken() == 1)
-											{
-												o.lnString.text = currentToken;
-
-												if (getToken() == 7)
-													return false;
-											}
-										}
-									}
-									else
-									{
-										if (getToken() == 7)
-											return false;
-									}
-								}
-							}
-							else if (currentToken == "obligation")
-							{
-								if (getToken() == 0)
-								{
-									o.obligation = new Obligation(currentToken, "");
-
-									if (o.op == 0)
-									{
-										if (getToken() == 8)
-										{
-											if (getToken() == 0)
-											{
-												o.obligation.verb = currentToken;
-
-												while (getToken() != 7)
-												{
-													if (type == 8)
-													{
-														getToken();
-
-														if (type == 0 || type == 3)
-															o.obligation.arguments.Add(currentToken);
-														else return true;
-													}
-													else return true;
-												}
-												return false;
-											}
-										}
-									}
-									else
-									{
-										if (getToken() == 7)
-											return false;
-									}
-								}
-							}
-							else if (currentToken == "goal")
-							{
-								if (getToken() == 0)
-								{
-									o.goal = new Goal(currentToken, "", 0);
-
-									if (o.op == 0)
-									{
-										if (getToken() == 8)
-										{
-											bool error = false;
-											error = parseGoalOperator(o.goal);
-											if (error)
-												return true;
-											else
-												return false;
-										}
-									}
-									else
-									{
-										if (getToken() == 7)
-											return false;
-									}
-								}
-							}
-							else if (currentToken == "behavior")
-							{
-								if (getToken() == 0)
-								{
-									o.behavior = new Behavior(currentToken, "", 0);
-
-									if (o.op == 0)
-									{
-										if (getToken() == 8)
-										{
-											if (getToken() == 0)
-											{
-												o.behavior.verb = currentToken;
-
-												if (getToken() == 8)
-												{
-													if (getToken() == 2)
-													{
-														if (Int32.TryParse(currentToken, out o.behavior.chance))
-														{
-															while (getToken() != 7)
-															{
-																if (type == 8)
-																{
-																	getToken();
-
-																	if (type == 0 || type == 3)
-																		o.behavior.arguments.Add(currentToken);
-																	else return true;
-																}
-																else return true;
-															}
-															return false;
-														}
-													}
-												}
-											}
-										}
-									}
-									else
-									{
-										if (getToken() == 7)
-											return false;
-									}
+									o.relateObj = currentToken;
+									if (getToken() == 7) return false;
 								}
 							}
 						}
 					}
-					else
+					else if (currentToken == "string")
 					{
-						o.num = new Number(currentToken, 0);
-						print("A");
-						getToken();
-						if (type == 15)
+						if (getToken() == 0)
 						{
-							o.op = 2;
-							getToken();
-							if (type == 2)
+							o.stringRef = currentToken;
+							
+							if (getToken() == 8)
 							{
-								if (Int32.TryParse(currentToken, out o.num.value))
+								getToken();
+								if (type == 2)
 								{
-									if (getToken() == 7)
-										return false;
+									o.stringValue = currentToken;
+									if (getToken() == 7) return false;
 								}
 							}
-							else if (type == 0 || type == 3)
+						}
+					}
+					else if (currentToken == "num")
+					{
+						if (getToken() == 0)
+						{
+							o.numRef = currentToken;
+							
+							if (getToken() == 8)
 							{
-								o.subject2 = currentToken;
+								o.num = new Expression(0);
+								if (parseExpression(o.num))
+									return true;
+								if (getToken() == 7) return false;
+							}
+						}
+					}
+				}
+				else if (currentToken == "remove")
+				{
+					o.op = 1;
 
-								if (getToken() == 19)
+					if (getToken() != 0)
+						return true;
+					if (currentToken == "tag")
+					{
+						if (getToken() == 0)
+						{
+							o.tagRef = currentToken;
+							if (getToken() == 7) return false;
+						}
+					}
+					else if (currentToken == "relate")
+					{
+						if (getToken() == 0)
+						{
+							o.relateRef = currentToken;
+							
+							if (getToken() == 8)
+							{
+								getToken();
+								if (type == 0 || type == 3)
 								{
-									if (getToken() == 0)
-									{
-										o.numRef2 = currentToken;
+									o.relateObj = currentToken;
+									if (getToken() == 7) return false;
+								}
+							}
+						}
+					}
+					else if (currentToken == "string")
+					{
+						if (getToken() == 0)
+						{
+							o.stringRef = currentToken;
+							if (getToken() == 7) return false;
+						}
+					}
+					else if (currentToken == "num")
+					{
+						if (getToken() == 0)
+						{
+							o.numRef = currentToken;
+							if (getToken() == 7) return false;
+						}
+					}
+				}
+				else if (currentToken == "change")
+				{
+					o.op = 2;
+					getToken();
+					if (type == 0 && currentToken == "image")
+					{
+						if (getToken() == 0)
+						{
+							o.imageRef = currentToken;
 
-										if (getToken() == 7)
-											return false;
-									}
-								}
-							}
-						}
-						else if (type == 16)
-						{
-							o.op = 3;
-							print("A");
 							getToken();
-							if (type == 2)
+							if (type == 0 && currentToken == "to")
 							{
-								if (Int32.TryParse(currentToken, out o.num.value))
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-							else if (type == 0 || type == 3)
-							{
-								o.subject2 = currentToken;
-								print("A");
-								if (getToken() == 19)
-								{
-									if (getToken() == 0)
-									{
-										print("A");
-										o.numRef2 = currentToken;
-										
-										if (getToken() == 7)
-											return false;
-									}
-								}
+								o.image = currentToken;
+								if (getToken() == 7) return false;
 							}
 						}
-						else if (type == 17)
-						{
-							o.op = 4;
-							getToken();
-							if (type == 2)
-							{
-								if (Int32.TryParse(currentToken, out o.num.value))
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-							else if (type == 0 || type == 3)
-							{
-								o.subject2 = currentToken;
-								
-								if (getToken() == 19)
-								{
-									if (getToken() == 0)
-									{
-										o.numRef2 = currentToken;
-										
-										if (getToken() == 7)
-											return false;
-									}
-								}
-							}
-						}
-						else if (type == 18)
-						{
-							o.op = 5;
-							getToken();
-							if (type == 2)
-							{
-								if (Int32.TryParse(currentToken, out o.num.value))
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-							else if (type == 0 || type == 3)
-							{
-								o.subject2 = currentToken;
-								
-								if (getToken() == 19)
-								{
-									if (getToken() == 0)
-									{
-										o.numRef2 = currentToken;
-										
-										if (getToken() == 7)
-											return false;
-									}
-								}
-							}
-						}
-						else if (type == 9)
-						{
-							o.op = 6;
-							getToken();
-							if (type == 2)
-							{
-								if (Int32.TryParse(currentToken, out o.num.value))
-								{
-									if (getToken() == 7)
-										return false;
-								}
-							}
-							else if (type == 0 || type == 3)
-							{
-								o.subject2 = currentToken;
-								
-								if (getToken() == 19)
-								{
-									if (getToken() == 0)
-									{
-										o.numRef2 = currentToken;
-										
-										if (getToken() == 7)
-											return false;
-									}
-								}
-							}
-						}
-						else return true;
 					}
 				}
 			}
@@ -1621,14 +1052,12 @@ public class StoryWorldLoader : MonoBehaviour
 	}
 
 	//Parse Page
-	public bool parsePage(Page p, bool isEntityPage, bool isVerbPage)
+	public bool parsePage(Page p)
 	{
 		bool error = false;
 
 		if (getToken() == 0)
 		{
-			if ((isEntityPage && currentToken == "entity") || (isVerbPage && currentToken == "verb") || (!isEntityPage && !isVerbPage))
-			{
 				p.name = currentToken;
 
 				if (getToken() == 4)
@@ -1657,7 +1086,6 @@ public class StoryWorldLoader : MonoBehaviour
 					}
 					return false;
 				}
-			}
 		}
 		return true;
 	}
@@ -1743,11 +1171,10 @@ public class StoryWorldLoader : MonoBehaviour
 				{
 					if (getToken() == 2)
 					{
-						if (Int32.TryParse(currentToken, out n.value))
-						{
-							if (getToken() == 7)
-								return false;
-						}
+						n.value = tokenInt;
+
+						if (getToken() == 7)
+							return false;
 					}
 				}
 			}
@@ -1779,104 +1206,6 @@ public class StoryWorldLoader : MonoBehaviour
 		return true;
 	}
 
-	//Parse Obligation
-	public bool parseObligation(Obligation o)
-	{
-		if (getToken() == 6)
-		{
-			if (getToken() == 0)
-			{
-				o.name = currentToken;
-
-				if (getToken() == 8)
-				{
-					if (getToken() == 0)
-					{
-						o.verb = currentToken;
-
-						while (getToken() != 7)
-						{
-							if (type == 8)
-							{
-								if (getToken() == 0)
-									o.arguments.Add(currentToken);
-								else return true;
-							}
-							else return true;
-						}
-						return false;
-					}
-				}
-			}
-		}
-		return true;
-	}
-
-	//Parse Goal
-	public bool parseGoal(Goal g)
-	{
-		if (getToken() == 6)
-		{
-			if (getToken() == 0)
-			{
-				g.name = currentToken;
-
-				if (getToken() == 8)
-				{
-					bool error = false;
-					error = parseGoalOperator(g);
-					if (error)
-						return true;
-					else
-						return false;
-				}
-			}
-		}
-		return true;
-	}
-	
-	//Parse Behavior
-	public bool parseBehavior(Behavior b)
-	{
-		if (getToken() == 6)
-		{
-			if (getToken() == 0)
-			{
-				b.name = currentToken;
-
-				if (getToken() == 8)
-				{
-					if (getToken() == 0)
-					{
-						b.verb = currentToken;
-
-						if (getToken() == 8)
-						{
-							if (getToken() == 2)
-							{
-								if (Int32.TryParse(currentToken, out b.chance))
-								{
-									while (getToken() != 7)
-									{
-										if (type == 8)
-										{
-											if (getToken() == 0)
-												b.arguments.Add(currentToken);
-											else return true;
-										}
-										else return true;
-									}
-									return false;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return true;
-	}
-
 	//Parse Image
 	public bool parseImage(ImageDef i)
 	{
@@ -1901,26 +1230,8 @@ public class StoryWorldLoader : MonoBehaviour
 		return true;
 	}
 
-	//Parse Icon
-	public bool parseIcon(Entity e, Verb v)
-	{
-		if (getToken() == 6)
-		{
-			if (getToken() == 0)
-			{
-				if (e != null)
-					e.icon = currentToken;
-				if (v != null)
-					v.icon = currentToken;
-				if (getToken() == 7)
-					return false;
-			}
-		}
-		return true;
-	}
-
 	//Parse Icon text
-	public bool parseIconText(Entity e, Verb v)
+	public bool parseIcon(Entity e, Verb v)
 	{
 		if (getToken() == 6)
 		{
@@ -1932,30 +1243,24 @@ public class StoryWorldLoader : MonoBehaviour
 
 					if (getToken() == 8)
 					{
-						if (getToken() == 2)
+						e.it.red = new Expression(0);
+						if (parseExpression(e.it.red))
+							return true;
+
+						if (getToken() == 8)
 						{
-							if (Int32.TryParse(currentToken, out e.it.red))
+							e.it.green = new Expression(0);
+							if (parseExpression(e.it.green))
+								return true;
+
+							if (getToken() == 8)
 							{
-								if (getToken() == 8)
-								{
-									if (getToken() == 2)
-									{
-										if (Int32.TryParse(currentToken, out e.it.green))
-										{
-											if (getToken() == 8)
-											{
-												if (getToken() == 2)
-												{
-													if (Int32.TryParse(currentToken, out e.it.blue))
-													{
-														if (getToken() == 7)
-															return false;
-													}
-												}
-											}
-										}
-									}
-								}
+								e.it.blue = new Expression(0);
+								if (parseExpression(e.it.blue))
+									return true;
+
+								if (getToken() == 7)
+									return false;
 							}
 						}
 					}
@@ -1966,36 +1271,47 @@ public class StoryWorldLoader : MonoBehaviour
 					
 					if (getToken() == 8)
 					{
-						if (getToken() == 2)
+						v.it.red = new Expression(0);
+						if (parseExpression(v.it.red))
+							return true;
+						
+						if (getToken() == 8)
 						{
-							if (Int32.TryParse(currentToken, out v.it.red))
+							v.it.green = new Expression(0);
+							if (parseExpression(v.it.green))
+								return true;
+							
+							if (getToken() == 8)
 							{
-								if (getToken() == 8)
-								{
-									if (getToken() == 2)
-									{
-										if (Int32.TryParse(currentToken, out v.it.green))
-										{
-											if (getToken() == 8)
-											{
-												if (getToken() == 2)
-												{
-													if (Int32.TryParse(currentToken, out v.it.blue))
-													{
-														if (getToken() == 7)
-															return false;
-													}
-												}
-											}
-										}
-									}
-								}
+								v.it.blue = new Expression(0);
+								if (parseExpression(v.it.blue))
+									return true;
+								
+								if (getToken() == 7)
+									return false;
 							}
 						}
 					}
 				}
 			}
 		}
+		return true;
+	}
+
+	//Parse Agent
+	public bool parseAgent(Entity e)
+	{
+		if (getToken() == 6)
+		{
+			if (getToken() == 0)
+			{
+				e.agent = currentToken;
+
+				if (getToken() == 7)
+					return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -2038,24 +1354,6 @@ public class StoryWorldLoader : MonoBehaviour
 							e.strings.Add(temp);
 							error = parseString(temp);
 						}
-						else if (currentToken == "obligation")
-						{
-							Obligation temp = new Obligation("","");
-							e.obligations.Add(temp);
-							error = parseObligation(temp);
-						}
-						else if (currentToken == "goal")
-						{
-							Goal temp = new Goal("","",0);
-							e.goals.Add(temp);
-							error = parseGoal(temp);
-						}
-						else if (currentToken == "behavior")
-						{
-							Behavior temp = new Behavior("","",0);
-							e.behaviors.Add(temp);
-							error = parseBehavior(temp);
-						}
 						else if (currentToken == "image")
 						{
 							ImageDef temp = new ImageDef("","");
@@ -2064,13 +1362,8 @@ public class StoryWorldLoader : MonoBehaviour
 						}
 						else if (currentToken == "icon")
 							error = parseIcon(e, null);
-						else if (currentToken == "icontext")
-							error = parseIconText(e, null);
-						else if (currentToken == "page")
-						{
-							Page temp = new Page("");
-							error = parsePage(temp,true,false);
-						}
+						else if (currentToken == "agent")
+							error = parseAgent(e);
 						else
 							return true;
 					}
@@ -2079,40 +1372,6 @@ public class StoryWorldLoader : MonoBehaviour
 				}
 				return false;
 			}
-		}
-		return true;
-	}
-
-	//Parse Input Page
-	public bool parseInputPage(Page p)
-	{
-		bool error = false;
-
-		if (getToken() == 4)
-		{
-			while (getToken() != 5)
-			{
-				if (type == 0 && !error)
-				{
-					if (currentToken == "draw")
-					{
-						DrawInstruction temp = new DrawInstruction(false,"","","",0,0);
-						p.drawList.Add(temp);
-						error = parseDrawDef(temp);
-					}
-					else if (currentToken == "text")
-					{
-						DrawInstruction temp = new DrawInstruction(true,"","","",0,0);
-						p.drawList.Add(temp);
-						error = parseTextDef(temp);
-					}
-					else
-						return true;
-				}
-				else if (type != 5 || error)
-					return true;
-			}
-			return false;
 		}
 		return true;
 	}
@@ -2235,24 +1494,22 @@ public class StoryWorldLoader : MonoBehaviour
 						{
 							Condition temp = new Condition();
 							c.conditions.Add(temp);
-							bool error = false;
-							error = parseCondition(temp);
-							if (error) return true;
+							if (parseCondition(temp))
+								return true;
 						}
 						else if (currentToken == "do")
 						{
 							Operator temp = new Operator();
 							c.operators.Add(temp);
-							bool error = false;
-							error = parseOperator(temp);
-							if (error) return true;
+							if (parseOperator(temp)) 
+								return true;
 						}
 						else if (currentToken == "page")
 						{
-							c.page = new Page("");
-							bool error = false;
-							error = parsePage(c.page, false, true);
-							if (error) return true;
+							Page temp = new Page("");
+							c.pages.Add(temp);
+							if (parsePage(c.page))
+								return true;
 						}
 						else return true;
 					} 
@@ -2271,7 +1528,7 @@ public class StoryWorldLoader : MonoBehaviour
 		{
 			if (currentToken == "never")
 			{
-				d.neverShow = true;
+				d.name = currentToken;
 
 				if (getToken() == 7)
 					return false;
@@ -2290,9 +1547,8 @@ public class StoryWorldLoader : MonoBehaviour
 							{
 								Condition temp = new Condition();
 								d.conditions.Add(temp);
-								bool error = false;
-								error = parseCondition(temp);
-								if (error) return true;
+								if (parseCondition(temp))
+									return true;
 							}
 							else return true;
 						}
@@ -2321,9 +1577,7 @@ public class StoryWorldLoader : MonoBehaviour
 					if (type == 0 && !error)
 					{
 						if (currentToken == "icon")
-							error = parseIcon(null, v);		
-						else if (currentToken == "icontext")
-							error = parseIconText(null, v);
+							error = parseIcon(null, v);
 						else if (currentToken == "variable")
 						{
 							Variable temp = new Variable("");
@@ -2381,7 +1635,7 @@ public class StoryWorldLoader : MonoBehaviour
 						{
 							Page temp = new Page("");
 							e.pages.Add(temp);
-							error = parsePage(temp,false,false);
+							error = parsePage(temp);
 						}
 						else if (currentToken == "where")
 						{
@@ -2420,22 +1674,13 @@ public class StoryWorldLoader : MonoBehaviour
 						{
 							if (type == 0 && !error)
 							{
-								if (currentToken == "user")
-									error = parseUser(sw);
-								else if (currentToken == "beginning")
+								if (currentToken == "beginning")
 									error = parseBeginning(sw);
 								else if (currentToken == "entity")
 								{
 									Entity temp = new Entity("");
 									sw.entities.Add(temp);
 									error = parseEntity(temp);
-								}
-								else if (currentToken == "input")
-								{
-									Page temp = new Page("");
-									temp.isInputPage = true;
-									sw.input = temp;
-									error = parseInputPage(temp);
 								}
 								else if (currentToken == "verb")
 								{
@@ -2469,11 +1714,9 @@ public class StoryWorldLoader : MonoBehaviour
 		bool error = false;
 		swText = swFile.text;
 		endLoc = swText.Length - 1;
-		storyWorld = new StoryWorld("","");
+		storyWorld = new StoryWorld("");
 
-		error = parseStoryWorld(storyWorld);
-
-		if (!error)
+		if (!parseStoryWorld(storyWorld))
 			return -1;
 		else
 			return lineCount;

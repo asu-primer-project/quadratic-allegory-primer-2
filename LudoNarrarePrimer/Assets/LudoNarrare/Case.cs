@@ -9,7 +9,7 @@ public class Case
 	public string name;
 	public List<Condition> conditions;
 	public List<Operator> operators;
-	public Page page;
+	public List<Page> pages;
 
 	/* Functions */
 	public Case(string _name)
@@ -17,7 +17,7 @@ public class Case
 		name = _name;
 		conditions = new List<Condition>();
 		operators = new List<Operator>();
-		page = null;
+		pages = new List<Page>();
 	}
 
 	public void replaceWith(string replace, string with)
@@ -28,7 +28,8 @@ public class Case
 		for (int i = 0; i < operators.Count; i++)
 			operators[i].replaceWith(replace, with);
 
-		page.replaceWith(replace, with);
+		for (int i = 0; i < pages.Count; i++)
+			pages[i].replaceWith(replace, with);
 	}
 
 	public void copyTo(Case c)
@@ -55,8 +56,14 @@ public class Case
 				c.operators.Add(temp);
 			}
 
-			c.page = new Page("");
-			page.copyTo(c.page);
+			//Copy pages
+			c.pages.Clear();
+			for (int i = 0; i < pages.Count; i++)
+			{
+				Page temp = new Page("");
+				pages[i].copyTo(temp);
+				c.pages.Add(temp);
+			}
 		}
 	}
 }

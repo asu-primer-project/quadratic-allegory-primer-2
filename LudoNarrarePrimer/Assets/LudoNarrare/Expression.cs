@@ -24,14 +24,35 @@ public class Expression
 		entRef = "";
 		numRef = "";
 	}
-
-	/*
-	//Should be written for the engine, since it needs full story world access for referencing. Implement via recursion
-	public int evaluate()
+	
+	public int evaluate(StoryWorld sw)
 	{
+		if (type == 2)
+		{
+			int left = leftExp.evaluate(sw);
+			int right = rightExp.evaluate(sw);
 
+			switch(op)
+			{
+			case 0: return left + right;
+			case 1: return left - right;
+			case 2: return left * right;
+			case 3: 
+				{
+					if (right == 0)
+						return 0; //Treason, I know, but I'm too lazy to think up the proper solution
+					else
+						return left / right;
+				}
+			}
+		}
+		else if (type == 0)
+			return number;
+		else if (type == 1)
+			return sw.entities.Find(x => x.name == entRef).numbers.Find(y => y.name == numRef).value;
+		else
+			return 0;
 	}
-	*/
 
 	public void replaceWith(string replace, string with)
 	{

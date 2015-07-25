@@ -8,19 +8,19 @@ public class Condition
     /* Variables */
     public string name;
     public string conditionSubject;
+	public string conditionObject;
 	public bool allCS; //false - one
-	public bool allRO; //false - one
-	//0 - has, 1 - missing, 2 - =, 3 - !=, 4 - <, 5 - >, 6 - <=, 7 - >=
+	public bool allCO; //false - one
+	//0 - has, 1 - missing, 2 - =, 3 - !=, 4 - <, 5 - >, 
+	//6 - <=, 7 - >=, 8 - empty, 9 - not empty, 10 - same, 11 - not same
+	//12 - matches, 13 - not matches
 	public int comparison;
     public string tagRef;
     public string relateRef;
-	public string relateObject;
 	public string numRef;
 	public string stringRef;
 	public Expression numCompare;
 	public string stringCompare;
-	public string variableObject;
-	public string subject2;
 	public string stringRef2;
 
     /* Functions */
@@ -28,18 +28,16 @@ public class Condition
     {
         name = "";
 		conditionSubject = "";
+		conditionObject = "";
 		allCS = false;
-		allRO = false;
+		allCO = false;
 		comparison = 0;
 		tagRef = "";
 		relateRef = "";
-		relateObject = "";
 		numRef = "";
 		stringRef = "";
 		numCompare = null;
 		stringCompare = "";
-		variableObject = "";
-		subject2 = "";
 		stringRef2 = "";
     }
 
@@ -47,16 +45,16 @@ public class Condition
     {
         if (conditionSubject == replace)
             conditionSubject = with;
-        if (relateObject == replace)
-            relateObject = with;
-		if (subject2 == replace)
-			subject2 = with;
+		if (conditionObject == replace)
+            conditionObject = with;
 		if (numCompare != null)
 			numCompare.replaceWith(replace, with);
     }
 
+	//Probably completely wrong
 	public int getType()
 	{
+		/*
 		if (stringRef2 != "")
 			return 5;
 		else if (tagRef != "")
@@ -70,7 +68,8 @@ public class Condition
 		else if (variableObject != "")
 			return 4;
 		else
-			return -1;
+			return -1;*/
+		return 0;
 	}
 
     public void copyTo(Condition c)
@@ -79,12 +78,12 @@ public class Condition
         {
             c.name = name;
             c.conditionSubject = conditionSubject;
+			c.conditionObject = conditionObject;
 			c.allCS = allCS;
-			c.allRO = allRO;
+			c.allCO = allCO;
 			c.comparison = comparison;
 			c.tagRef = tagRef;
 			c.relateRef = relateRef;
-			c.relateObject = relateObject;
 			c.numRef = numRef;
 			c.stringRef = stringRef;
 			if (c.numCompare != null)
@@ -95,8 +94,6 @@ public class Condition
 			else
 				c.numCompare = null;
 			c.stringCompare = stringCompare;
-			c.variableObject = variableObject;
-			c.subject2 = subject2;
 			c.stringRef2 = stringRef2;
         }
     }

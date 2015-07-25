@@ -8,14 +8,17 @@ public class Operator
     /* Variables */
     public string name;
     public string operatorSubject;
-	//0 - add, 1 - remove
+	//0 - add, 1 - remove, 2 - change
 	public int op; 
-    public Tag tag;
-    public Relationship relationship;
+    public string tagRef;
+    public string relateRef;
+	public string relateObj;
 	public string numRef;
 	public Expression num;
-	public LNString lnString;
-	public ImageDef newImage;
+	public string stringRef;
+	public string stringValue;
+	public string imageRef;
+	public string image;
 
     /* Functions */
     public Operator()
@@ -23,29 +26,31 @@ public class Operator
         name = "";
         operatorSubject = "";
 		op = 0;
-        tag = null;
-        relationship = null;
+        tagRef = "";
+        relateRef = "";
+		relateObj = "";
 		numRef = "";
 		num = null;
-		lnString = null;
-		newImage = null;
-    }
+		stringRef = "";
+		stringValue = "";
+		imageRef = "";
+		image = "";
+	}
 
     public void replaceWith(string replace, string with)
     {
         if (operatorSubject == replace)
             operatorSubject = with;
-		if (relationship != null)
-		{
-		    if (relationship.other == replace)
-		        relationship.other = with;
-		}
+		if (relateObj == replace)
+			relateObj = with;
 		if (num != null)
 			num.replaceWith(replace, with);
     }
 
+	//Completely broke again
 	public int getType()
 	{
+		/*
 		if (tag != null)
 			return 0;
 		else if (relationship != null)
@@ -57,7 +62,7 @@ public class Operator
 		else if (newImage != null)
 			return 4;
 		else
-			return -1;
+			return -1;*/
 	}
 
     public void copyTo(Operator o)
@@ -67,31 +72,19 @@ public class Operator
             o.name = name;
             o.operatorSubject = operatorSubject;
 			o.op = op;
-            if (tag != null)
-			{
-				o.tag = new Tag("");
-                tag.copyTo(o.tag);
-			}
-            if (relationship != null)
-			{
-				o.relationship = new Relationship("", "");
-                relationship.copyTo(o.relationship);
-			}
+			o.tagRef = tagRef;
+			o.relateRef = relateRef;
+			o.relateObj = relateObj;
+			o.numRef = numRef;
 			if (num != null)
 			{
 				o.num = new Expression(num.type);
 				num.copyTo(o.num);
 			}
-			if (lnString != null)
-			{
-				o.lnString = new LNString("","");
-				lnString.copyTo(o.lnString);
-			}
-			if (ImageDef != null)
-			{
-				o.newImage = new ImageDef("","");
-				newImage.copyTo(o.newImage);
-			}
+			o.stringRef = stringRef;
+			o.stringValue = stringValue;
+			o.imageRef = imageRef;
+			o.image = image;
         }
     }
 }

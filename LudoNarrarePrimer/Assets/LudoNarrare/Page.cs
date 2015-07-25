@@ -6,12 +6,14 @@ public class Page
 {
 	/* Variables */
 	public string name;
+	public bool isInputPage;
 	public List<DrawInstruction> drawList;
 
 	/* Functions */
 	public Page(string _name)
 	{
 		name = _name;
+		isInputPage = false;
 		drawList = new List<DrawInstruction>();
 	}
 
@@ -26,6 +28,7 @@ public class Page
 		if (p != null)
 		{
 			p.name = name;
+			p.isInputPage = isInputPage;
 			p.drawList.Clear();
 			for (int i = 0; i < drawList.Count; i++)
 			{

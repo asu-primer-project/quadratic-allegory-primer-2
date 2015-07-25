@@ -20,9 +20,6 @@ tag
 relate
 num
 string
-obligation
-goal
-behavior
 image
 verb
 variable
@@ -41,7 +38,15 @@ remove
 icon
 one
 all
-icontext
+none
+never
+matches
+empty
+not
+agent
+same
+change
+to
 
 SYMBOLS
 {
@@ -81,6 +86,8 @@ TOKEN TYPE INDEXES
 17 - *
 18 - /
 19 - .
+20 - (
+21 - )
 
 LNScript Syntax
 ------------------
@@ -292,13 +299,15 @@ LNScript Context Free Grammar
 
 <STORYWORLD>                ==> storyworld WORD <STORYWORLDBLOCK>
 
-<STORYWORLDBLOCK>           ==> { <USERDEF> <BEGINDEF> <ENTITYDEFLIST> <VERBDEFLIST> <ENDDEFLIST> }
+<STORYWORLDBLOCK>           ==> { <DEFLIST> }
 
-<USERDEF>                   ==> user: WORD;
+<DEFLIST>					==> <DEF> <DEFLIST> || <DEF>
+
+<DEF>						==> <BEGINDEF> || <ENTITYDEFLIST> || <VERBDEFLIST> || <ENDDEFLIST>
 
 <DRAWDEFLIST>               ==> <DRAWDEF> <DRAWDEFLIST> || <DRAWDEF>
 
-<DRAWDEF>                   ==> draw: WORD image WORD, <EXPRESSION>, <EXPRESSION>;
+<DRAWDEF>                   ==> draw: <REFERENCEOP> image WORD, <EXPRESSION>, <EXPRESSION>; || <TEXTDEF>
 
 <TEXTDEF>                   ==> text: STRING;
 
@@ -306,17 +315,19 @@ LNScript Context Free Grammar
 
 <PAGEDEFLIST>               ==> <PAGEDEF> <PAGEDEFLIST> || <PAGEDEF>
 
-<PAGEDEF>                   ==> page WORD { <DRAWDEFLIST> <TEXTDEF> }
+<PAGEDEF>                   ==> page WORD { <DRAWDEFLIST> }
 
 <ENTITYDEFLIST>             ==> <ENTITYDEF> <ENTITYDEFLIST> || <ENTITYDEF>
 
-<ENTITYDEF>                 ==> entity WORD { <ICONDEF> <ATTRIBUTELIST> }
-
-<ICONDEF>                   ==> icon: STRING, <EXPRESSION>, <EXPRESSION>, <EXPRESSION>;
+<ENTITYDEF>                 ==> entity WORD { <ATTRIBUTELIST> }
 
 <ATTRIBUTELIST>             ==> <ATTRIBUTE> <ATTRIBUTELIST> || <ATTRIBUTE>
 
-<ATTRIBUTE>                 ==> <TAGATTR> || <RELATEATTR> || <STRINGATTR> || <NUMBERATTR> || <IMAGEATTR>
+<ATTRIBUTE>                 ==> <AGENTDEF> || <ICONDEF> || <TAGATTR> || <RELATEATTR> || <STRINGATTR> || <NUMBERATTR> || <IMAGEATTR>
+
+<AGENTDEF>                  ==> agent: WORD;
+
+<ICONDEF>                   ==> icon: STRING, <EXPRESSION>, <EXPRESSION>, <EXPRESSION>;
 
 <TAGATTR>                   ==> tag: WORD;
 
@@ -354,7 +365,7 @@ LNScript Context Free Grammar
 
 <DISCRIMINATORLIST>         ==> <DISCRIMINATOR> <DISCRIMINATORLIST> || EMPTY
 
-<DISCRIMINATOR>             ==> discriminator never || discriminator WORD { <CONDITIONLIST> }
+<DISCRIMINATOR>             ==> discriminator never; || discriminator WORD { <CONDITIONLIST> }
 
 <CONDITIONLIST>             ==> <CONDITION> <CONDITIONLIST> || EMPTY
 
@@ -374,7 +385,7 @@ LNScript Context Free Grammar
 
 <COMPARISON>                ==> = || != || < || > || <= || >=
 
-<REFERENCE>                 ==> WORD || VARIABLE || one VARIABLE || all VARIABLE
+<REFERENCE>                 ==> WORD || one VARIABLE || all VARIABLE
 
 <REFERENCEOP>               ==> WORD || VARIABLE
 
@@ -382,7 +393,7 @@ LNScript Context Free Grammar
 
 <OPERATOR>                  ==> do: <OPERATORDEF>;
 
-<OPERATORDEF>               ==> <REFERENCEOP> add tag WORD || <REFERENCEOP> add relate WORD, <REFERENCEOP> || <REFERENCEOP> add string WORD, STRING || <REFERENCEOP> add num WORD, <EXPRESSIONVERB> 
+<OPERATORDEF>               ==> <REFERENCEOP> add tag WORD || <REFERENCEOP> add relate WORD, <REFERENCEOP> || <REFERENCEOP> add string WORD, STRING || <REFERENCEOP> add num WORD, <EXPRESSION> 
 
 <OPERATORDEF>               ==>	<REFERENCEOP> change image WORD to WORD
 

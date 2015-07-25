@@ -7,6 +7,7 @@ public class Entity
 {
     /* Variables */
     public string name;
+	public string agent;
 	public IconText it;
     public List<Tag> tags;
     public List<Relationship> relationships;
@@ -18,6 +19,7 @@ public class Entity
     public Entity(string _name)
     {
         name = _name;
+		agent = "None";
 		it = null;
         tags = new List<Tag>();
         relationships = new List<Relationship>();
