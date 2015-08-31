@@ -52,6 +52,7 @@ public class Expression
 			return sw.entities.Find(x => x.name == entRef).numbers.Find(y => y.name == numRef).value;
 		else
 			return 0;
+		return 0;
 	}
 
 	public void replaceWith(string replace, string with)
@@ -74,12 +75,16 @@ public class Expression
 			e.leftExp = new Expression(leftExp.type);
 			leftExp.copyTo(e.leftExp);
 		}
+		else
+			e.leftExp = null;
 
 		if (rightExp != null)
 		{
 			e.rightExp = new Expression(rightExp.type);
 			rightExp.copyTo(e.rightExp);
 		}
+		else
+			e.rightExp = null;
 
 		e.op = op;
 		e.entRef = entRef;

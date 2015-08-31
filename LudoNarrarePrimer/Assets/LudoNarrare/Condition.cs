@@ -6,95 +6,112 @@ using System.Text;
 public class Condition
 {
     /* Variables */
-    public string name;
-    public string conditionSubject;
-	public string conditionObject;
-	public bool allCS; //false - one
-	public bool allCO; //false - one
-	//0 - has, 1 - missing, 2 - =, 3 - !=, 4 - <, 5 - >, 
-	//6 - <=, 7 - >=, 8 - empty, 9 - not empty, 10 - same, 11 - not same
-	//12 - matches, 13 - not matches
-	public int comparison;
-    public string tagRef;
-    public string relateRef;
-	public string numRef;
-	public string stringRef;
-	public Expression numCompare;
-	public string stringCompare;
-	public string stringRef2;
+	public bool notFlag;
+	public AtomicCondition atomic;
+	public Condition left;
+	public Condition right;
+	public bool andFlag;
+	public bool orFlag;
 
     /* Functions */
     public Condition()
     {
-        name = "";
-		conditionSubject = "";
-		conditionObject = "";
-		allCS = false;
-		allCO = false;
-		comparison = 0;
-		tagRef = "";
-		relateRef = "";
-		numRef = "";
-		stringRef = "";
-		numCompare = null;
-		stringCompare = "";
-		stringRef2 = "";
+		notFlag = false;
+		atomic = null;
+		left = null;
+		right = null;
+		andFlag = false;
+		orFlag = false;
     }
+
+	public bool evaluate(StoryWorld sw, Verb vc)
+	{
+		if (notFlag && left != null)
+		{
+			bool t = left.evaluate(sw, vc);
+
+			if (t)
+				return false;
+			else
+				return true;
+		}
+		else if (atomic != null)
+		{
+			bool t = atomic.evaluate(sw, vc);
+
+			if (t)
+				return true;
+			else
+				return false;
+		}
+		else if (left != null && right != null)
+		{
+			bool l = left.evaluate(sw, vc);
+			bool r = right.evaluate(sw, vc);
+
+			if (andFlag)
+			{
+				if (l && r)
+					return true;
+				else
+					return false;
+			}
+			else if (orFlag) 
+			{
+				if (l || r)
+					return true;
+				else
+					return false;
+			}
+			else
+				return false;
+		}
+		else
+			return false;
+	}
 
     public void replaceWith(string replace, string with)
     {
-        if (conditionSubject == replace)
-            conditionSubject = with;
-		if (conditionObject == replace)
-            conditionObject = with;
-		if (numCompare != null)
-			numCompare.replaceWith(replace, with);
+		if (atomic != null)
+			atomic.replaceWith(replace, with);
+		if (left != null)
+			left.replaceWith(replace, with);
+		if (right != null)
+			right.replaceWith(replace, with);
     }
-
-	//Probably completely wrong
-	public int getType()
-	{
-		/*
-		if (stringRef2 != "")
-			return 5;
-		else if (tagRef != "")
-			return 0;
-		else if (relateRef != "")
-			return 1;
-		else if (numRef != "")
-			return 2;
-		else if (stringRef != "")
-			return 3;
-		else if (variableObject != "")
-			return 4;
-		else
-			return -1;*/
-		return 0;
-	}
 
     public void copyTo(Condition c)
     {
         if (c != null)
         {
-            c.name = name;
-            c.conditionSubject = conditionSubject;
-			c.conditionObject = conditionObject;
-			c.allCS = allCS;
-			c.allCO = allCO;
-			c.comparison = comparison;
-			c.tagRef = tagRef;
-			c.relateRef = relateRef;
-			c.numRef = numRef;
-			c.stringRef = stringRef;
-			if (c.numCompare != null)
+			c.notFlag = notFlag;
+
+			if (atomic != null)
 			{
-				c.numCompare = new Expression(numCompare.type);
-				numCompare.copyTo(c.numCompare);
+				c.atomic = new AtomicCondition();
+				atomic.copyTo(c.atomic);
 			}
 			else
-				c.numCompare = null;
-			c.stringCompare = stringCompare;
-			c.stringRef2 = stringRef2;
+				c.atomic = null;
+
+			if (left != null)
+			{
+				c.left = new Condition();
+				left.copyTo(c.left);
+			}
+			else
+				c.left = null;
+
+			if (right != null)
+			{
+				c.right = new Condition();
+				right.copyTo(c.right);
+			}
+			else
+				c.right = null;
+
+			c.andFlag = andFlag;
+			c.orFlag = orFlag;
         }
     }
 }

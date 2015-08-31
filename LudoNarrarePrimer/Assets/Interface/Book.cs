@@ -72,6 +72,7 @@ public class Book : MonoBehaviour
 	private int pageIndex;
 
 	private LudoNarrare ln;
+	private Engine eng;
 	private bool ready = false;
 	private bool waitingForInput = false;
 
@@ -93,8 +94,6 @@ public class Book : MonoBehaviour
 		argue3Tab.SetActive(false);
 		argue4Tab.SetActive(false);
 
-		Engine eng = ln.getEngine();
-
 		switch(argueCount)
 		{
 		case 0:
@@ -111,7 +110,7 @@ public class Book : MonoBehaviour
 			executeTab.GetComponent<RectTransform>().localPosition = new Vector3(650f, -162.5f, 0f);
 
 			Text a1Text = argue1Text.GetComponent<Text>();
-			a1Text.text = eng.currentAgentChoices[verbChoice].arguments[0].text;
+			a1Text.text = eng.currentUserChoices[verbChoice].arguments[0].text;
 			break;
 		}
 		case 2:
@@ -125,8 +124,8 @@ public class Book : MonoBehaviour
 
 			Text a1Text = argue1Text.GetComponent<Text>();
 			Text a2Text = argue2Text.GetComponent<Text>();
-			a1Text.text = eng.currentAgentChoices[verbChoice].arguments[0].text;
-			a2Text.text = eng.currentAgentChoices[verbChoice].arguments[1].text;
+			a1Text.text = eng.currentUserChoices[verbChoice].arguments[0].text;
+			a2Text.text = eng.currentUserChoices[verbChoice].arguments[1].text;
 			break;
 		}
 		case 3:
@@ -143,9 +142,9 @@ public class Book : MonoBehaviour
 			Text a1Text = argue1Text.GetComponent<Text>();
 			Text a2Text = argue2Text.GetComponent<Text>();
 			Text a3Text = argue3Text.GetComponent<Text>();
-			a1Text.text = eng.currentAgentChoices[verbChoice].arguments[0].text;
-			a2Text.text = eng.currentAgentChoices[verbChoice].arguments[1].text;
-			a3Text.text = eng.currentAgentChoices[verbChoice].arguments[2].text;
+			a1Text.text = eng.currentUserChoices[verbChoice].arguments[0].text;
+			a2Text.text = eng.currentUserChoices[verbChoice].arguments[1].text;
+			a3Text.text = eng.currentUserChoices[verbChoice].arguments[2].text;
 			break;
 		}
 		case 4:
@@ -165,10 +164,10 @@ public class Book : MonoBehaviour
 			Text a2Text = argue2Text.GetComponent<Text>();
 			Text a3Text = argue3Text.GetComponent<Text>();
 			Text a4Text = argue4Text.GetComponent<Text>();
-			a1Text.text = eng.currentAgentChoices[verbChoice].arguments[0].text;
-			a2Text.text = eng.currentAgentChoices[verbChoice].arguments[1].text;
-			a3Text.text = eng.currentAgentChoices[verbChoice].arguments[2].text;
-			a4Text.text = eng.currentAgentChoices[verbChoice].arguments[3].text;
+			a1Text.text = eng.currentUserChoices[verbChoice].arguments[0].text;
+			a2Text.text = eng.currentUserChoices[verbChoice].arguments[1].text;
+			a3Text.text = eng.currentUserChoices[verbChoice].arguments[2].text;
+			a4Text.text = eng.currentUserChoices[verbChoice].arguments[3].text;
 			break;
 		}
 		}
@@ -176,11 +175,13 @@ public class Book : MonoBehaviour
 
 	public void redrawUI(int argueCount)
 	{
+		updateInputPage();
+
 		switch(argueCount)
 		{
 		case 0:
 		{
-			IconText itV = ln.getEngine().currentAgentChoices[verbChoice].it;
+			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
 			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
 
@@ -195,7 +196,7 @@ public class Book : MonoBehaviour
 		}
 		case 1:
 		{
-			IconText itV = ln.getEngine().currentAgentChoices[verbChoice].it;
+			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
 			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
 			
@@ -207,7 +208,7 @@ public class Book : MonoBehaviour
 			else
 				vt.color = Color.white;
 
-			IconText itA1 = ln.getEngine().currentAgentChoices[verbChoice].arguments[0].values[argument1].it;
+			IconText itA1 = eng.currentUserChoices[verbChoice].arguments[0].values[argument1].it;
 			Image a1i = argue1Icon.GetComponent<Image>();
 			a1i.color = new Vector4((float)itA1.red.evaluate(sw)/255f, (float)itA1.green.evaluate(sw)/255f, (float)itA1.blue.evaluate(sw)/255f, 1f);
 			
@@ -223,7 +224,7 @@ public class Book : MonoBehaviour
 		}
 		case 2:
 		{
-			IconText itV = ln.getEngine().currentAgentChoices[verbChoice].it;
+			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
 			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
 			
@@ -235,7 +236,7 @@ public class Book : MonoBehaviour
 			else
 				vt.color = Color.white;
 			
-			IconText itA1 = ln.getEngine().currentAgentChoices[verbChoice].arguments[0].values[argument1].it;
+			IconText itA1 = eng.currentUserChoices[verbChoice].arguments[0].values[argument1].it;
 			Image a1i = argue1Icon.GetComponent<Image>();
 			a1i.color = new Vector4((float)itA1.red.evaluate(sw)/255f, (float)itA1.green.evaluate(sw)/255f, (float)itA1.blue.evaluate(sw)/255f, 1f);
 			
@@ -247,7 +248,7 @@ public class Book : MonoBehaviour
 			else
 				a1t.color = Color.white;
 
-			IconText itA2 = ln.getEngine().currentAgentChoices[verbChoice].arguments[1].values[argument2].it;
+			IconText itA2 = eng.currentUserChoices[verbChoice].arguments[1].values[argument2].it;
 			Image a2i = argue2Icon.GetComponent<Image>();
 			a2i.color = new Vector4((float)itA2.red.evaluate(sw)/255f, (float)itA2.green.evaluate(sw)/255f, (float)itA2.blue.evaluate(sw)/255f, 1f);
 			
@@ -263,7 +264,7 @@ public class Book : MonoBehaviour
 		}
 		case 3:
 		{
-			IconText itV = ln.getEngine().currentAgentChoices[verbChoice].it;
+			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
 			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
 			
@@ -275,7 +276,7 @@ public class Book : MonoBehaviour
 			else
 				vt.color = Color.white;
 			
-			IconText itA1 = ln.getEngine().currentAgentChoices[verbChoice].arguments[0].values[argument1].it;
+			IconText itA1 = eng.currentUserChoices[verbChoice].arguments[0].values[argument1].it;
 			Image a1i = argue1Icon.GetComponent<Image>();
 			a1i.color = new Vector4((float)itA1.red.evaluate(sw)/255f, (float)itA1.green.evaluate(sw)/255f, (float)itA1.blue.evaluate(sw)/255f, 1f);
 			
@@ -287,7 +288,7 @@ public class Book : MonoBehaviour
 			else
 				a1t.color = Color.white;
 			
-			IconText itA2 = ln.getEngine().currentAgentChoices[verbChoice].arguments[1].values[argument2].it;
+			IconText itA2 = eng.currentUserChoices[verbChoice].arguments[1].values[argument2].it;
 			Image a2i = argue2Icon.GetComponent<Image>();
 			a2i.color = new Vector4((float)itA2.red.evaluate(sw)/255f, (float)itA2.green.evaluate(sw)/255f, (float)itA2.blue.evaluate(sw)/255f, 1f);
 			
@@ -299,7 +300,7 @@ public class Book : MonoBehaviour
 			else
 				a2t.color = Color.white;
 
-			IconText itA3 = ln.getEngine().currentAgentChoices[verbChoice].arguments[2].values[argument3].it;
+			IconText itA3 = eng.currentUserChoices[verbChoice].arguments[2].values[argument3].it;
 			Image a3i = argue3Icon.GetComponent<Image>();
 			a3i.color = new Vector4((float)itA3.red.evaluate(sw)/255f, (float)itA3.green.evaluate(sw)/255f, (float)itA3.blue.evaluate(sw)/255f, 1f);
 			
@@ -315,7 +316,7 @@ public class Book : MonoBehaviour
 		}
 		case 4:
 		{
-			IconText itV = ln.getEngine().currentAgentChoices[verbChoice].it;
+			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
 			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
 			
@@ -327,7 +328,7 @@ public class Book : MonoBehaviour
 			else
 				vt.color = Color.white;
 			
-			IconText itA1 = ln.getEngine().currentAgentChoices[verbChoice].arguments[0].values[argument1].it;
+			IconText itA1 = eng.currentUserChoices[verbChoice].arguments[0].values[argument1].it;
 			Image a1i = argue1Icon.GetComponent<Image>();
 			a1i.color = new Vector4((float)itA1.red.evaluate(sw)/255f, (float)itA1.green.evaluate(sw)/255f, (float)itA1.blue.evaluate(sw)/255f, 1f);
 			
@@ -339,7 +340,7 @@ public class Book : MonoBehaviour
 			else
 				a1t.color = Color.white;
 			
-			IconText itA2 = ln.getEngine().currentAgentChoices[verbChoice].arguments[1].values[argument2].it;
+			IconText itA2 = eng.currentUserChoices[verbChoice].arguments[1].values[argument2].it;
 			Image a2i = argue2Icon.GetComponent<Image>();
 			a2i.color = new Vector4((float)itA2.red.evaluate(sw)/255f, (float)itA2.green.evaluate(sw)/255f, (float)itA2.blue.evaluate(sw)/255f, 1f);
 			
@@ -351,7 +352,7 @@ public class Book : MonoBehaviour
 			else
 				a2t.color = Color.white;
 			
-			IconText itA3 = ln.getEngine().currentAgentChoices[verbChoice].arguments[2].values[argument3].it;
+			IconText itA3 = eng.currentUserChoices[verbChoice].arguments[2].values[argument3].it;
 			Image a3i = argue3Icon.GetComponent<Image>();
 			a3i.color = new Vector4((float)itA3.red.evaluate(sw)/255f, (float)itA3.green.evaluate(sw)/255f, (float)itA3.blue.evaluate(sw)/255f, 1f);
 			
@@ -363,7 +364,7 @@ public class Book : MonoBehaviour
 			else
 				a3t.color = Color.white;
 
-			IconText itA4 = ln.getEngine().currentAgentChoices[verbChoice].arguments[3].values[argument4].it;
+			IconText itA4 = eng.currentUserChoices[verbChoice].arguments[3].values[argument4].it;
 			Image a4i = argue4Icon.GetComponent<Image>();
 			a4i.color = new Vector4((float)itA4.red.evaluate(sw)/255f, (float)itA4.green.evaluate(sw)/255f, (float)itA4.blue.evaluate(sw)/255f, 1f);
 			
@@ -380,18 +381,50 @@ public class Book : MonoBehaviour
 		}
 	}
 
+	public void updateInputPage()
+	{
+		Verb currentVerb = eng.currentUserChoices[verbChoice];
+		Page p = null;
+
+		switch (currentVerb.arguments.Count)
+		{
+		case 0:
+			p = eng.getPagePreview(currentVerb, "", "" , "", ""); 
+			break;
+		case 1:
+			p = eng.getPagePreview(currentVerb, currentVerb.arguments[0].values[argument1].name, "", "", ""); 
+			break;
+		case 2:
+			p = eng.getPagePreview(currentVerb, currentVerb.arguments[0].values[argument1].name, currentVerb.arguments[1].values[argument2].name, "", ""); 
+			break;
+		case 3:
+			p = eng.getPagePreview(currentVerb, currentVerb.arguments[0].values[argument1].name, currentVerb.arguments[1].values[argument2].name, currentVerb.arguments[2].values[argument3].name, ""); 
+			break;
+		case 4:
+			p = eng.getPagePreview(currentVerb, currentVerb.arguments[0].values[argument1].name, currentVerb.arguments[1].values[argument2].name, currentVerb.arguments[2].values[argument3].name, currentVerb.arguments[3].values[argument4].name); 
+			break;
+		}
+
+		if (p != null)
+		{
+			eng.output.RemoveAt(eng.output.Count - 1);
+			p.isInputPage = true;
+			eng.output.Add(p);
+		}
+	}
+
 	//Functions that handle user verb choosing
 	public void incrementVerb()
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
-			if (verbChoice != ln.getEngine().currentAgentChoices.Count - 1)
+			if (verbChoice != eng.currentUserChoices.Count - 1)
 				verbChoice++;
 			else
 				verbChoice = 0;
 
-			setUIArguments(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 
@@ -402,10 +435,10 @@ public class Book : MonoBehaviour
 			if (verbChoice != 0)
 				verbChoice--;
 			else
-				verbChoice = ln.getEngine().currentAgentChoices.Count - 1;	
+				verbChoice = eng.currentUserChoices.Count - 1;	
 
-			setUIArguments(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 
@@ -413,12 +446,12 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
-			if (argument1 != ln.getEngine().currentAgentChoices[verbChoice].arguments[0].values.Count - 1)
+			if (argument1 != eng.currentUserChoices[verbChoice].arguments[0].values.Count - 1)
 				argument1++;
 			else
 				argument1 = 0;
 
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 	
@@ -429,9 +462,9 @@ public class Book : MonoBehaviour
 			if (argument1 != 0)
 				argument1--;
 			else
-				argument1 = ln.getEngine().currentAgentChoices[verbChoice].arguments[0].values.Count - 1;
+				argument1 = eng.currentUserChoices[verbChoice].arguments[0].values.Count - 1;
 
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 	
@@ -439,12 +472,12 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
-			if (argument2 != ln.getEngine().currentAgentChoices[verbChoice].arguments[1].values.Count - 1)
+			if (argument2 != eng.currentUserChoices[verbChoice].arguments[1].values.Count - 1)
 				argument2++;
 			else
 				argument2 = 0;			
 
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 	
@@ -455,9 +488,9 @@ public class Book : MonoBehaviour
 			if (argument2 != 0)
 				argument2--;
 			else
-				argument2 = ln.getEngine().currentAgentChoices[verbChoice].arguments[1].values.Count - 1;	
+				argument2 = eng.currentUserChoices[verbChoice].arguments[1].values.Count - 1;	
 
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 	
@@ -465,12 +498,12 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
-			if (argument3 != ln.getEngine().currentAgentChoices[verbChoice].arguments[2].values.Count - 1)
+			if (argument3 != eng.currentUserChoices[verbChoice].arguments[2].values.Count - 1)
 				argument3++;
 			else
 				argument3 = 0;			
 
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 	
@@ -481,9 +514,9 @@ public class Book : MonoBehaviour
 			if (argument3 != 0)
 				argument3--;
 			else
-				argument3 = ln.getEngine().currentAgentChoices[verbChoice].arguments[2].values.Count - 1;	
+				argument3 = eng.currentUserChoices[verbChoice].arguments[2].values.Count - 1;	
 
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 	
@@ -491,12 +524,12 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
-			if (argument4 != ln.getEngine().currentAgentChoices[verbChoice].arguments[3].values.Count - 1)
+			if (argument4 != eng.currentUserChoices[verbChoice].arguments[3].values.Count - 1)
 				argument4++;
 			else
 				argument4 = 0;		
 
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 	
@@ -507,9 +540,9 @@ public class Book : MonoBehaviour
 			if (argument4 != 0)
 				argument4--;
 			else
-				argument4 = ln.getEngine().currentAgentChoices[verbChoice].arguments[3].values.Count - 1;	
+				argument4 = eng.currentUserChoices[verbChoice].arguments[3].values.Count - 1;	
 
-			redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		}
 	}
 
@@ -521,7 +554,7 @@ public class Book : MonoBehaviour
 			if (TTSManager.IsInitialized())
 			{
 				TTSManager.Stop();
-				TTSManager.Speak(ln.getEngine().currentAgentChoices[verbChoice].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+				TTSManager.Speak(eng.currentUserChoices[verbChoice].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
 			}
 		}
 	}
@@ -534,7 +567,7 @@ public class Book : MonoBehaviour
 			if (TTSManager.IsInitialized())
 			{
 				TTSManager.Stop();
-				TTSManager.Speak(ln.getEngine().currentAgentChoices[verbChoice].arguments[0].values[argument1].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+				TTSManager.Speak(eng.currentUserChoices[verbChoice].arguments[0].values[argument1].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
 			}
 		}
 	}
@@ -547,7 +580,7 @@ public class Book : MonoBehaviour
 			if (TTSManager.IsInitialized())
 			{
 				TTSManager.Stop();
-				TTSManager.Speak(ln.getEngine().currentAgentChoices[verbChoice].arguments[1].values[argument2].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+				TTSManager.Speak(eng.currentUserChoices[verbChoice].arguments[1].values[argument2].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
 			}
 		}
 	}
@@ -560,7 +593,7 @@ public class Book : MonoBehaviour
 			if (TTSManager.IsInitialized())
 			{
 				TTSManager.Stop();
-				TTSManager.Speak(ln.getEngine().currentAgentChoices[verbChoice].arguments[2].values[argument3].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+				TTSManager.Speak(eng.currentUserChoices[verbChoice].arguments[2].values[argument3].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
 			}
 		}
 	}
@@ -573,19 +606,18 @@ public class Book : MonoBehaviour
 			if (TTSManager.IsInitialized())
 			{
 				TTSManager.Stop();
-				TTSManager.Speak(ln.getEngine().currentAgentChoices[verbChoice].arguments[3].values[argument4].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
+				TTSManager.Speak(eng.currentUserChoices[verbChoice].arguments[3].values[argument4].it.text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
 			}
 		}
 	}
 
 	public void processExecute()
 	{
-		Engine eng = ln.getEngine();
-		
 		//Process verb
-		Verb tempV = eng.currentAgentChoices[verbChoice];
+		Verb tempV = new Verb(""); 
+		eng.currentUserChoices[verbChoice].copyTo(tempV);
 		
-		switch (eng.currentAgentChoices[verbChoice].arguments.Count)
+		switch (eng.currentUserChoices[verbChoice].arguments.Count)
 		{
 		case 0:
 			break;
@@ -618,8 +650,10 @@ public class Book : MonoBehaviour
 		argument3 = 0;
 		argument4 = 0;
 		drawPage(pageIndex);
-		setUIArguments(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
-		redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+		setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
+		redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+		eng.output.Add(new Page(""));
+		updateInputPage();
 		fadeIn = true;
 	}
 
@@ -844,6 +878,8 @@ public class Book : MonoBehaviour
 	void Start() 
 	{
 		ln = GetComponent<LudoNarrare>();
+		eng = ln.getEngine();
+		
 		if (useTTS)
 			TTSManager.Initialize(transform.name, "OnTTSInit");
 	}
@@ -905,12 +941,14 @@ public class Book : MonoBehaviour
 			if (ln.getDone())
 			{
 				sw = ln.getStoryWorld();
-				story = ln.getEngine().output;
+				story = eng.output;
 				pageIndex = 0;
 				drawPage(pageIndex);
 				ready = true;
-				setUIArguments(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
-				redrawUI(ln.getEngine().currentAgentChoices[verbChoice].arguments.Count);
+				setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
+				redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+				eng.output.Add(new Page(""));
+				updateInputPage();
 				waitingForInput = true;
 
 				//TTS go!

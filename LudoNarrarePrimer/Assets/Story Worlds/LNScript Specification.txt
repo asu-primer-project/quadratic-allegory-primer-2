@@ -32,7 +32,6 @@ do
 argument
 ending
 has
-missing
 add
 remove
 icon
@@ -47,6 +46,8 @@ agent
 same
 change
 to
+and
+or
 
 SYMBOLS
 {
@@ -371,17 +372,17 @@ LNScript Context Free Grammar
 
 <CONDITION>                 ==> where: <CONDITIONDEF>; 
 
-<CONDITIONDEF>              ==> <REFERENCE> has tag WORD || <REFERENCE> has relate WORD || <REFERENCE> has string WORD || <REFERENCE> has num WORD
+<CONDITIONDEF>				==> ATOMICCONDITION || not <CONDITIONDEF> || (<CONDITIONDEF> and <CONDITIONDEF>) || (<CONDITIONDEF> or <CONDITIONDEF>)
 
-<CONDITIONDEF>              ==> <REFERENCE> missing tag WORD || <REFERENCE> missing relate WORD || <REFERENCE> missing string WORD || <REFERENCE> missing num WORD
+<ATOMICCONDITION>           ==> <REFERENCE> has tag WORD || <REFERENCE> has relate WORD || <REFERENCE> has string WORD || <REFERENCE> has num WORD
 
-<CONDITIONDEF>              ==> <REFERENCE> WORD <REFERENCE> || <REFERENCE> not WORD <REFERENCE>
+<ATOMICCONDITION>           ==> <REFERENCE> WORD <REFERENCE>
 
-<CONDITIONDEF>              ==> <REFERENCE> WORD <COMPARISON> <EXPRESSION>
+<ATOMICCONDITION>           ==> <REFERENCE> WORD <COMPARISON> <EXPRESSION>
 
-<CONDITIONDEF>              ==> <REFERENCE> WORD matches STRING || <REFERENCE> WORD matches <REFERENCE> WORD || <REFERENCE> WORD not matches STRING || <REFERENCE> WORD not matches <REFERENCE> WORD
+<ATOMICCONDITION>           ==> <REFERENCE> WORD matches STRING || <REFERENCE> WORD matches <REFERENCE> WORD
 
-<CONDITIONDEF>              ==> VARIABLE empty || VARIABLE not empty || VARIABLE same VARIABLE || VARIABLE not same VARIABLE
+<ATOMICCONDITION>           ==> VARIABLE empty || VARIABLE same VARIABLE
 
 <COMPARISON>                ==> = || != || < || > || <= || >=
 

@@ -37,6 +37,98 @@ public class Operator
 		image = "";
 	}
 
+	public void operate(StoryWorld sw, Verb vc)
+	{
+		//Get all subjects to operate on
+		List<Entity> osList = new List<Entity>();
+
+		if (operatorSubject[0] == '?' && vc != null)
+		{
+			foreach (Entity e in vc.variables.Find(v => v.name == operatorSubject).values)
+				osList.Add(e);
+		}
+		else
+			osList.Add(sw.entities.Find(x => x.name == operatorSubject));
+
+		switch(op)
+		{
+		case 0:
+			foreach (Entity e in osList)
+			{
+				if (tagRef != "")
+				{
+					if (!e.tags.Exists(x => x.name == tagRef))
+						e.tags.Add(new Tag(tagRef));
+				}
+				else if (relateRef != "" && relateObj != "")
+				{
+					//Get all objects to operate on
+					List<Entity> ooList = new List<Entity>();
+					
+					if (relateObj[0] == '?' && vc != null)
+					{
+						foreach (Entity o in vc.variables.Find(v => v.name == relateObj).values)
+							ooList.Add(o);
+					}
+					else
+						ooList.Add(sw.entities.Find(x => x.name == relateObj));
+
+					foreach (Entity o in ooList)
+					{
+						if (!e.relationships.Exists(y => y.name == relateRef && y.other == o.name))
+							e.relationships.Add(new Relationship(relateRef, o.name));
+					}
+				}
+				else if (numRef != "" && num != null)
+				{
+					if (!e.numbers.Exists(x => x.name == numRef))
+						e.numbers.Add(new Number(numRef, num.evaluate()));
+					else
+						e.numbers.Find(y => y.name == numRef).value = num.evaluate();
+				}
+				else if (stringRef != "" && stringValue != "")
+				{
+					if (!e.strings.Exists(x => x.name == stringRef))
+						e.strings.Add(new LNString(stringRef, stringValue));
+					else
+						e.strings.Find(y => y.name == stringRef).text = stringValue;
+				}
+			}
+			break;
+		case 1:
+			foreach (Entity e in osList)
+			{
+				if (tagRef != "")
+					e.tags.RemoveAll(x => x.name == tagRef);
+				else if (relateRef != "" && relateObj != "")
+				{
+					//Get all objects to operate on
+					List<Entity> ooList = new List<Entity>();
+					
+					if (relateObj[0] == '?' && vc != null)
+					{
+						foreach (Entity o in vc.variables.Find(v => v.name == relateObj).values)
+							ooList.Add(o);
+					}
+					else
+						ooList.Add(sw.entities.Find(x => x.name == relateObj));
+
+					foreach (Entity o in ooList)
+						e.relationships.RemoveAll(y => y.name == relateRef && y.other == relateObj); 
+				}
+				else if (numRef != "")
+					e.numbers.RemoveAll(x => x.name == numRef);
+				else if (stringRef != "")
+					e.strings.RemoveAll(x => x.name == stringRef);
+			}
+			break;
+		case 2:
+			foreach (Entity e in osList)
+				e.images.Find(x => x.name == imageRef).image = image;
+			break;
+		}
+	}
+
     public void replaceWith(string replace, string with)
     {
         if (operatorSubject == replace)
@@ -81,6 +173,8 @@ public class Operator
 				o.num = new Expression(num.type);
 				num.copyTo(o.num);
 			}
+			else
+				o.num = null;
 			o.stringRef = stringRef;
 			o.stringValue = stringValue;
 			o.imageRef = imageRef;
