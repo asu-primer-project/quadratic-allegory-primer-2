@@ -1,0 +1,617 @@
+storyworld RockPaperScissors
+{
+	///////////////
+	// Beginning //
+	///////////////
+
+	beginning
+	{
+		page intro
+		{
+			draw: RPS image back, 0, 0;
+			text: "Rock, Paper, Scissors";
+		}
+		
+		page explain
+		{
+			draw: RPS image back, 0, 0;
+			draw: Ann image won, -500, 0;
+			draw: Jack image won, 500, 0;
+			text: "This is the final round of the rock, paper, scissors tournament. Ann faces up against Jack.";
+		}
+		
+		page beginning
+		{
+			draw: RPS image back, 0, 0;
+			draw: Ann image won, -500, 0;
+			draw: Jack image won, 500, 0;
+			text: "The whistle has blown and the game has begun!";
+		}
+	}
+	
+	//////////////
+	// Entities //
+	//////////////
+	
+	//Characters
+	entity Ann
+	{
+		agent: user;
+		tag: player1;
+		string: name, "Ann";
+		num: score, 0;
+		image: throwRock, annRock;
+		image: throwPaper, annPaper;
+		image: throwScissors, annScissors;
+		image: lost, annLost;
+		image: won, annWon;
+	}
+	
+	entity Jack
+	{
+		agent: random;
+		tag: player2;
+		string: name, "Jack";
+		num: score, 0;
+		image: throwRock, jackRock;
+		image: throwPaper, jackPaper;
+		image: throwScissors, jackScissors;
+		image: lost, jackLost;
+		image: won, jackWon;
+	}
+	
+	//Control Object
+	entity RPS
+	{
+		agent: random;
+		tag: game;
+		num: state, 0;
+		image: back, rpsBack;
+	}
+	
+	//Conversation Objects
+	entity praise1
+	{
+		icon: "Beautiful", 255, 80, 215;
+		tag: praise;
+		string: text, "a beautiful human being";
+	}
+	
+	entity praise2
+	{
+		icon: "Genius", 45, 103, 171;
+		tag: praise;
+		string: text, "an absolute genius";			
+	}
+	
+	entity praise3
+	{
+		icon: "Cool", 0, 225, 210;
+		tag: praise;
+		string: text, "the coolest";	
+	}
+	
+	entity insult1
+	{
+		icon: "Poopy", 112, 64, 21;
+		tag: insult;
+		string: text, "a poopy face";	
+	}
+	
+	entity insult2
+	{
+		icon: "Jerk", 57, 88, 23;
+		tag: insult;
+		string: text, "a disgusting jerk";	
+	}
+	
+	entity insult3
+	{
+		icon: "Mustard", 181, 145, 0;
+		tag: insult;
+		string: text, "a mustard-stained waste of flesh";	
+	}
+	
+	//Topics
+	entity RockTopic
+	{
+		icon: "Rock", 227, 223, 168;
+		string: description, "In geology, rock is a naturally occurring solid aggregate of one or more minerals or mineraloids.";
+		tag: topic;
+	}
+	
+	entity PaperTopic
+	{
+		icon: "Paper", 227, 223, 168;
+		string: description, "Paper is a thin material produced by pressing together moist fibers, typically cellulose pulp derived from wood, rags, or grasses, and drying them into flexible sheets.";
+		tag: topic;
+	}
+	
+	entity ScissorsTopic
+	{
+		icon: "Scissors", 227, 223, 168;
+		string: description, "Scissors are hand-operated shearing tools.";
+		tag: topic;
+	}
+	
+	entity PraiseTopic
+	{
+		icon: "Praise", 227, 223, 168;
+		string: description, "The expression of approval or admiration for someone or something.";
+		tag: topic;
+	}
+	
+	entity InsultTopic
+	{
+		icon: "Insult", 227, 223, 168;
+		string: description, "A disrespectful or scornfully abusive remark or action.";
+		tag: topic;
+	}
+	
+	entity AnnTopic
+	{
+		icon: "Ann", 227, 223, 168;
+		string: description, "Ann is a rookie in the rock, paper, scissors world who has risen to the top quickly.";
+		tag: topic;
+	}
+	
+	entity JackTopic
+	{
+		icon: "Jack", 227, 223, 168;
+		string: description, "Jack is an old time champion who has many years of rock, paper, scissors experience.";
+		tag: topic;
+	}
+	
+	///////////
+	// Verbs //
+	///////////
+	
+	verb ThrowRock
+	{
+		icon: "Throw Rock", 13, 147, 224;
+		
+		preconditions
+		{
+			where: RPS state != 2;
+		}
+		
+		case player1
+		{
+			where: ?me has tag player1;
+			where: RPS state = 0;
+			
+			do: ?me add tag rock;
+			do: RPS add num state, 1;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?me image throwRock, 0, 0;
+				text: "?me.name threw rock.";
+			}
+		}
+		
+		case player2
+		{
+			where: ?me has tag player2;
+			where: RPS state = 1;
+			
+			do: ?me add tag rock;
+			do: RPS add num state, 2;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?me image throwRock, 0, 0;
+				text: "?me.name threw rock.";
+			}
+		}
+	}
+	
+	verb ThrowPaper
+	{
+		icon: "Throw Paper", 28, 184, 178;
+		
+		preconditions
+		{
+			where: RPS state != 2;
+		}
+		
+		case player1
+		{
+			where: ?me has tag player1;
+			where: RPS state = 0;
+			
+			do: ?me add tag paper;
+			do: RPS add num state, 1;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?me image throwPaper, 0, 0;
+				text: "?me.name threw paper.";
+			}
+		}
+		
+		case player2
+		{
+			where: ?me has tag player2;
+			where: RPS state = 1;
+			
+			do: ?me add tag paper;
+			do: RPS add num state, 2;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?me image throwPaper, 0, 0;
+				text: "?me.name threw paper.";
+			}
+		}
+	}
+	
+	verb ThrowScissors
+	{
+		icon: "Throw Scissors", 113, 138, 201;
+		
+		preconditions
+		{
+			where: RPS state != 2;
+		}
+		
+		case player1
+		{
+			where: ?me has tag player1;
+			where: RPS state = 0;
+			
+			do: ?me add tag scissors;
+			do: RPS add num state, 1;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?me image throwScissors, 0, 0;
+				text: "?me.name threw scissors.";
+			}
+		}
+		
+		case player2
+		{
+			where: ?me has tag player2;
+			where: RPS state = 1;
+			
+			do: ?me add tag scissors;
+			do: RPS add num state, 2;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?me image throwScissors, 0, 0;
+				text: "?me.name threw scissors.";
+			}
+		}
+	}
+	
+	
+	verb Praise
+	{
+		icon: "Praise", 255, 201, 18;
+		
+		argument ?praise
+		{
+			where: ?praise has tag praise;
+		}
+		
+		variable ?player2
+		{
+			where: ?player2 has tag player2;
+		}
+		
+		case player1Praise
+		{
+			where: ?me has tag player1;
+			where: RPS state = 0;
+						
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?me image won, 0, 0;
+				text: "?me.name says ?player2.name is ?praise.text.";
+			}
+		}
+	}
+	
+	verb Insult
+	{
+		icon: "Insult", 181, 21, 21;
+		
+		argument ?insult
+		{
+			where: ?insult has tag insult;
+		}
+		
+		variable ?player2
+		{
+			where: ?player2 has tag player2;
+		}
+		
+		case player1Insult
+		{
+			where: ?me has tag player1;
+			where: RPS state = 0;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?me image lost, 0, 0;
+				text: "?me.name says ?player2.name is ?insult.text.";
+			}
+		}
+	}
+	
+	verb TellMeAbout
+	{
+		icon: "Tell me about", 74, 201, 10;
+		
+		argument ?what
+		{
+			where: ?what has tag topic;
+		}
+		
+		preconditions
+		{
+			where: RPS state = 0;
+			where: ?me has tag player1;
+		}
+		
+		case Tell
+		{	
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				text: "?what.description";
+			}
+		}
+	}
+	
+	verb AnnounceWinner
+	{
+		icon: "Announce Winner", 100, 100, 100;
+		
+		variable ?player1
+		{
+			where: ?player1 has tag player1;
+		}
+		
+		variable ?player2
+		{
+			where: ?player2 has tag player2;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag game;
+			where: RPS state = 2;
+		}
+		
+		case player1WinsWithRock
+		{
+			where: all ?player1 has tag rock;
+			where: all ?player2 has tag scissors;
+			
+			do: ?player1 remove tag rock;
+			do: ?player2 remove tag scissors;
+			do: ?player1 add num score, (?player1 score + 1);
+			do: RPS add num state, 0;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?player1 image won, -500, 0;
+				draw: ?player2 image lost, 500, 0;
+				text: "?player1.name won this round! Score is ?player1.score - ?player2.score";
+			}
+		}
+				
+		case player1WinsWithPaper
+		{
+			where: all ?player1 has tag paper;
+			where: all ?player2 has tag rock;
+			
+			do: ?player1 remove tag paper;
+			do: ?player2 remove tag rock;
+			do: ?player1 add num score, (?player1 score + 1);
+			do: RPS add num state, 0;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?player1 image won, -500, 0;
+				draw: ?player2 image lost, 500, 0;
+				text: "?player1.name won this round! Score is ?player1.score - ?player2.score";
+			}
+		}
+		
+		case player1WinsWithScissors
+		{
+			where: all ?player1 has tag scissors;
+			where: all ?player2 has tag paper;
+			
+			do: ?player1 remove tag scissors;
+			do: ?player2 remove tag paper;
+			do: ?player1 add num score, (?player1 score + 1);
+			do: RPS add num state, 0;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?player1 image won, -500, 0;
+				draw: ?player2 image lost, 500, 0;
+				text: "?player1.name won this round! Score is ?player1.score - ?player2.score";
+			}
+		}
+		
+		case player2WinsWithRock
+		{
+			where: all ?player2 has tag rock;
+			where: all ?player1 has tag scissors;
+			
+			do: ?player2 remove tag rock;
+			do: ?player1 remove tag scissors;
+			do: ?player2 add num score, (?player2 score + 1);
+			do: RPS add num state, 0;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?player1 image lost, -500, 0;
+				draw: ?player2 image won, 500, 0;
+				text: "?player2.name won this round! Score is ?player1.score - ?player2.score";
+			}
+		}
+				
+		case player2WinsWithPaper
+		{
+			where: all ?player2 has tag paper;
+			where: all ?player1 has tag rock;
+			
+			do: ?player2 remove tag paper;
+			do: ?player1 remove tag rock;
+			do: ?player2 add num score, (?player2 score + 1);
+			do: RPS add num state, 0;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?player1 image lost, -500, 0;
+				draw: ?player2 image won, 500, 0;
+				text: "?player2.name won this round! Score is ?player1.score - ?player2.score";
+			}
+		}
+		
+		case player2WinsWithScissors
+		{
+			where: all ?player2 has tag scissors;
+			where: all ?player1 has tag paper;
+			
+			do: ?player2 remove tag scissors;
+			do: ?player1 remove tag paper;
+			do: ?player2 add num score, (?player2 score + 1);
+			do: RPS add num state, 0;
+			
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?player1 image lost, -500, 0;
+				draw: ?player2 image won, 500, 0;
+				text: "?player2.name won this round! Score is ?player1.score - ?player2.score";
+			}
+		}
+		
+		case tieWithRock
+		{
+			where: all ?player1 has tag rock;
+			where: all ?player2 has tag rock;
+			
+			do: ?player1 remove tag rock;
+			do: ?player2 remove tag rock;
+			do: RPS add num state, 0;
+		
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?player1 image lost, -500, 0;
+				draw: ?player2 image lost, 500, 0;
+				text: "It's a tie! Everyone loses this round. Score is ?player1.score - ?player2.score";
+			}		
+		}
+		
+		case tieWithPaper
+		{
+			where: all ?player1 has tag paper;
+			where: all ?player2 has tag paper;
+			
+			do: ?player1 remove tag paper;
+			do: ?player2 remove tag paper;
+			do: RPS add num state, 0;
+		
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?player1 image lost, -500, 0;
+				draw: ?player2 image lost, 500, 0;
+				text: "It's a tie! Everyone loses this round. Score is ?player1.score - ?player2.score";
+			}		
+		}
+		
+		case tieWithScissors
+		{
+			where: all ?player1 has tag scissors;
+			where: all ?player2 has tag scissors;
+			
+			do: ?player1 remove tag scissors;
+			do: ?player2 remove tag scissors;
+			do: RPS add num state, 0;
+		
+			page verb
+			{
+				draw: RPS image back, 0, 0;
+				draw: ?player1 image lost, -500, 0;
+				draw: ?player2 image lost, 500, 0;
+				text: "It's a tie! Everyone loses this round. Score is ?player1.score - ?player2.score";
+			}		
+		}
+	}	
+	
+	/////////////
+	// Endings //
+	/////////////
+	
+	ending player1IsChamp
+	{
+		where: Ann score = 3;
+		
+		page AnnIsChamp
+		{
+			draw: RPS image back, 0, 0;
+			draw: Ann image won, 0, 0;
+			text: "Ann has won three rounds. She is the champ!";
+		}
+		
+		page conclude
+		{
+			draw: RPS image back, 0, 0;
+			draw: Ann image won, 0, 0;
+			text: "Thus concludes the tense final round of the rock, paper, scissors tournament.";			
+		}
+		
+		page theEnd
+		{
+			text: "The end!";
+		}
+	}
+	
+	ending player2IsChamp
+	{
+		where: Jack score = 3;
+		
+		page JackIsChamp
+		{
+			draw: RPS image back, 0, 0;
+			draw: Jack image won, 0, 0;
+			text: "Jack has won three rounds. He is the champ!";
+		}
+		
+		page conclude
+		{
+			draw: RPS image back, 0, 0;
+			draw: Jack image won, 0, 0;
+			text: "Thus concludes the tense final round of the rock, paper, scissors tournament.";			
+		}
+		
+		page theEnd
+		{
+			text: "The end!";
+		}
+	}
+}

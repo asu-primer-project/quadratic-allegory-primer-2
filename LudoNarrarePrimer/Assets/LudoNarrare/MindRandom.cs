@@ -16,6 +16,11 @@ public class MindRandom : Mind
 	public override Verb decide(List<Verb> choices)
 	{
 		System.Random rand = new System.Random();
+
+		//If there are more options than waiting, don't wait
+		if (choices.Count() > 1)
+			choices.RemoveAll(x => x.name == "Wait");
+
 		return choices[rand.Next(0, choices.Count)];
 	}
 }

@@ -54,13 +54,16 @@ public class AtomicCondition
 		//Build a list of condition objects to check
 		List<Entity> coList = new List<Entity>();
 
-		if (conditionObject[0] == '?' && vc != null)
+		if (conditionObject != "")
 		{
-			foreach (Entity e in vc.variables.Find(v => v.name == conditionObject).values)
-				coList.Add(e);
+			if (conditionObject[0] == '?' && vc != null)
+			{
+				foreach (Entity e in vc.variables.Find(v => v.name == conditionObject).values)
+					coList.Add(e);
+			}
+			else
+				coList.Add(sw.entities.Find(e => e.name == conditionObject));
 		}
-		else if (conditionObject != "")
-			coList.Add(sw.entities.Find(e => e.name == conditionObject));
 
 		if (comparison == 7)
 		{

@@ -82,9 +82,9 @@ public class Operator
 				else if (numRef != "" && num != null)
 				{
 					if (!e.numbers.Exists(x => x.name == numRef))
-						e.numbers.Add(new Number(numRef, num.evaluate()));
+						e.numbers.Add(new Number(numRef, num.evaluate(sw)));
 					else
-						e.numbers.Find(y => y.name == numRef).value = num.evaluate();
+						e.numbers.Find(y => y.name == numRef).value = num.evaluate(sw);
 				}
 				else if (stringRef != "" && stringValue != "")
 				{
@@ -114,7 +114,7 @@ public class Operator
 						ooList.Add(sw.entities.Find(x => x.name == relateObj));
 
 					foreach (Entity o in ooList)
-						e.relationships.RemoveAll(y => y.name == relateRef && y.other == relateObj); 
+						e.relationships.RemoveAll(y => y.name == relateRef && y.other == o.name); 
 				}
 				else if (numRef != "")
 					e.numbers.RemoveAll(x => x.name == numRef);
@@ -138,24 +138,6 @@ public class Operator
 		if (num != null)
 			num.replaceWith(replace, with);
     }
-
-	//Completely broke again
-	public int getType()
-	{
-		/*
-		if (tag != null)
-			return 0;
-		else if (relationship != null)
-			return 1;
-		else if (num != null)
-			return 2;
-		else if (lnString != null)
-			return 3;
-		else if (newImage != null)
-			return 4;
-		else
-			return -1;*/
-	}
 
     public void copyTo(Operator o)
     {

@@ -28,9 +28,8 @@ public class Engine : MonoBehaviour
 		standStill = false;
         ended = false;
 		rand = new System.Random();
-		userEntity = _storyWorld.entities.Find(x => x.agent.name == "user");
-		agents = _storyWorld.entities.FindAll(x => x.agent != null);
-		agents.RemoveAll(x => x.agent.name == "user");
+		userEntity = null;
+		agents = null;
 	}
 
 	public Page getPagePreview(Verb v, string a1, string a2, string a3, string a4)
@@ -169,6 +168,10 @@ public class Engine : MonoBehaviour
 	//Start the story engine
 	public void init()
 	{
+		userEntity = storyWorld.entities.Find(x => x.agent.name == "user");
+		agents = storyWorld.entities.FindAll(x => x.agent != null);
+		agents.RemoveAll(x => x.agent.name == "user");
+
 		output.AddRange(storyWorld.beginning);
 		currentUserChoices = generatePossibleVerbs(userEntity);
 		

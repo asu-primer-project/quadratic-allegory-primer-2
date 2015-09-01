@@ -45,9 +45,10 @@ public class LudoNarrare : MonoBehaviour
 		{
 			engine = new Engine(sw);
 			Page p = new Page("StandstillError");
-			p.drawList.Add(new DrawInstruction(true, "", "", "Error in LNScript file on line " + loadStatus, 0, 0));
+			p.drawList.Add(new DrawInstruction(true, "", "", "Error in LNScript file on line " + loadStatus));
 			engine.output.Add(p);
 		}
+
 		done = true;
 	}
 }

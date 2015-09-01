@@ -32,7 +32,7 @@ public class Page
 			p.drawList.Clear();
 			for (int i = 0; i < drawList.Count; i++)
 			{
-				DrawInstruction tempD = new DrawInstruction(false,"","","",0,0);
+				DrawInstruction tempD = new DrawInstruction(false,"","","");
 				drawList[i].copyTo(tempD);
 				p.drawList.Add(tempD);
 			}

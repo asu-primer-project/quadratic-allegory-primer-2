@@ -175,8 +175,6 @@ public class Book : MonoBehaviour
 
 	public void redrawUI(int argueCount)
 	{
-		updateInputPage();
-
 		switch(argueCount)
 		{
 		case 0:
@@ -381,7 +379,7 @@ public class Book : MonoBehaviour
 		}
 	}
 
-	public void updateInputPage()
+	public void addInputPage()
 	{
 		Verb currentVerb = eng.currentUserChoices[verbChoice];
 		Page p = null;
@@ -407,9 +405,8 @@ public class Book : MonoBehaviour
 
 		if (p != null)
 		{
-			eng.output.RemoveAt(eng.output.Count - 1);
 			p.isInputPage = true;
-			eng.output.Add(p);
+			story.Add(p);
 		}
 	}
 
@@ -425,6 +422,9 @@ public class Book : MonoBehaviour
 
 			setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 
@@ -439,6 +439,9 @@ public class Book : MonoBehaviour
 
 			setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 
@@ -452,6 +455,9 @@ public class Book : MonoBehaviour
 				argument1 = 0;
 
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 	
@@ -465,6 +471,9 @@ public class Book : MonoBehaviour
 				argument1 = eng.currentUserChoices[verbChoice].arguments[0].values.Count - 1;
 
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 	
@@ -478,6 +487,9 @@ public class Book : MonoBehaviour
 				argument2 = 0;			
 
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 	
@@ -491,6 +503,9 @@ public class Book : MonoBehaviour
 				argument2 = eng.currentUserChoices[verbChoice].arguments[1].values.Count - 1;	
 
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 	
@@ -504,6 +519,9 @@ public class Book : MonoBehaviour
 				argument3 = 0;			
 
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 	
@@ -517,6 +535,9 @@ public class Book : MonoBehaviour
 				argument3 = eng.currentUserChoices[verbChoice].arguments[2].values.Count - 1;	
 
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 	
@@ -530,6 +551,9 @@ public class Book : MonoBehaviour
 				argument4 = 0;		
 
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 	
@@ -543,6 +567,9 @@ public class Book : MonoBehaviour
 				argument4 = eng.currentUserChoices[verbChoice].arguments[3].values.Count - 1;	
 
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+			story.RemoveAt(story.Count - 1);
+			addInputPage();
+			drawPage(pageIndex);
 		}
 	}
 
@@ -640,7 +667,8 @@ public class Book : MonoBehaviour
 			tempV.replaceWith(tempV.arguments[3].name, tempV.arguments[3].values[argument4].name);
 			break;
 		}
-		
+
+		story.RemoveAt(story.Count - 1);
 		eng.takeInputAndProcess(tempV);
 		
 		//Restart input UI
@@ -652,8 +680,7 @@ public class Book : MonoBehaviour
 		drawPage(pageIndex);
 		setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
 		redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
-		eng.output.Add(new Page(""));
-		updateInputPage();
+		addInputPage();
 		fadeIn = true;
 	}
 
@@ -878,7 +905,6 @@ public class Book : MonoBehaviour
 	void Start() 
 	{
 		ln = GetComponent<LudoNarrare>();
-		eng = ln.getEngine();
 		
 		if (useTTS)
 			TTSManager.Initialize(transform.name, "OnTTSInit");
@@ -941,14 +967,14 @@ public class Book : MonoBehaviour
 			if (ln.getDone())
 			{
 				sw = ln.getStoryWorld();
+				eng = ln.getEngine();
 				story = eng.output;
 				pageIndex = 0;
 				drawPage(pageIndex);
 				ready = true;
+				addInputPage();
 				setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
 				redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
-				eng.output.Add(new Page(""));
-				updateInputPage();
 				waitingForInput = true;
 
 				//TTS go!

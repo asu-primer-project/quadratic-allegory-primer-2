@@ -386,7 +386,7 @@ LNScript Context Free Grammar
 
 <COMPARISON>                ==> = || != || < || > || <= || >=
 
-<REFERENCE>                 ==> WORD || one VARIABLE || all VARIABLE
+<REFERENCE>                 ==> WORD || VARIABLE || one VARIABLE || all VARIABLE
 
 <REFERENCEOP>               ==> WORD || VARIABLE
 
