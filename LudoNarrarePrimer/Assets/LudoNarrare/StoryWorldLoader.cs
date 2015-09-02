@@ -437,18 +437,29 @@ public class StoryWorldLoader : MonoBehaviour
 				{
 					currentToken += c.ToString();
 					readLoc++;
+
 					if (readLoc > endLoc)
 					{
-						print("Read the integer " + currentToken + "\n");
-						type = 2;
-						return 2;
+						if (Int32.TryParse(currentToken, out tokenInt))
+						{
+							print("Read the integer " + tokenInt + "\n");
+							type = 2;
+							return 2;
+						}
+						else
+							return -1;
 					}
 					c = swText[readLoc];
 				}
 				
-				print("Read the integer " + currentToken + "\n");
-				type = 2;
-				return 2;
+				if (Int32.TryParse(currentToken, out tokenInt))
+				{
+					print("Read the integer " + tokenInt + "\n");
+					type = 2;
+					return 2;
+				}
+				else
+					return -1;
 			}
 			
 			print("Read -\n");
@@ -576,6 +587,7 @@ public class StoryWorldLoader : MonoBehaviour
 		}
 		else if (type == 20)
 		{
+			e.type = 2;
 			e.leftExp = new Expression(0);
 			if (parseExpression(e.leftExp))
 				return true;
@@ -597,6 +609,7 @@ public class StoryWorldLoader : MonoBehaviour
 		}
 		else if (type == 0 || type == 3)
 		{
+			e.type = 1;
 			e.entRef = currentToken;
 
 			if (getToken() == 0)

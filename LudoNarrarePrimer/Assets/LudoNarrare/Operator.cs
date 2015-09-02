@@ -82,9 +82,9 @@ public class Operator
 				else if (numRef != "" && num != null)
 				{
 					if (!e.numbers.Exists(x => x.name == numRef))
-						e.numbers.Add(new Number(numRef, num.evaluate(sw)));
+						e.numbers.Add(new Number(numRef, num.evaluate(sw, vc)));
 					else
-						e.numbers.Find(y => y.name == numRef).value = num.evaluate(sw);
+						e.numbers.Find(y => y.name == numRef).value = num.evaluate(sw, vc);
 				}
 				else if (stringRef != "" && stringValue != "")
 				{

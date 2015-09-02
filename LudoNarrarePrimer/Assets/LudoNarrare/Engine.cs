@@ -148,6 +148,9 @@ public class Engine : MonoBehaviour
 						}
 					}
 
+					//Remove wait option
+					currentUserChoices.RemoveAll(x => x.name == "Wait");
+
 					userFoundNoAction = false;
 
 					if (standStill)
@@ -174,9 +177,12 @@ public class Engine : MonoBehaviour
 
 		output.AddRange(storyWorld.beginning);
 		currentUserChoices = generatePossibleVerbs(userEntity);
-		
+
 		if (currentUserChoices.Count == 1)
 			takeInputAndProcess(currentUserChoices[0]);
+
+		//Remove wait option
+		currentUserChoices.RemoveAll(x => x.name == "Wait");
 	}
 
 	//SHOULD BE ABLE TO SURVIVE LNSCRIPT CHANGES

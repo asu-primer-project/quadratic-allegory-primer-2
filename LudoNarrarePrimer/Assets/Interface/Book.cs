@@ -181,7 +181,7 @@ public class Book : MonoBehaviour
 		{
 			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
-			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
+			vi.color = new Vector4((float)itV.red.evaluate(sw, null)/255f, (float)itV.green.evaluate(sw, null)/255f, (float)itV.blue.evaluate(sw, null)/255f, 1f);
 
 			Text vt = vi.GetComponentInChildren<Text>();
 			vt.text = itV.text;
@@ -196,7 +196,7 @@ public class Book : MonoBehaviour
 		{
 			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
-			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
+			vi.color = new Vector4((float)itV.red.evaluate(sw, null)/255f, (float)itV.green.evaluate(sw, null)/255f, (float)itV.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text vt = vi.GetComponentInChildren<Text>();
 			vt.text = itV.text;
@@ -208,7 +208,7 @@ public class Book : MonoBehaviour
 
 			IconText itA1 = eng.currentUserChoices[verbChoice].arguments[0].values[argument1].it;
 			Image a1i = argue1Icon.GetComponent<Image>();
-			a1i.color = new Vector4((float)itA1.red.evaluate(sw)/255f, (float)itA1.green.evaluate(sw)/255f, (float)itA1.blue.evaluate(sw)/255f, 1f);
+			a1i.color = new Vector4((float)itA1.red.evaluate(sw, null)/255f, (float)itA1.green.evaluate(sw, null)/255f, (float)itA1.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a1t = a1i.GetComponentInChildren<Text>();
 			a1t.text = itA1.text;
@@ -224,7 +224,7 @@ public class Book : MonoBehaviour
 		{
 			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
-			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
+			vi.color = new Vector4((float)itV.red.evaluate(sw, null)/255f, (float)itV.green.evaluate(sw, null)/255f, (float)itV.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text vt = vi.GetComponentInChildren<Text>();
 			vt.text = itV.text;
@@ -236,7 +236,7 @@ public class Book : MonoBehaviour
 			
 			IconText itA1 = eng.currentUserChoices[verbChoice].arguments[0].values[argument1].it;
 			Image a1i = argue1Icon.GetComponent<Image>();
-			a1i.color = new Vector4((float)itA1.red.evaluate(sw)/255f, (float)itA1.green.evaluate(sw)/255f, (float)itA1.blue.evaluate(sw)/255f, 1f);
+			a1i.color = new Vector4((float)itA1.red.evaluate(sw, null)/255f, (float)itA1.green.evaluate(sw, null)/255f, (float)itA1.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a1t = a1i.GetComponentInChildren<Text>();
 			a1t.text = itA1.text;
@@ -248,7 +248,7 @@ public class Book : MonoBehaviour
 
 			IconText itA2 = eng.currentUserChoices[verbChoice].arguments[1].values[argument2].it;
 			Image a2i = argue2Icon.GetComponent<Image>();
-			a2i.color = new Vector4((float)itA2.red.evaluate(sw)/255f, (float)itA2.green.evaluate(sw)/255f, (float)itA2.blue.evaluate(sw)/255f, 1f);
+			a2i.color = new Vector4((float)itA2.red.evaluate(sw, null)/255f, (float)itA2.green.evaluate(sw, null)/255f, (float)itA2.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a2t = a2i.GetComponentInChildren<Text>();
 			a2t.text = itA2.text;
@@ -264,7 +264,7 @@ public class Book : MonoBehaviour
 		{
 			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
-			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
+			vi.color = new Vector4((float)itV.red.evaluate(sw, null)/255f, (float)itV.green.evaluate(sw, null)/255f, (float)itV.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text vt = vi.GetComponentInChildren<Text>();
 			vt.text = itV.text;
@@ -276,7 +276,7 @@ public class Book : MonoBehaviour
 			
 			IconText itA1 = eng.currentUserChoices[verbChoice].arguments[0].values[argument1].it;
 			Image a1i = argue1Icon.GetComponent<Image>();
-			a1i.color = new Vector4((float)itA1.red.evaluate(sw)/255f, (float)itA1.green.evaluate(sw)/255f, (float)itA1.blue.evaluate(sw)/255f, 1f);
+			a1i.color = new Vector4((float)itA1.red.evaluate(sw, null)/255f, (float)itA1.green.evaluate(sw, null)/255f, (float)itA1.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a1t = a1i.GetComponentInChildren<Text>();
 			a1t.text = itA1.text;
@@ -288,7 +288,7 @@ public class Book : MonoBehaviour
 			
 			IconText itA2 = eng.currentUserChoices[verbChoice].arguments[1].values[argument2].it;
 			Image a2i = argue2Icon.GetComponent<Image>();
-			a2i.color = new Vector4((float)itA2.red.evaluate(sw)/255f, (float)itA2.green.evaluate(sw)/255f, (float)itA2.blue.evaluate(sw)/255f, 1f);
+			a2i.color = new Vector4((float)itA2.red.evaluate(sw, null)/255f, (float)itA2.green.evaluate(sw, null)/255f, (float)itA2.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a2t = a2i.GetComponentInChildren<Text>();
 			a2t.text = itA2.text;
@@ -300,7 +300,7 @@ public class Book : MonoBehaviour
 
 			IconText itA3 = eng.currentUserChoices[verbChoice].arguments[2].values[argument3].it;
 			Image a3i = argue3Icon.GetComponent<Image>();
-			a3i.color = new Vector4((float)itA3.red.evaluate(sw)/255f, (float)itA3.green.evaluate(sw)/255f, (float)itA3.blue.evaluate(sw)/255f, 1f);
+			a3i.color = new Vector4((float)itA3.red.evaluate(sw, null)/255f, (float)itA3.green.evaluate(sw, null)/255f, (float)itA3.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a3t = a3i.GetComponentInChildren<Text>();
 			a3t.text = itA3.text;
@@ -316,7 +316,7 @@ public class Book : MonoBehaviour
 		{
 			IconText itV = eng.currentUserChoices[verbChoice].it;
 			Image vi = verbIcon.GetComponent<Image>();
-			vi.color = new Vector4((float)itV.red.evaluate(sw)/255f, (float)itV.green.evaluate(sw)/255f, (float)itV.blue.evaluate(sw)/255f, 1f);
+			vi.color = new Vector4((float)itV.red.evaluate(sw, null)/255f, (float)itV.green.evaluate(sw, null)/255f, (float)itV.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text vt = vi.GetComponentInChildren<Text>();
 			vt.text = itV.text;
@@ -328,7 +328,7 @@ public class Book : MonoBehaviour
 			
 			IconText itA1 = eng.currentUserChoices[verbChoice].arguments[0].values[argument1].it;
 			Image a1i = argue1Icon.GetComponent<Image>();
-			a1i.color = new Vector4((float)itA1.red.evaluate(sw)/255f, (float)itA1.green.evaluate(sw)/255f, (float)itA1.blue.evaluate(sw)/255f, 1f);
+			a1i.color = new Vector4((float)itA1.red.evaluate(sw, null)/255f, (float)itA1.green.evaluate(sw, null)/255f, (float)itA1.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a1t = a1i.GetComponentInChildren<Text>();
 			a1t.text = itA1.text;
@@ -340,7 +340,7 @@ public class Book : MonoBehaviour
 			
 			IconText itA2 = eng.currentUserChoices[verbChoice].arguments[1].values[argument2].it;
 			Image a2i = argue2Icon.GetComponent<Image>();
-			a2i.color = new Vector4((float)itA2.red.evaluate(sw)/255f, (float)itA2.green.evaluate(sw)/255f, (float)itA2.blue.evaluate(sw)/255f, 1f);
+			a2i.color = new Vector4((float)itA2.red.evaluate(sw, null)/255f, (float)itA2.green.evaluate(sw, null)/255f, (float)itA2.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a2t = a2i.GetComponentInChildren<Text>();
 			a2t.text = itA2.text;
@@ -352,7 +352,7 @@ public class Book : MonoBehaviour
 			
 			IconText itA3 = eng.currentUserChoices[verbChoice].arguments[2].values[argument3].it;
 			Image a3i = argue3Icon.GetComponent<Image>();
-			a3i.color = new Vector4((float)itA3.red.evaluate(sw)/255f, (float)itA3.green.evaluate(sw)/255f, (float)itA3.blue.evaluate(sw)/255f, 1f);
+			a3i.color = new Vector4((float)itA3.red.evaluate(sw, null)/255f, (float)itA3.green.evaluate(sw, null)/255f, (float)itA3.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a3t = a3i.GetComponentInChildren<Text>();
 			a3t.text = itA3.text;
@@ -364,7 +364,7 @@ public class Book : MonoBehaviour
 
 			IconText itA4 = eng.currentUserChoices[verbChoice].arguments[3].values[argument4].it;
 			Image a4i = argue4Icon.GetComponent<Image>();
-			a4i.color = new Vector4((float)itA4.red.evaluate(sw)/255f, (float)itA4.green.evaluate(sw)/255f, (float)itA4.blue.evaluate(sw)/255f, 1f);
+			a4i.color = new Vector4((float)itA4.red.evaluate(sw, null)/255f, (float)itA4.green.evaluate(sw, null)/255f, (float)itA4.blue.evaluate(sw, null)/255f, 1f);
 			
 			Text a4t = a4i.GetComponentInChildren<Text>();
 			a4t.text = itA4.text;
@@ -668,7 +668,6 @@ public class Book : MonoBehaviour
 			break;
 		}
 
-		story.RemoveAt(story.Count - 1);
 		eng.takeInputAndProcess(tempV);
 		
 		//Restart input UI
@@ -677,10 +676,11 @@ public class Book : MonoBehaviour
 		argument2 = 0;
 		argument3 = 0;
 		argument4 = 0;
-		drawPage(pageIndex);
 		setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
 		redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
-		addInputPage();
+		if (!eng.ended)
+			addInputPage();
+		drawPage(pageIndex);
 		fadeIn = true;
 	}
 
@@ -756,7 +756,7 @@ public class Book : MonoBehaviour
 
 			sr.sortingOrder = depth;
 			temp.transform.localScale += new Vector3(0.112f, 0.0f);
-			temp.transform.localPosition = new Vector3((d.x.evaluate(sw) * 1.112f)/100f, d.y.evaluate(sw)/100f);
+			temp.transform.localPosition = new Vector3((d.x.evaluate(sw, null) * 1.112f)/100f, d.y.evaluate(sw, null)/100f);
 		}
 	}
 

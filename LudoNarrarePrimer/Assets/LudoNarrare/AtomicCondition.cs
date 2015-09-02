@@ -97,13 +97,13 @@ public class AtomicCondition
 					{
 						foreach (Entity j in coList)
 						{
-							if (evaluatePair(i, j, sw))
+							if (evaluatePair(i, j, sw, vc))
 								return true;
 						}
 					}
 					else
 					{
-						if (evaluatePair(i, null, sw))
+						if (evaluatePair(i, null, sw, vc))
 							return true;
 					}
 				}
@@ -118,7 +118,7 @@ public class AtomicCondition
 					{
 						foreach (Entity j in coList)
 						{
-							if (evaluatePair(i, j, sw))
+							if (evaluatePair(i, j, sw, vc))
 							{
 								truthCount++;
 								break;
@@ -127,7 +127,7 @@ public class AtomicCondition
 					}
 					else
 					{
-						if (evaluatePair(i, null, sw))
+						if (evaluatePair(i, null, sw, vc))
 							truthCount++;
 					}
 				}
@@ -145,7 +145,7 @@ public class AtomicCondition
 				{
 					foreach (Entity j in csList)
 					{
-						if (evaluatePair(j, i, sw))
+						if (evaluatePair(j, i, sw, vc))
 						{
 							truthCount++;
 							break;
@@ -164,7 +164,7 @@ public class AtomicCondition
 				{
 					foreach (Entity j in coList)
 					{
-						if (!evaluatePair(j, i, sw))
+						if (!evaluatePair(j, i, sw, vc))
 							return false;
 					}
 				}
@@ -177,7 +177,7 @@ public class AtomicCondition
 		return false;
 	}
 
-	public bool evaluatePair(Entity cs, Entity co, StoryWorld sw)
+	public bool evaluatePair(Entity cs, Entity co, StoryWorld sw, Verb vc)
 	{
 		switch(comparison)
 		{
@@ -214,7 +214,7 @@ public class AtomicCondition
 		case 1:
 			if (numRef != "" && numCompare != null)
 			{
-				if (cs.numbers.Find(x => x.name == numRef).value == numCompare.evaluate(sw))
+				if (cs.numbers.Find(x => x.name == numRef).value == numCompare.evaluate(sw, vc))
 					return true;
 				else
 					return false;
@@ -223,7 +223,7 @@ public class AtomicCondition
 		case 2:
 			if (numRef != "" && numCompare != null)
 			{
-				if (cs.numbers.Find(x => x.name == numRef).value != numCompare.evaluate(sw))
+				if (cs.numbers.Find(x => x.name == numRef).value != numCompare.evaluate(sw, vc))
 					return true;
 				else
 					return false;
@@ -232,7 +232,7 @@ public class AtomicCondition
 		case 3:
 			if (numRef != "" && numCompare != null)
 			{
-				if (cs.numbers.Find(x => x.name == numRef).value < numCompare.evaluate(sw))
+				if (cs.numbers.Find(x => x.name == numRef).value < numCompare.evaluate(sw, vc))
 					return true;
 				else
 					return false;
@@ -241,7 +241,7 @@ public class AtomicCondition
 		case 4:
 			if (numRef != "" && numCompare != null)
 			{
-				if (cs.numbers.Find(x => x.name == numRef).value > numCompare.evaluate(sw))
+				if (cs.numbers.Find(x => x.name == numRef).value > numCompare.evaluate(sw, vc))
 					return true;
 				else
 					return false;
@@ -250,7 +250,7 @@ public class AtomicCondition
 		case 5:
 			if (numRef != "" && numCompare != null)
 			{
-				if (cs.numbers.Find(x => x.name == numRef).value <= numCompare.evaluate(sw))
+				if (cs.numbers.Find(x => x.name == numRef).value <= numCompare.evaluate(sw, vc))
 					return true;
 				else
 					return false;
@@ -259,7 +259,7 @@ public class AtomicCondition
 		case 6:
 			if (numRef != "" && numCompare != null)
 			{
-				if (cs.numbers.Find(x => x.name == numRef).value >= numCompare.evaluate(sw))
+				if (cs.numbers.Find(x => x.name == numRef).value >= numCompare.evaluate(sw, vc))
 					return true;
 				else
 					return false;

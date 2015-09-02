@@ -20,7 +20,7 @@ storyworld RockPaperScissors
 			text: "This is the final round of the rock, paper, scissors tournament. Ann faces up against Jack.";
 		}
 		
-		page beginning
+		page begin
 		{
 			draw: RPS image back, 0, 0;
 			draw: Ann image won, -500, 0;
@@ -300,6 +300,7 @@ storyworld RockPaperScissors
 		argument ?praise
 		{
 			where: ?praise has tag praise;
+			text: "Praise to give";
 		}
 		
 		variable ?player2
@@ -328,6 +329,7 @@ storyworld RockPaperScissors
 		argument ?insult
 		{
 			where: ?insult has tag insult;
+			text: "Insult to throw";
 		}
 		
 		variable ?player2
@@ -356,6 +358,7 @@ storyworld RockPaperScissors
 		argument ?what
 		{
 			where: ?what has tag topic;
+			text: "Topic to Explain";
 		}
 		
 		preconditions

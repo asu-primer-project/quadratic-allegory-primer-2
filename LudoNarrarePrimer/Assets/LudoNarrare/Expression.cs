@@ -25,12 +25,12 @@ public class Expression
 		numRef = "";
 	}
 	
-	public int evaluate(StoryWorld sw)
+	public int evaluate(StoryWorld sw, Verb vc)
 	{
 		if (type == 2)
 		{
-			int left = leftExp.evaluate(sw);
-			int right = rightExp.evaluate(sw);
+			int left = leftExp.evaluate(sw, vc);
+			int right = rightExp.evaluate(sw, vc);
 
 			switch(op)
 			{
@@ -49,7 +49,12 @@ public class Expression
 		else if (type == 0)
 			return number;
 		else if (type == 1)
-			return sw.entities.Find(x => x.name == entRef).numbers.Find(y => y.name == numRef).value;
+		{
+			if (entRef[0] == '?' && vc != null)
+				return vc.variables.Find(x => x.name == entRef).values[0].numbers.Find(y => y.name == numRef).value; 
+			else
+				return sw.entities.Find(x => x.name == entRef).numbers.Find(y => y.name == numRef).value;
+		}
 		else
 			return 0;
 		return 0;
