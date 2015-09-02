@@ -671,15 +671,18 @@ public class Book : MonoBehaviour
 		eng.takeInputAndProcess(tempV);
 		
 		//Restart input UI
-		verbChoice = 0;
-		argument1 = 0;
-		argument2 = 0;
-		argument3 = 0;
-		argument4 = 0;
-		setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
-		redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 		if (!eng.ended)
+		{
+			verbChoice = 0;
+			argument1 = 0;
+			argument2 = 0;
+			argument3 = 0;
+			argument4 = 0;
+			setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 			addInputPage();
+		}
+
 		drawPage(pageIndex);
 		fadeIn = true;
 	}
