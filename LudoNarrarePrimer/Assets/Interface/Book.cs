@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+//using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -43,6 +44,9 @@ public class Book : MonoBehaviour
 	public GameObject argue2Text;
 	public GameObject argue3Text;
 	public GameObject argue4Text;
+
+	public GameObject inputNormal;
+	public GameObject inputEnd;
 
 	public GameObject fadePanel;
 	public float fadeSpeed = 3f;
@@ -573,6 +577,38 @@ public class Book : MonoBehaviour
 		}
 	}
 
+	/*
+	public void restart()
+	{
+		ln.initialize();
+
+		story = eng.output;
+		pageIndex = 0;
+		drawPage(pageIndex);
+		ready = true;
+		
+		if (eng.userEntity != null)
+		{
+			addInputPage();
+			setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
+			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+		}
+		
+		waitingForInput = true;
+
+		inputNormal.SetActive(true);
+		inputEnd.SetActive(false);
+	}
+	*/
+
+	public void exit()
+	{
+		//if (UnityEditor.EditorApplication.isPlaying)
+		//	UnityEditor.EditorApplication.isPlaying = false;
+		//else
+			Application.Quit();
+	}
+	/*
 	public void speakVerb()
 	{
 		//TTS go!
@@ -637,7 +673,7 @@ public class Book : MonoBehaviour
 			}
 		}
 	}
-
+	*/
 	public void processExecute()
 	{
 		//Process verb
@@ -682,8 +718,17 @@ public class Book : MonoBehaviour
 			redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
 			addInputPage();
 		}
+		else
+		{
+			Page pEnd = new Page("End Menu");
+			pEnd.isInputPage = true;
+			story.Add(pEnd);
+			inputNormal.SetActive(false);
+			inputEnd.SetActive(true);
+		}
 
 		drawPage(pageIndex);
+
 		fadeIn = true;
 	}
 
@@ -908,15 +953,18 @@ public class Book : MonoBehaviour
 	void Start() 
 	{
 		ln = GetComponent<LudoNarrare>();
-		
+		/*
 		if (useTTS)
 			TTSManager.Initialize(transform.name, "OnTTSInit");
+		*/
 	}
 
 	void OnDestroy()
 	{
+		/*
 		if (useTTS)
 			TTSManager.Shutdown();
+		*/
 	}
 
 	// Update is called once per frame
@@ -949,7 +997,7 @@ public class Book : MonoBehaviour
 				fadeTimer = 0f;
 				fadeIn = false;
 				waitingForInput = true;
-
+				/*
 				//TTS go!
 				if (useTTS)
 				{
@@ -961,7 +1009,7 @@ public class Book : MonoBehaviour
 							TTSManager.Speak(story[pageIndex].drawList.Find(x => x.isText == true).text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
 						}
 					}
-				}
+				}*/
 			}
 		}
 
@@ -975,11 +1023,26 @@ public class Book : MonoBehaviour
 				pageIndex = 0;
 				drawPage(pageIndex);
 				ready = true;
-				addInputPage();
-				setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
-				redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
-				waitingForInput = true;
 
+				//Add end page in case of completely agent based story world
+				if (eng.ended)
+				{
+					Page pEnd = new Page("End Menu");
+					pEnd.isInputPage = true;
+					story.Add(pEnd);
+					inputNormal.SetActive(false);
+					inputEnd.SetActive(true);
+				}
+				else if (eng.userEntity != null)
+				{
+					//Prepare for user to make the first move if they exist.
+					addInputPage();
+					setUIArguments(eng.currentUserChoices[verbChoice].arguments.Count);
+					redrawUI(eng.currentUserChoices[verbChoice].arguments.Count);
+				}
+
+				waitingForInput = true;
+				/*
 				//TTS go!
 				if (useTTS)
 				{
@@ -991,7 +1054,7 @@ public class Book : MonoBehaviour
 							TTSManager.Speak(story[pageIndex].drawList.Find(x => x.isText == true).text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
 						}
 					}
-				}
+				}*/
 			}
 		}
 		else
@@ -1110,7 +1173,7 @@ public class Book : MonoBehaviour
 							inputCanvas.transform.localScale = new Vector3(1f*inputScale, 1f*inputScale, 1f);
 							inputCanvas.transform.position = new Vector3(0f, 0f, -1f);
 						}
-
+						/*
 						//TTS go!
 						if (useTTS)
 						{
@@ -1122,7 +1185,7 @@ public class Book : MonoBehaviour
 									TTSManager.Speak(story[pageIndex].drawList.Find(x => x.isText == true).text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
 								}
 							}
-						}
+						}*/
 
 						currentLeftPage.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
 						previousRightPage.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
@@ -1165,7 +1228,7 @@ public class Book : MonoBehaviour
 					else if (currentRightPage.transform.eulerAngles.y < 180.0f)
 					{
 						settledRight = true;
-
+						/*
 						//TTS go!
 						if (useTTS)
 						{
@@ -1177,7 +1240,7 @@ public class Book : MonoBehaviour
 									TTSManager.Speak(story[pageIndex].drawList.Find(x => x.isText == true).text, false, TTSManager.STREAM.Music, 1f, 0f, transform.name, "OnSpeechCompleted", "speech_" + (++_speechId));
 								}
 							}
-						}
+						}*/
 						
 						currentRightPage.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
 						nextLeftPage.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);

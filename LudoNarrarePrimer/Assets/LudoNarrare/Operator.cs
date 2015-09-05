@@ -19,6 +19,7 @@ public class Operator
 	public string stringValue;
 	public string imageRef;
 	public string image;
+	public string agentSelector;
 
     /* Functions */
     public Operator()
@@ -35,6 +36,7 @@ public class Operator
 		stringValue = "";
 		imageRef = "";
 		image = "";
+		agentSelector = "";
 	}
 
 	public void operate(StoryWorld sw, Verb vc)
@@ -49,6 +51,21 @@ public class Operator
 		}
 		else
 			osList.Add(sw.entities.Find(x => x.name == operatorSubject));
+
+		//Apply agent selector if needed
+		if (agentSelector != "")
+		{
+			foreach (Entity e in osList)
+			{
+				if (e.agent != null)
+				{
+					if (e.agent.name != agentSelector)
+						osList.RemoveAll(x => x.name == e.name);	
+				}
+				else
+					osList.RemoveAll(x => x.name == e.name);	
+			}
+		}
 
 		switch(op)
 		{
@@ -161,6 +178,7 @@ public class Operator
 			o.stringValue = stringValue;
 			o.imageRef = imageRef;
 			o.image = image;
+			o.agentSelector = agentSelector;
         }
     }
 }

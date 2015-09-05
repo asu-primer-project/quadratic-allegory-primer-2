@@ -933,6 +933,17 @@ public class StoryWorldLoader : MonoBehaviour
 
 			if (type == 0 || type == 3)
 			{
+				if (currentToken == "for")
+				{
+					if (getToken() != 0)
+						return true;
+				
+					o.agentSelector = currentToken;
+
+					if (getToken() != 0)
+						return true;
+				}
+
 				o.operatorSubject = currentToken;
 
 				if (getToken() != 0)
@@ -1330,7 +1341,10 @@ public class StoryWorldLoader : MonoBehaviour
 			{
 				//Any AI's written need to be referenced here:
 				if (currentToken == "random")
+				{
 					e.agent = new MindRandom();
+					e.agent.body = e;
+				}
 				else if (currentToken == "user")
 					e.agent = new MindUser();
 				else

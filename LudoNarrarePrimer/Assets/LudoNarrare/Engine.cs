@@ -150,7 +150,6 @@ public class Engine : MonoBehaviour
 
 					//Remove wait option
 					currentUserChoices.RemoveAll(x => x.name == "Wait");
-
 					userFoundNoAction = false;
 
 					if (standStill)
@@ -168,21 +167,42 @@ public class Engine : MonoBehaviour
 		}
 	}
 
+	//Process story when no user input is required
+	public void processStory()
+	{
+		while (!ended && !standStill)
+			handleAI();
+
+		if (standStill)
+		{
+			Page p = new Page("StandstillError");
+			p.drawList.Add(new DrawInstruction(true, "", "", "ERROR: Story has hit a stand still. No entity has a possible action beyond waiting."));
+			output.Add(p);
+		}
+	}
+
 	//Start the story engine
 	public void init()
 	{
-		userEntity = storyWorld.entities.Find(x => x.agent.name == "user");
+		output.AddRange(storyWorld.beginning);
+
 		agents = storyWorld.entities.FindAll(x => x.agent != null);
+		userEntity = agents.Find(x => x.agent.name == "user");
 		agents.RemoveAll(x => x.agent.name == "user");
 
-		output.AddRange(storyWorld.beginning);
-		currentUserChoices = generatePossibleVerbs(userEntity);
+		//In the case the user can interact
+		if (userEntity != null)
+		{
+			currentUserChoices = generatePossibleVerbs(userEntity);
 
-		if (currentUserChoices.Count == 1)
-			takeInputAndProcess(currentUserChoices[0]);
+			if (currentUserChoices.Count == 1)
+				takeInputAndProcess(currentUserChoices[0]);
 
-		//Remove wait option
-		currentUserChoices.RemoveAll(x => x.name == "Wait");
+			//Remove wait option
+			currentUserChoices.RemoveAll(x => x.name == "Wait");
+		}
+		else
+			processStory();
 	}
 
 	//SHOULD BE ABLE TO SURVIVE LNSCRIPT CHANGES

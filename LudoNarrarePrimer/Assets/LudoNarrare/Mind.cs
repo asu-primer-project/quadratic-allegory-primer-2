@@ -9,28 +9,16 @@ using System.Text;
 public class Mind 
 {
 	public string name;
-	public List<Page> story; //Story so far; the history is made to make decisions
+	public Entity body;
 
 	public Mind()
 	{
 		name = "mind";
 	}
 
-	//Set up the initial state of the mind
-	public virtual void initalize(List<Page> beginning)
-	{
-		story = beginning;
-	}
-
 	//Given a choice of actions, decide on one to take
 	public virtual Verb decide(List<Verb> choices)
 	{
 		return choices[0];
-	}
-
-	//Read the story up the current moment to make an up to date decision
-	public virtual void read(List<Page> newStory)
-	{
-		story = newStory;
 	}
 }

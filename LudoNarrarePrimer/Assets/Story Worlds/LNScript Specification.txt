@@ -392,7 +392,9 @@ LNScript Context Free Grammar
 
 <OPERATORLIST>              ==> <OPERATOR> <OPERATORLIST> || EMPTY
 
-<OPERATOR>                  ==> do: <OPERATORDEF>;
+<OPERATOR>                  ==> do: <OPERATORDEF>; || do: <AGENTOPERATORDEF>;
+
+<AGENTOPERATORDEF>			==> for WORD <OPERATORDEF>
 
 <OPERATORDEF>               ==> <REFERENCEOP> add tag WORD || <REFERENCEOP> add relate WORD, <REFERENCEOP> || <REFERENCEOP> add string WORD, STRING || <REFERENCEOP> add num WORD, <EXPRESSION> 
 

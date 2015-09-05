@@ -29,13 +29,12 @@ public class LudoNarrare : MonoBehaviour
 		return done;
 	}
 
-	//On start, initialize
-	void Start() 
+	public void initialize()
 	{
 		StoryWorldLoader swLoader = new StoryWorldLoader();
 		loadStatus = swLoader.readStoryWorld(storyWorldFile);
 		sw = swLoader.storyWorld;
-
+		
 		if (loadStatus == -1)
 		{
 			engine = new Engine(sw);
@@ -48,7 +47,13 @@ public class LudoNarrare : MonoBehaviour
 			p.drawList.Add(new DrawInstruction(true, "", "", "Error in LNScript file on line " + loadStatus));
 			engine.output.Add(p);
 		}
-
+		
 		done = true;
+	}
+
+	//On start, initialize
+	void Start() 
+	{
+		initialize();
 	}
 }
