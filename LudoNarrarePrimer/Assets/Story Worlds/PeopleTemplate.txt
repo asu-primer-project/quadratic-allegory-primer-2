@@ -1,0 +1,1075 @@
+storyworld PeopleTemplate
+{
+	///////////////
+	// Beginning //
+	///////////////
+	beginning
+	{
+		page explain
+		{
+			text: "People Template: Entity types that use the 'person' agent.";
+		}
+	}
+	
+	//////////////
+	// Entities //
+	//////////////
+	entity Ashley
+	{
+		icon: "Ashley", 30, 30, 30;
+	
+		agent: person;
+		tag: person;
+		string: name, "Ashley";
+		string: pnSubject, "she";
+		string: pnObject, "her";
+		string: pnOwner, "her";
+		
+		//Agent Properties (-5 to 5)
+		num: initiative, 4;
+		num: social, -3;
+		num: morality, -2;
+		num: trusting, 4;
+		num: curiosity, 1;
+		num: temperment, -2; 
+		num: happiness, 3;
+		
+		//Entity Properties
+		num: intelligence, 2;
+	}
+	
+	entity Jim
+	{
+		icon: "Jim", 30, 30, 30;
+
+		agent: person;
+		tag: person;
+		string: name, "Jim";
+		string: pnSubject, "he";
+		string: pnObject, "him";
+		string: pnOwner, "his";
+		
+		//Agent Properties (-5 to 5)
+		num: initiative, -2;
+		num: social, 2;
+		num: morality, 1;
+		num: trusting, -4;
+		num: curiosity, 5;
+		num: temperment, 3;
+		num: happiness, -5;
+	
+		//Entity Properties
+		num: intelligence, 5;
+	}
+	
+	entity Alex
+	{
+		icon: "Alex", 30, 30, 30;
+		
+		agent: person;
+		tag: person;
+		string: name, "Alex";
+		string: pnSubject, "he";
+		string: pnObject, "him";
+		string: pnOwner, "his";
+		
+		//Agent Properties (-5 to 5)
+		num: initiative, 1;
+		num: social, 4;
+		num: morality, 5;
+		num: trusting, 0;
+		num: curiosity, -3;
+		num: temperment, 4;
+		num: happiness, 1;
+		
+		//Entity Properties
+		num: intelligence, -1;
+	}
+	
+	entity Timer
+	{
+		agent: random;
+		num: time, 0;
+	}
+	
+	///////////
+	// Verbs //
+	///////////
+	//Influences liking of someone 
+	verb DoSomethingPositive
+	{
+		icon: "Do Something Positive", 0, 0, 230;
+		
+		tag: notSocial;
+		tag: moral;
+		tag: happy;
+		tag: calm;
+		tag: positive;
+		
+		argument ?other
+		{
+			text: "Who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case success
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+		
+			do: for person ?other add relate like, ?me; 
+			
+			page p
+			{
+				text: "?me.name did something positive for ?other.name and now ?other.pnSubject likes ?me.pnObject";
+			}
+		}
+		
+		case neutralize 
+		{
+			where: ?other dislike ?me;
+		
+			do: for person ?other remove relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name did something positive for ?other.name and now ?other.pnSubject doesn't dislike ?me.pnObject.";
+			}
+		}
+		
+		case fail
+		{
+			where: (?other hate ?me or (?other love ?me or ?other like ?me));
+
+			page p
+			{
+				text: "?me.name did something positive for ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+		
+		case default
+		{
+			page p
+			{
+				text: "?me.name did something positive for ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+	}
+	
+	verb SaySomethingPositive
+	{
+		icon: "Say Something Positive", 0, 0, 230;
+		
+		tag: social;
+		tag: moral;
+		tag: happy;
+		tag: calm;
+		tag: positive;
+		
+		argument ?other
+		{
+			text: "Who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case success
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+		
+			do: for person ?other add relate like, ?me; 
+			
+			page p
+			{
+				text: "?me.name said something positive to ?other.name and now ?other.pnSubject likes ?me.pnObject.";
+			}
+		}
+		
+		case neutralize 
+		{
+			where: ?other dislike ?me;
+		
+			do: for person ?other remove relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name said something positive to ?other.name and now ?other.pnSubject doesn't dislike ?me.pnObject.";
+			}
+		}
+		
+		case fail
+		{
+			where: (?other hate ?me or (?other love ?me or ?other like ?me));
+
+			page p
+			{
+				text: "?me.name said something positive to ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+		
+		case default
+		{
+			page p
+			{
+				text: "?me.name said something positive to ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+	}
+	
+	//Influences loving of someone
+	verb DoSomethingVeryPositive
+	{
+		icon: "Do Something Very Positive", 0, 0, 230;
+		
+		tag: notSocial;
+		tag: moral;
+		tag: happy;
+		tag: calm;
+		tag: positive;
+		
+		argument ?other
+		{
+			text: "Who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case success
+		{
+			where: ?other like ?me;
+		
+			do: for person ?other remove relate like, ?me;
+			do: for person ?other add relate love, ?me; 
+			
+			page p
+			{
+				text: "?me.name did something very positive for ?other.name and now ?other.pnSubject loves ?me.pnObject.";
+			}
+		}
+		
+		case makeLike
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+			
+			do: for person ?other add relate like, ?me;
+			
+			page p
+			{
+				text: "?me.name did something very positive for ?other.name and now ?other.pnSubject likes ?me.pnObject.";
+			}
+		}
+		
+		case neutralize 
+		{
+			where: ?other dislike ?me;
+		
+			do: for person ?other remove relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name did something very positive for ?other.name and now ?other.pnSubject doesn't dislike ?me.pnObject.";
+			}
+		}
+		
+		case improve
+		{
+			where: ?other hate ?me;
+			
+			do: for person ?other remove relate hate, ?me;
+			do: for person ?other add relate dislike, ?me;
+
+			page p
+			{
+				text: "?me.name did something very positive for ?other.name and now ?other.pnSubject doesn't hate ?me.pnObject.";
+			}
+		}
+		
+		case default
+		{
+			page p
+			{
+				text: "?me.name did something very positive for ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+	}
+
+	verb SaySomethingVeryPositive
+	{
+		icon: "Say Something Very Positive", 0, 0, 230;
+		
+		tag: social;
+		tag: moral;
+		tag: happy;
+		tag: calm;
+		tag: positive;
+		
+		argument ?other
+		{
+			text: "Who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;	
+		}
+		
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case success
+		{
+			where: ?other like ?me;
+		
+			do: for person ?other remove relate like, ?me;
+			do: for person ?other add relate love, ?me; 
+			
+			page p
+			{
+				text: "?me.name said something very positive to ?other.name and now ?other.pnSubject loves ?me.pnObject.";
+			}
+		}
+		
+		case makeLike
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+			
+			do: for person ?other add relate like, ?me;
+			
+			page p
+			{
+				text: "?me.name said something very positive to ?other.name and now ?other.pnSubject likes ?me.pnObject.";
+			}
+		}
+		
+		case neutralize 
+		{
+			where: ?other dislike ?me;
+		
+			do: for person ?other remove relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name said something very positive to ?other.name and now ?other.pnSubject doesn't dislike ?me.pnObject.";
+			}
+		}
+		
+		case improve
+		{
+			where: ?other hate ?me;
+
+			do: for person ?other remove relate hate, ?me;
+			do: for person ?other add relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name said something very positive to ?other.name and now ?other.pnSubject doesn't hate ?me.pnObject.";
+			}
+		}
+		
+		case default
+		{
+			page p
+			{
+				text: "?me.name said something very positive to ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+	}
+	
+	//Influences disliking of someone
+	verb DoSomethingNegative
+	{
+		icon: "Do Something Negative", 230, 0, 0;
+		
+		tag: notSocial;
+		tag: notMoral;
+		tag: notHappy;
+		tag: notCalm;
+		tag: negative;
+		
+		argument ?other
+		{
+			text: "Who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case success
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+		
+			do: for person ?other add relate dislike, ?me; 
+			
+			page p
+			{
+				text: "?me.name did something negative to ?other.name and now ?other.pnSubject dislikes ?me.pnObject.";
+			}
+		}
+		
+		case neutralize 
+		{
+			where: ?other like ?me;
+		
+			do: for person ?other remove relate like, ?me;
+			
+			page p
+			{
+				text: "?me.name did something negative to ?other.name and now ?other.pnSubject doesn't like ?me.pnObject.";
+			}
+		}
+		
+		case fail
+		{
+			where: (?other love ?me or (?other hate ?me or ?other dislike ?me));
+
+			page p
+			{
+				text: "?me.name did something negative to ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+		
+		case default
+		{
+			page p
+			{
+				text: "?me.name did something negative to ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+	}
+	
+	verb SaySomethingNegative
+	{
+		icon: "Say Something Negative", 230, 0, 0;
+		
+		tag: social;
+		tag: notMoral;
+		tag: notHappy;
+		tag: notCalm;
+		tag: negative;
+		
+		argument ?other
+		{
+			text: "Who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case success
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+		
+			do: for person ?other add relate dislike, ?me; 
+			
+			page p
+			{
+				text: "?me.name said something negative to ?other.name and now ?other.pnSubject dislikes ?me.pnObject.";
+			}
+		}
+		
+		case neutralize 
+		{
+			where: ?other like ?me;
+		
+			do: for person ?other remove relate like, ?me;
+			
+			page p
+			{
+				text: "?me.name said something negative to ?other.name and now ?other.pnSubject doesn't like ?me.pnObject.";
+			}
+		}
+		
+		case fail
+		{
+			where: (?other love ?me or (?other hate ?me or ?other dislike ?me));
+
+			page p
+			{
+				text: "?me.name said something negative to ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+		
+		case default
+		{
+			page p
+			{
+				text: "?me.name said something negative to ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+	}
+	
+	//Influences hating of someone
+	verb DoSomethingVeryNegative
+	{
+		icon: "Do Something Very Negative", 230, 0, 0;
+		
+		tag: notSocial;
+		tag: notMoral;
+		tag: notHappy;
+		tag: notCalm;
+		tag: negative;
+		
+		argument ?other
+		{
+			text: "Who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case success
+		{
+			where: ?other dislike ?me;
+		
+			do: for person ?other remove relate dislike, ?me;
+			do: for person ?other add relate hate, ?me; 
+			
+			page p
+			{
+				text: "?me.name did something very negative to ?other.name and now ?other.pnSubject hates ?me.pnObject.";
+			}
+		}
+		
+		case makeDislike
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+			where: ?other trusting >= 0;
+			
+			do: for person ?other add relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name did something very negative to ?other.name and now ?other.pnSubject dislikes ?me.pnObject.";
+			}
+		}
+
+		case makeHate
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+			where: ?other trusting < 0;
+			
+			do: for person ?other add relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name did something very negative to ?other.name and now ?other.pnSubject hates ?me.pnObject.";
+			}
+		}
+		
+		case fail
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+			
+			page p
+			{
+				text: "?me.name did something very negative to ?other.name and ?other.pnOwner opinion has not changed.";
+			}		
+		}
+		
+		case neutralize 
+		{
+			where: ?other like ?me;
+		
+			do: for person ?other remove relate like, ?me;
+			do: for person ?other add relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name did something very negative to ?other.name and now ?other.pnSubject dislikes ?me.pnObject.";
+			}
+		}
+		
+		case hurt
+		{
+			where: ?other love ?me;
+
+			do: for person ?other remove relate love, ?me;
+			do: for person ?other add relate like, ?me;
+			
+			page p
+			{
+				text: "?me.name did something very negative to ?other.name and now ?other.pnSubject doesn't love ?me.pnObject.";
+			}
+		}
+	
+		case default
+		{
+			page p
+			{
+				text: "?me.name did something very negative to ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+	}
+
+	verb SaySomethingVeryNegative
+	{
+		icon: "Say Something Very Negative", 230, 0, 0;
+		
+		tag: social;
+		tag: notMoral;
+		tag: notHappy;
+		tag: notCalm;
+		tag: negative;
+		
+		argument ?other
+		{
+			text: "Who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case success
+		{
+			where: ?other dislike ?me;
+		
+			do: for person ?other remove relate dislike, ?me;
+			do: for person ?other add relate hate, ?me; 
+			
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name and now ?other.pnSubject hates ?me.pnObject.";
+			}
+		}
+		
+		case makeDislike
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+			where: ?other trusting >= 0;
+			
+			do: for person ?other add relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name and now ?other.pnSubject dislikes ?me.pnObject.";
+			}
+		}
+
+		case makeHate
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+			where: ?other trusting < 0;
+			
+			do: for person ?other add relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name and now ?other.pnSubject hates ?me.pnObject.";
+			}
+		}
+		
+		case fail
+		{
+			where: (not ?other like ?me and (not ?other love ?me and (not ?other dislike ?me and not ?other hate ?me)));
+			
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name and ?other.pnOwner opinion has not changed.";
+			}		
+		}
+		
+		case neutralize 
+		{
+			where: ?other like ?me;
+		
+			do: for person ?other remove relate like, ?me;
+			do: for person ?other add relate dislike, ?me;
+			
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name and now ?other.pnSubject dislikes ?me.pnObject.";
+			}
+		}
+		
+		case hurt
+		{
+			where: ?other love ?me;
+
+			do: for person ?other remove relate love, ?me;
+			do: for person ?other add relate like, ?me;
+			
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name and now ?other.pnSubject doesn't love ?me.pnObject.";
+			}
+		}
+		
+		case default
+		{
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name but it did not change ?other.pnOwner opinion.";
+			}
+		}
+	}
+	
+	//Influences liking of someone and knowledge of someone's like
+	verb SayPositiveAbout
+	{
+		icon: "Say Something Positive About", 0, 0, 230;
+		
+		tag: social;
+		tag: moral;
+		tag: happy;
+		tag: calm;
+		tag: positive;
+	
+		argument ?other
+		{
+			text: "To who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		argument ?object
+		{
+			text: "About who?";
+			where: ?object has tag person;
+			where: not ?object name matches ?me name;
+			where: not ?object name matches ?other name;
+		}
+	
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case succeed
+		{
+			where: ?other trusting >= 1;
+			where: (not ?other hate ?me and not ?other dislike ?me);
+			where: (not ?other like ?object and (not ?other love ?object and not ?other hate ?object));
+			
+			do: for person ?other remove relate dislike, ?object;
+			do: for person ?other add relate like, ?object;
+			
+			page p
+			{
+				text: "?me.name said something positive to ?other.name about ?object.name and now ?other.pnSubject likes ?object.pnObject.";
+			}
+		}
+		
+		case backfire
+		{
+			where: ?other hate ?me;
+			where: (not ?other like ?object and (not ?other love ?object and not ?other hate ?object));
+			
+			do: for person ?other add relate dislike, ?object;
+			
+			page p
+			{
+				text: "?me.name said something positive to ?other.name about ?object.name, but now ?other.pnSubject dislikes ?object.pnObject.";
+			}			
+		}
+		
+		case noTrust
+		{
+			where: ?other trusting <= -3;
+			
+			page p
+			{
+				text: "?me.name said something positive to ?other.name about ?object.name to no effect.";
+			}			
+		}
+		
+		case noEffect
+		{
+			page p
+			{
+				text: "?me.name said something positive to ?other.name about ?object.name to no effect.";
+			}
+		}
+	}
+	
+	//Influences knowledge of someone's love
+	verb SayVeryPositiveAbout
+	{
+		icon: "Say Something Very Positive About", 0, 0, 230;
+		
+		tag: social;
+		tag: moral;
+		tag: happy;
+		tag: calm;
+		tag: positive;
+	
+		argument ?other
+		{
+			text: "To who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		argument ?object
+		{
+			text: "About who?";
+			where: ?object has tag person;
+			where: not ?object name matches ?me name;
+			where: not ?object name matches ?other name;
+		}
+	
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case succeed
+		{
+			where: ?other trusting >= 3;
+			where: (not ?other hate ?me and (not ?other dislike ?me and ?other like ?me));
+			where: (not ?other dislike ?object and (not ?other love ?object and not ?other hate ?object));
+			
+			do: for person ?other remove relate like, ?object;
+			do: for person ?other add relate love, ?object;
+			
+			page p
+			{
+				text: "?me.name said something very positive to ?other.name about ?object.name and now ?other.pnSubject loves ?object.pnObject.";
+			}
+		}
+		
+		case backfire
+		{
+			where: ?other hate ?me;
+			where: (not ?other like ?object and (not ?other love ?object and not ?other hate ?object));
+			
+			do: for person ?other add relate dislike, ?object;
+			
+			page p
+			{
+				text: "?me.name said something very positive to ?other.name about ?object.name, but now ?other.pnSubject dislikes ?object.pnObject.";
+			}			
+		}
+		
+		case noTrust
+		{
+			where: ?other trusting <= -1;
+			
+			page p
+			{
+				text: "?me.name said something very positive to ?other.name about ?object.name to no effect.";
+			}			
+		}
+		
+		case noEffect
+		{
+			page p
+			{
+				text: "?me.name said something very positive to ?other.name about ?object.name to no effect.";
+			}
+		}
+	}
+	
+	//Influences disliking of someone and knowledge of someone's dislike
+	verb SayNegativeAbout
+	{
+		icon: "Say Something Negative About", 230, 0, 0;
+		
+		tag: social;
+		tag: notMoral;
+		tag: notHappy;
+		tag: notCalm;
+		tag: negative;
+	
+		argument ?other
+		{
+			text: "To who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		argument ?object
+		{
+			text: "About who?";
+			where: ?object has tag person;
+			where: not ?object name matches ?me name;
+			where: not ?object name matches ?other name;
+		}
+	
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case succeed
+		{
+			where: ?other trusting >= 1;
+			where: (not ?other hate ?me and not ?other dislike ?me);
+			where: (not ?other dislike ?object and (not ?other love ?object and not ?other hate ?object));
+			
+			do: for person ?other remove relate like, ?object;
+			do: for person ?other add relate dislike, ?object;
+			
+			page p
+			{
+				text: "?me.name said something negative to ?other.name about ?object.name and now ?other.pnSubject dislikes ?object.pnObject.";
+			}
+		}
+		
+		case backfire
+		{
+			where: ?other hate ?me;
+			where: (not ?other dislike ?object and (not ?other love ?object and not ?other hate ?object));
+			
+			do: for person ?other add relate like, ?object;
+			
+			page p
+			{
+				text: "?me.name said something negative to ?other.name about ?object.name, but now ?other.pnSubject likes ?object.pnObject.";
+			}			
+		}
+		
+		case noTrust
+		{
+			where: ?other trusting <= -3;
+			
+			page p
+			{
+				text: "?me.name said something negative to ?other.name about ?object.name to no effect.";
+			}			
+		}
+		
+		case noEffect
+		{
+			page p
+			{
+				text: "?me.name said something negative to ?other.name about ?object.name to no effect.";
+			}
+		}
+	}
+	
+	//Influences knowledge of someone's hate
+	verb SayVeryNegativeAbout
+	{
+		icon: "Say Something Very Negative About", 230, 0, 0;
+		
+		tag: social;
+		tag: notMoral;
+		tag: notHappy;
+		tag: notCalm;
+		tag: negative;
+	
+		argument ?other
+		{
+			text: "To who?";
+			where: ?other has tag person;
+			where: not ?other name matches ?me name;
+		}
+		
+		argument ?object
+		{
+			text: "About who?";
+			where: ?object has tag person;
+			where: not ?object name matches ?me name;
+			where: not ?object name matches ?other name;
+		}
+	
+		preconditions
+		{
+			where: ?me has tag person;
+		}
+		
+		case succeed
+		{
+			where: ?other trusting >= 3;
+			where: (not ?other hate ?me and (not ?other dislike ?me and ?other like ?me));
+			where: (not ?other like ?object and (not ?other love ?object and not ?other hate ?object));
+			
+			do: for person ?other remove relate dislike, ?object;
+			do: for person ?other add relate hate, ?object;
+			
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name about ?object.name and now ?other.pnSubject hates ?object.pnObject.";
+			}
+		}
+		
+		case backfire
+		{
+			where: ?other hate ?me;
+			where: (not ?other dislike ?object and (not ?other love ?object and not ?other hate ?object));
+			
+			do: for person ?other add relate like, ?object;
+			
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name about ?object.name, but now ?other.pnSubject likes ?object.pnObject.";
+			}			
+		}
+		
+		case noTrust
+		{
+			where: ?other trusting <= -1;
+			
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name about ?object.name to no effect.";
+			}			
+		}
+		
+		case noEffect
+		{
+			page p
+			{
+				text: "?me.name said something very negative to ?other.name about ?object.name to no effect.";
+			}
+		}
+	}
+	
+	verb Tic
+	{
+		preconditions
+		{
+			where: ?me has num time;
+		}
+		
+		case Tic
+		{
+			do: ?me add num time, (?me time + 1); 
+		}
+		
+		discriminator never;
+	}
+	
+	/////////////
+	// Endings //
+	/////////////
+	ending TimeExpired
+	{
+		where: Timer time = 20;
+		
+		page end
+		{
+			text: "THE END";
+		}
+	}
+}

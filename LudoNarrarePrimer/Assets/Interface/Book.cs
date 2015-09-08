@@ -86,9 +86,9 @@ public class Book : MonoBehaviour
 	private int argument3 = 0;
 	private int argument4 = 0;
 
-	public bool useTTS = false;
-	private int _speechId = 0;
-	private int pageAtTouch;
+	//public bool useTTS = false;
+	//private int _speechId = 0;
+	//private int pageAtTouch;
 
 	//Functions for changing input UI state
 	public void setUIArguments(int argueCount)
@@ -1033,7 +1033,7 @@ public class Book : MonoBehaviour
 					inputNormal.SetActive(false);
 					inputEnd.SetActive(true);
 				}
-				else if (eng.userEntity != null)
+				else if (eng.userEntity != null && !eng.ended && !eng.standStill)
 				{
 					//Prepare for user to make the first move if they exist.
 					addInputPage();
@@ -1094,7 +1094,7 @@ public class Book : MonoBehaviour
 							flippingLeft = true; 
 							settledLeft = false;
 
-							pageAtTouch = pageIndex;
+							//pageAtTouch = pageIndex;
 						}
 						else if (settledLeft && !flippingRight && !flippingLeft && Input.mousePosition.x > Screen.width/2 && pageIndex != story.Count - 1)
 						{
@@ -1109,7 +1109,7 @@ public class Book : MonoBehaviour
 							flippingRight = true; 
 							settledRight = false;
 
-							pageAtTouch = pageIndex;
+							//pageAtTouch = pageIndex;
 						}
 						else if (flippingLeft && mouseHingeLeft - Input.mousePosition.x < 0)
 						{

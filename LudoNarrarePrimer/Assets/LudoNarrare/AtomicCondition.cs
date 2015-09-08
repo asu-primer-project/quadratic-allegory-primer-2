@@ -43,7 +43,7 @@ public class AtomicCondition
 		//Build a list of condition subjects to check
 		List<Entity> csList = new List<Entity>();
 
-		if (conditionSubject[0] == '?' && vc != null)
+		if (conditionSubject[0] == '?' && vc != null && vc.variables.Exists(v => v.name == conditionSubject))
 		{
 			foreach (Entity e in vc.variables.Find(v => v.name == conditionSubject).values)
 				csList.Add(e);
@@ -56,7 +56,7 @@ public class AtomicCondition
 
 		if (conditionObject != "")
 		{
-			if (conditionObject[0] == '?' && vc != null)
+			if (conditionObject[0] == '?' && vc != null && vc.variables.Exists(v => v.name == conditionObject))
 			{
 				foreach (Entity e in vc.variables.Find(v => v.name == conditionObject).values)
 					coList.Add(e);
@@ -214,6 +214,10 @@ public class AtomicCondition
 		case 1:
 			if (numRef != "" && numCompare != null)
 			{
+				if (!cs.numbers.Exists(x => x.name == numRef))
+				    return false;
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+				    return false;
 				if (cs.numbers.Find(x => x.name == numRef).value == numCompare.evaluate(sw, vc))
 					return true;
 				else
@@ -223,6 +227,10 @@ public class AtomicCondition
 		case 2:
 			if (numRef != "" && numCompare != null)
 			{
+				if (!cs.numbers.Exists(x => x.name == numRef))
+					return false;
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value != numCompare.evaluate(sw, vc))
 					return true;
 				else
@@ -232,6 +240,10 @@ public class AtomicCondition
 		case 3:
 			if (numRef != "" && numCompare != null)
 			{
+				if (!cs.numbers.Exists(x => x.name == numRef))
+					return false;
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value < numCompare.evaluate(sw, vc))
 					return true;
 				else
@@ -241,6 +253,10 @@ public class AtomicCondition
 		case 4:
 			if (numRef != "" && numCompare != null)
 			{
+				if (!cs.numbers.Exists(x => x.name == numRef))
+					return false;
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value > numCompare.evaluate(sw, vc))
 					return true;
 				else
@@ -250,6 +266,10 @@ public class AtomicCondition
 		case 5:
 			if (numRef != "" && numCompare != null)
 			{
+				if (!cs.numbers.Exists(x => x.name == numRef))
+					return false;
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value <= numCompare.evaluate(sw, vc))
 					return true;
 				else
@@ -259,6 +279,10 @@ public class AtomicCondition
 		case 6:
 			if (numRef != "" && numCompare != null)
 			{
+				if (!cs.numbers.Exists(x => x.name == numRef))
+					return false;
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value >= numCompare.evaluate(sw, vc))
 					return true;
 				else
@@ -270,6 +294,8 @@ public class AtomicCondition
 			{
 				if (stringCompare != "")
 				{
+					if (!cs.strings.Exists(x => x.name == stringRef))
+					    return false;
 					if (cs.strings.Find(x => x.name == stringRef).text == stringCompare)
 						return true;
 					else
@@ -277,6 +303,10 @@ public class AtomicCondition
 				}
 				else if (stringRef2 != "" && co != null)
 				{
+					if (!cs.strings.Exists(x => x.name == stringRef))
+						return false;
+					if (!co.strings.Exists(x => x.name == stringRef2))
+						return false;
 					if (cs.strings.Find(x => x.name == stringRef).text == co.strings.Find(y => y.name == stringRef2).text)
 						return true;
 					else
@@ -287,7 +317,7 @@ public class AtomicCondition
 		case 10:
 			if (relateRef != "" && co != null)
 			{
-				if (cs.relationships.Find(x => x.name == relateRef).other == co.name)
+				if (cs.relationships.Exists(x => x.name == relateRef && x.other == co.name))
 					return true;
 				else
 					return false;

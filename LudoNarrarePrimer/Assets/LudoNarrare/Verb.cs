@@ -7,6 +7,7 @@ public class Verb
 {
     /* Variables */
     public string name;
+	public List<Tag> tags;
     public List<Variable> variables;
     public List<Argument> arguments;
     public List<Condition> preconditions;
@@ -20,6 +21,7 @@ public class Verb
     public Verb(string _name)
     {
         name = _name;
+		tags = new List<Tag>();
         variables = new List<Variable>();
 		arguments = new List<Argument>();
 		preconditions = new List<Condition>();
@@ -57,6 +59,11 @@ public class Verb
         if (verb != null)
         {
             verb.name = name;
+
+			//Copy tags
+			verb.tags.Clear();
+			foreach (Tag t in tags)
+				verb.tags.Add(new Tag(t.name));
 
 			//Copy variables
 			verb.variables.Clear();

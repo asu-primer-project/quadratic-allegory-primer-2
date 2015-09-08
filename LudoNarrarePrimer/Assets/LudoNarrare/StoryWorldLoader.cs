@@ -843,7 +843,7 @@ public class StoryWorldLoader : MonoBehaviour
 						c.stringCompare = currentToken;
 						return false;
 					}
-					else if (type == 0)
+					else if (type == 0 || type == 3)
 					{
 						if (currentToken == "one")
 						{
@@ -891,7 +891,7 @@ public class StoryWorldLoader : MonoBehaviour
 						return true;
 					return false;
 				}
-				else if (type == 0)
+				else if (type == 0 || type == 3)
 				{
 					c.comparison = 10;
 					c.relateRef = tempRef;
@@ -939,8 +939,9 @@ public class StoryWorldLoader : MonoBehaviour
 						return true;
 				
 					o.agentSelector = currentToken;
+					getToken();
 
-					if (getToken() != 0)
+					if (type != 0 && type != 3)
 						return true;
 				}
 
@@ -1345,6 +1346,11 @@ public class StoryWorldLoader : MonoBehaviour
 					e.agent = new MindRandom();
 					e.agent.body = e;
 				}
+				else if (currentToken == "person")
+				{
+					e.agent = new MindPerson();
+					e.agent.body = e;
+				}
 				else if (currentToken == "user")
 					e.agent = new MindUser();
 				else
@@ -1651,6 +1657,12 @@ public class StoryWorldLoader : MonoBehaviour
 					{
 						if (currentToken == "icon")
 							error = parseIcon(null, v);
+						else if (currentToken == "tag")
+						{
+							Tag temp = new Tag("");
+							v.tags.Add(temp);
+							error = parseTag(temp);
+						}
 						else if (currentToken == "variable")
 						{
 							Variable temp = new Variable("");

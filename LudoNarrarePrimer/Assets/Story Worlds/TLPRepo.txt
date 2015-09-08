@@ -360,3 +360,13 @@ TLP Repository
 	{
 		
 	}
+
+			case notEnoughMoney
+		{
+			where: ?me money < ?supplies cost;
+			
+			page notEnoughMoney
+			{
+				text: "?me.name tried to buy the ?supplies.name, but it was too expensive at $?supplies.cost.";
+			}
+		}

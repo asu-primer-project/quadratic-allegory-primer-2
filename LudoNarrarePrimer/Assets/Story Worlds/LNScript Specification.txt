@@ -330,6 +330,8 @@ LNScript Context Free Grammar
 
 <ICONDEF>                   ==> icon: STRING, <EXPRESSION>, <EXPRESSION>, <EXPRESSION>;
 
+<TAGLIST>					==> <TAGATTR> <TAGLIST> || EMPTY
+
 <TAGATTR>                   ==> tag: WORD;
 
 <RELATEATTR>                ==> relate: WORD, WORD;
@@ -346,7 +348,7 @@ LNScript Context Free Grammar
 
 <VERBDEFLIST>               ==> <VERBDEF> <VERBDEFLIST> || <VERBDEF>
 
-<VERBDEF>                   ==> verb WORD { <ICONDEF> <VARIABLELIST> <ARGUMENTLIST> <PRECONDITIONLIST> <CASELIST> <DISCRIMINATORLIST> }
+<VERBDEF>                   ==> verb WORD { <ICONDEF> <TAGLIST> <VARIABLELIST> <ARGUMENTLIST> <PRECONDITIONLIST> <CASELIST> <DISCRIMINATORLIST> }
 
 <VARIABLELIST>              ==> <VARIABLE> <VARIABLELIST> || EMPTY
 
@@ -358,7 +360,7 @@ LNScript Context Free Grammar
 
 <PRECONDITIONLIST>          ==> <PRECONDITION> <PRECONDITIONLIST> || EMPTY
 
-<PRECONDITION>              ==> precondition { <CONDITIONLIST> }
+<PRECONDITION>              ==> preconditions { <CONDITIONLIST> }
 
 <CASELIST>                  ==> <CASE> <CASELIST> || <CASE>
 
