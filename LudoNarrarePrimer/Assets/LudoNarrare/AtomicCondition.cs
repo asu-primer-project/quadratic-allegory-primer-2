@@ -216,7 +216,7 @@ public class AtomicCondition
 			{
 				if (!cs.numbers.Exists(x => x.name == numRef))
 				    return false;
-				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)) && !(numCompare.entRef == "" && numCompare.numRef == ""))
 				    return false;
 				if (cs.numbers.Find(x => x.name == numRef).value == numCompare.evaluate(sw, vc))
 					return true;
@@ -229,7 +229,7 @@ public class AtomicCondition
 			{
 				if (!cs.numbers.Exists(x => x.name == numRef))
 					return false;
-				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)) && !(numCompare.entRef == "" && numCompare.numRef == ""))
 					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value != numCompare.evaluate(sw, vc))
 					return true;
@@ -242,7 +242,7 @@ public class AtomicCondition
 			{
 				if (!cs.numbers.Exists(x => x.name == numRef))
 					return false;
-				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)) && !(numCompare.entRef == "" && numCompare.numRef == ""))
 					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value < numCompare.evaluate(sw, vc))
 					return true;
@@ -255,7 +255,7 @@ public class AtomicCondition
 			{
 				if (!cs.numbers.Exists(x => x.name == numRef))
 					return false;
-				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)) && !(numCompare.entRef == "" && numCompare.numRef == ""))
 					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value > numCompare.evaluate(sw, vc))
 					return true;
@@ -268,7 +268,7 @@ public class AtomicCondition
 			{
 				if (!cs.numbers.Exists(x => x.name == numRef))
 					return false;
-				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)) && !(numCompare.entRef == "" && numCompare.numRef == ""))
 					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value <= numCompare.evaluate(sw, vc))
 					return true;
@@ -281,7 +281,7 @@ public class AtomicCondition
 			{
 				if (!cs.numbers.Exists(x => x.name == numRef))
 					return false;
-				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)))
+				if (!sw.entities.Exists(x => x.name == numCompare.entRef && x.numbers.Exists(y => y.name == numCompare.numRef)) && !(numCompare.entRef == "" && numCompare.numRef == ""))
 					return false;
 				if (cs.numbers.Find(x => x.name == numRef).value >= numCompare.evaluate(sw, vc))
 					return true;

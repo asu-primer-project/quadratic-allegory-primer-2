@@ -106,8 +106,7 @@ public class Engine : MonoBehaviour
 		if (amountOfWaits == agents.Count() && userFoundNoAction && !ended)
 			standStill = true;
 	}
-
-	//NEEDS TO BE REWRITTEN
+	
 	//The loop of action; each agent takes turns acting upon the world
 	public void takeInputAndProcess(Verb choice)
 	{
@@ -161,10 +160,6 @@ public class Engine : MonoBehaviour
 				}
 			}
 		}
-		else
-		{
-			//Handle ended state and story restart.
-		}
 	}
 
 	//Process story when no user input is required
@@ -204,8 +199,7 @@ public class Engine : MonoBehaviour
 		else
 			processStory();
 	}
-
-	//SHOULD BE ABLE TO SURVIVE LNSCRIPT CHANGES
+	
     //If any of the story world's endings' conditions are satisfied, execute it.
     public bool checkEndConditions()
     {
@@ -231,8 +225,7 @@ public class Engine : MonoBehaviour
 
 		return false;
     }
-	
-	//SHOULD BE ABLE TO SURVIVE LNSCRIPT CHANGES
+
 	//Given the parameters, arguments, verb context, and newly created DVT root, maps out the DVT root and returns whether there is a possible solution (null no, else yes)
 	public List<DynamicVerbTreeNode> generateDVT(List<Argument> parameters, List<Entity> arguments, Verb vContext, DynamicVerbTreeNode r)
 	{
@@ -360,8 +353,7 @@ public class Engine : MonoBehaviour
 		else
 			return null;
 	}
-
-	//SHOULD BE ABLE TO SURVIVE LNSCRIPT CHANGES
+	
 	public List<Verb> generatePossibleVerbs(Entity e)
 	{
 		//Get all verbs
@@ -430,19 +422,18 @@ public class Engine : MonoBehaviour
 				}
 			}
 
-			if (invalid)
-				break;
-
-			//Check all path combinations of arguments to see if at least one case is valid 
-			tempV.root = new DynamicVerbTreeNode(e);
-			if (generateDVT(tempV.arguments, new List<Entity>(), tempV, tempV.root) != null)
-				list.Add(tempV);
+			if (!invalid)
+			{
+				//Check all path combinations of arguments to see if at least one case is valid 
+				tempV.root = new DynamicVerbTreeNode(e);
+				if (generateDVT(tempV.arguments, new List<Entity>(), tempV, tempV.root) != null)
+					list.Add(tempV);
+			}
 		}
 
 		return list;
 	}
-
-	//SHOULD BE ABLE TO SURVIVE LNSCRIPT CHANGES
+	
 	//Given a verb, find the correct case to execute
 	public Case chooseCase(Verb v)
 	{
@@ -464,8 +455,7 @@ public class Engine : MonoBehaviour
 
 		return null;
 	}
-
-	//NEEDS A FEW TWEAKS
+	
 	//Crazy slow, needs a better solution someday
 	public List<Page> generateCasePages(Case c, Verb context, Entity me)
 	{
@@ -562,8 +552,7 @@ public class Engine : MonoBehaviour
 
 		return casePages;
 	}
-
-	//SHOULD BE ABLE TO SURVIVE LNSCRIPT CHANGES
+	
 	//Has side-effects...
 	public List<Page> executeCase(Case c, Verb context, Entity me)
 	{
@@ -577,8 +566,7 @@ public class Engine : MonoBehaviour
 		else
 			return null;
 	}
-
-	//SHOULD BE ABLE TO SURVIVE LNSCRIPT CHANGES
+	
 	public bool shouldShow(Verb v)
 	{
 		if (v.discriminators.Count == 0)

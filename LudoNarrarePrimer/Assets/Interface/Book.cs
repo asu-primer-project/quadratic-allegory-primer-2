@@ -110,7 +110,7 @@ public class Book : MonoBehaviour
 		{
 			argue1Tab.SetActive(true);
 			verbTab.GetComponent<RectTransform>().localPosition = new Vector3(650f, 187.5f, 0f);
-			argue1Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, 12.5f, 0f);
+			argue1Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, 12.5f, 0f);
 			executeTab.GetComponent<RectTransform>().localPosition = new Vector3(650f, -162.5f, 0f);
 
 			Text a1Text = argue1Text.GetComponent<Text>();
@@ -122,8 +122,8 @@ public class Book : MonoBehaviour
 			argue1Tab.SetActive(true);
 			argue2Tab.SetActive(true);
 			verbTab.GetComponent<RectTransform>().localPosition = new Vector3(650f, 275f, 0f);
-			argue1Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, 100f, 0f);
-			argue2Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, -75f, 0f);
+			argue1Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, 100f, 0f);
+			argue2Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, -75f, 0f);
 			executeTab.GetComponent<RectTransform>().localPosition = new Vector3(650f, -250f, 0f);
 
 			Text a1Text = argue1Text.GetComponent<Text>();
@@ -138,9 +138,9 @@ public class Book : MonoBehaviour
 			argue2Tab.SetActive(true);
 			argue3Tab.SetActive(true);
 			verbTab.GetComponent<RectTransform>().localPosition = new Vector3(650f, 362.5f, 0f);
-			argue1Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, 187.5f, 0f);
-			argue2Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, 12.5f, 0f);
-			argue3Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, -162.5f, 0f);
+			argue1Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, 187.5f, 0f);
+			argue2Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, 12.5f, 0f);
+			argue3Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, -162.5f, 0f);
 			executeTab.GetComponent<RectTransform>().localPosition = new Vector3(650f, -337.5f, 0f);
 
 			Text a1Text = argue1Text.GetComponent<Text>();
@@ -158,10 +158,10 @@ public class Book : MonoBehaviour
 			argue3Tab.SetActive(true);
 			argue4Tab.SetActive(true);
 			verbTab.GetComponent<RectTransform>().localPosition = new Vector3(650f, 450f, 0f);
-			argue1Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, 275f, 0f);
-			argue2Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, 100f, 0f);
-			argue3Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, -75f, 0f);
-			argue4Tab.GetComponent<RectTransform>().localPosition = new Vector3(470f, -250f, 0f);
+			argue1Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, 275f, 0f);
+			argue2Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, 100f, 0f);
+			argue3Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, -75f, 0f);
+			argue4Tab.GetComponent<RectTransform>().localPosition = new Vector3(488f, -250f, 0f);
 			executeTab.GetComponent<RectTransform>().localPosition = new Vector3(650f, -425f, 0f);
 
 			Text a1Text = argue1Text.GetComponent<Text>();
@@ -707,7 +707,7 @@ public class Book : MonoBehaviour
 		eng.takeInputAndProcess(tempV);
 		
 		//Restart input UI
-		if (!eng.ended)
+		if (!eng.ended && !eng.standStill)
 		{
 			verbChoice = 0;
 			argument1 = 0;

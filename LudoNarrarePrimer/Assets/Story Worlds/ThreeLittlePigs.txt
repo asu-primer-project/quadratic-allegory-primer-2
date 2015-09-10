@@ -68,7 +68,7 @@ storyworld ThreeLittlePigs
 	{
 		icon: "Wolf", 0, 0, 0;
 
-		agent: user;
+		agent: random;
 		string: name, "Wolf";
 		num: money, 20;
 		tag: wolf;
@@ -77,13 +77,16 @@ storyworld ThreeLittlePigs
 		string: pnSubject, "he";
 		string: pnObject, "him";
 		string: pnOwner, "his";
+		string: pnCSubject, "He";
+		string: pnCObject, "Him";
+		string: pnCOwner, "His";
 	}
 	
 	entity LittlestPig
 	{
 		icon: "Littlest Pig", 0, 0, 0;
 	
-		agent: random;
+		agent: user;
 		string: name, "Littlest Pig";
 		num: money, 10;
 		tag: pig;
@@ -94,6 +97,9 @@ storyworld ThreeLittlePigs
 		string: pnSubject, "he";
 		string: pnObject, "him";
 		string: pnOwner, "his";
+		string: pnCSubject, "He";
+		string: pnCObject, "Him";
+		string: pnCOwner, "His";
 	}
 	
 	entity LittlerPig
@@ -111,6 +117,9 @@ storyworld ThreeLittlePigs
 		string: pnSubject, "she";
 		string: pnObject, "her";
 		string: pnOwner, "her";
+		string: pnCSubject, "She";
+		string: pnCObject, "Her";
+		string: pnCOwner, "Her";
 	}
 	
 	entity LittlePig
@@ -128,6 +137,9 @@ storyworld ThreeLittlePigs
 		string: pnSubject, "she";
 		string: pnObject, "her";
 		string: pnOwner, "her";
+		string: pnCSubject, "She";
+		string: pnCObject, "Her";
+		string: pnCOwner, "Her";		
 	}
 	
 	//Places
@@ -226,7 +238,7 @@ storyworld ThreeLittlePigs
 		icon: "Gold", 0, 0, 0;
 	
 		string: name, "gold";
-		num: cost, 1000000;
+		num: cost, 100000;
 		tag: supplies;
 	}
 	
@@ -251,7 +263,7 @@ storyworld ThreeLittlePigs
 	entity Air
 	{
 		icon: "Air", 0, 0, 0;
-	
+		
 		string: name, "air";
 		num: cost, 10;
 		tag: supplies;
@@ -424,12 +436,10 @@ storyworld ThreeLittlePigs
 		{
 			do: Wolf add tag active;
 			do: ?pigs remove tag active;
-			do: ?pigs remove tag active;
-			do: ?pigs remove tag active;
 			
 			page wakeUp
 			{
-				text: "Wolf wakes up. He is hungry. How about some pig?";
+				text: "Wolf wakes up. He is hungry. How about some pork?";
 			}
 		}
 	}
@@ -449,18 +459,20 @@ storyworld ThreeLittlePigs
 		{
 			where: ?me has tag pig;
 			where: ?me has tag active;
+			where: not ?me has relate owns;
 			where: not ?me has tag lookingForMoney;
 		}
 		
 		case purchase
 		{	
 			do: ?me add num money, (?me money - ?supplies cost);
-			do: ?me add relate has, ?supplies;
+			do: ?me add relate owns, ?supplies;
 			do: ?supplies add tag bought;
+			do: ?me add tag hasSupplies;
 			
 			page purchase
 			{
-				text: "?me.name spent $?supplies.cost to buy the ?supplies.name. ?me.pnSubject now only has $?me.money";
+				text: "?me.name spent $?supplies.cost to buy the ?supplies.name. ?me.pnCSubject now only has $?me.money.";
 			}
 		}
 	}
@@ -471,134 +483,28 @@ storyworld ThreeLittlePigs
 	
 		argument ?supplies
 		{
-			where: ?me has ?supplies;
+			where: ?me owns ?supplies;
+			where: ?supplies has tag supplies;
 		}
 		
 		preconditions
 		{
 			where: ?me has tag pig;
 			where: ?me has tag active;
+			where: ?me has tag hasSupplies;
 			where: not ?me has tag lookingForMoney;
 		}
 		
 		case build
 		{
 			do: ?me add relate inHouse, ?supplies;
-			do: ?me remove relate has, ?supplies;
+			do: ?me remove relate owns, ?supplies;
 			do: ?me remove tag active;
+			do: ?me add tag hasHouse;
 			
 			page verb
 			{
 				text: "?me.name built a house of ?supplies.name.";
-			}
-		}
-	}
-	
-	verb LookForMoney
-	{
-		icon: "Look for Money", 0, 0, 0;
-		
-		preconditions
-		{
-			where: ?me has tag active;
-			where: not ?me has tag foundMoney;
-		}
-		
-		case goLook
-		{
-			do: ?me add tag lookingForMoney;
-		
-			page goLook
-			{
-				text: "?me.name went searching for money in the grass fields.";
-			}
-		}
-	}
-	
-	verb GiveMoney
-	{
-		icon: "Give Money", 0, 0, 0;
-	
-		argument ?money
-		{
-			where: ?money has tag money;
-		}
-		
-		argument ?recipient
-		{
-			where: ?recipient has tag active;
-			where: ?recipient has tag lookingForMoney;
-		}
-		
-		preconditions
-		{
-			where: ?me has tag moneyGiver;
-		}
-		
-		case find5
-		{
-			where: ?money value = 5;
-			
-			do: ?recipient add num money, (?recipient money + 5);
-			do: ?recipient remove tag lookingForMoney;
-			do: ?recipient add tag foundMoney;
-			
-			page verb
-			{
-				text: "?me.name found ?money.name while walking around.";
-			}
-		}
-		
-		case find10
-		{
-			where: ?money value = 10;
-			
-			do: ?recipient add num money, (?recipient money + 10);
-			do: ?recipient remove tag lookingForMoney;
-			do: ?recipient add tag foundMoney;
-			
-			page verb
-			{
-				text: "?me.name found ?money.name while walking around.";
-			}
-		}
-		
-		case find20
-		{
-			where: ?money value = 20;
-			
-			do: ?recipient add num money, (?recipient money + 20);
-			do: ?recipient remove tag lookingForMoney;
-			do: ?recipient add tag foundMoney;
-			
-			page verb
-			{
-				text: "?me.name found ?money.name while walking around.";
-			}
-		}
-		
-		case find1000000
-		{
-			where: ?money value = 1000000;
-			
-			do: ?recipient add num money, (?recipient money + 1000000);
-			do: ?recipient remove tag lookingForMoney;
-			do: ?recipient add tag foundMoney;
-			
-			page verb
-			{
-				text: "?me.name found ?money.name while walking around.";
-			}
-		}
-		
-		case findFail
-		{
-			do: ?recipient remove tag lookingForMoney;
-			do: ?recipient add tag foundMoney;
-
-			page verb
-			{
-				text: "ERROR: DEFAULT CASE FOR MONEY SEARCH REACHED";
 			}
 		}
 	}

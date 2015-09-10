@@ -370,3 +370,121 @@ TLP Repository
 				text: "?me.name tried to buy the ?supplies.name, but it was too expensive at $?supplies.cost.";
 			}
 		}
+		
+	verb LookForMoney
+	{
+		icon: "Look for Money", 0, 0, 0;
+		
+		preconditions
+		{
+			where: ?me has tag active;
+			where: not ?me has tag foundMoney;
+		}
+		
+		case goLook
+		{
+			do: ?me add tag lookingForMoney;
+		
+			page goLook
+			{
+				text: "?me.name went searching for money in the grass fields.";
+			}
+		}
+	}
+	
+	verb GiveMoney
+	{
+		icon: "Give Money", 0, 0, 0;
+	
+		argument ?money
+		{
+			where: ?money has tag money;
+		}
+		
+		argument ?recipient
+		{
+			where: ?recipient has tag active;
+			where: ?recipient has tag lookingForMoney;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag moneyGiver;
+		}
+		
+		case find5
+		{
+			where: ?money value = 5;
+			
+			do: ?recipient add num money, (?recipient money + 5);
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+			
+			page verb
+			{
+				text: "?me.name found ?money.name while walking around.";
+			}
+		}
+		
+		case find10
+		{
+			where: ?money value = 10;
+			
+			do: ?recipient add num money, (?recipient money + 10);
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+			
+			page verb
+			{
+				text: "?me.name found ?money.name while walking around.";
+			}
+		}
+		
+		case find20
+		{
+			where: ?money value = 20;
+			
+			do: ?recipient add num money, (?recipient money + 20);
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+			
+			page verb
+			{
+				text: "?me.name found ?money.name while walking around.";
+			}
+		}
+		
+		case find1000000
+		{
+			where: ?money value = 1000000;
+			
+			do: ?recipient add num money, (?recipient money + 1000000);
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+			
+			page verb
+			{
+				text: "?me.name found ?money.name while walking around.";
+			}
+		}
+		
+		case findFail
+		{
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+
+			page verb
+			{
+				text: "ERROR: DEFAULT CASE FOR MONEY SEARCH REACHED";
+			}
+		}
+	}
+	
+	entity Air
+	{
+		icon: "Air", 0, 0, 0;
+		
+		string: name, "air";
+		num: cost, 10;
+		tag: supplies;
+	}
