@@ -1075,8 +1075,11 @@ public class StoryWorldLoader : MonoBehaviour
 							getToken();
 							if (type == 0 && currentToken == "to")
 							{
-								o.image = currentToken;
-								if (getToken() == 7) return false;
+								if (getToken() == 0)
+								{
+									o.image = currentToken;
+									if (getToken() == 7) return false;
+								}
 							}
 						}
 					}
@@ -1345,11 +1348,19 @@ public class StoryWorldLoader : MonoBehaviour
 				{
 					e.agent = new MindRandom();
 					e.agent.body = e;
+					e.agent.sw = storyWorld;
 				}
 				else if (currentToken == "person")
 				{
 					e.agent = new MindPerson();
 					e.agent.body = e;
+					e.agent.sw = storyWorld;
+				}
+				else if (currentToken == "pig")
+				{
+					e.agent = new MindPig();
+					e.agent.body = e;
+					e.agent.sw = storyWorld;
 				}
 				else if (currentToken == "user")
 					e.agent = new MindUser();
@@ -1468,6 +1479,7 @@ public class StoryWorldLoader : MonoBehaviour
 		if (getToken() == 3)
 		{
 			a.name = currentToken;
+			a.choice = currentToken;
 			
 			if (getToken() == 4)
 			{

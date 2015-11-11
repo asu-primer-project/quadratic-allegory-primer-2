@@ -26,7 +26,8 @@ public class Argument
 	{
 		foreach (Condition c in conditions)
 			c.replaceWith(replace, with);
-		choice = with;
+		if (choice == replace)
+			choice = with;
 	}
 	
 	public void copyTo(Argument a)
@@ -35,6 +36,7 @@ public class Argument
 		{
 			a.name = name;
 			a.text = text;
+			a.choice = choice;
 			a.values.Clear();
 			for (int i = 0; i < values.Count; i++)
 				a.values.Add(values[i]);

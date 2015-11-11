@@ -197,7 +197,10 @@ public class Engine : MonoBehaviour
 			currentUserChoices.RemoveAll(x => x.name == "Wait");
 		}
 		else
+		{
+			userFoundNoAction = true;
 			processStory();
+		}
 	}
 	
     //If any of the story world's endings' conditions are satisfied, execute it.
@@ -481,35 +484,41 @@ public class Engine : MonoBehaviour
 				{
 					foreach (Variable var in context.variables)
 					{
-						Entity ent = var.values[rand.Next(0, var.values.Count)];
-				
-						foreach (LNString ln in ent.strings)
+						if (var.values.Count != 0)
 						{
-							string str = (var.name + "." + ln.name);
-							d.text = d.text.Replace(str, ln.text);
-						}
-						
-						foreach (Number num in ent.numbers)
-						{
-							string str = (var.name + "." + num.name);
-							d.text = d.text.Replace(str, num.value.ToString());
+							Entity ent = var.values[rand.Next(0, var.values.Count)];
+					
+							foreach (LNString ln in ent.strings)
+							{
+								string str = (var.name + "." + ln.name);
+								d.text = d.text.Replace(str, ln.text);
+							}
+							
+							foreach (Number num in ent.numbers)
+							{
+								string str = (var.name + "." + num.name);
+								d.text = d.text.Replace(str, num.value.ToString());
+							}
 						}
 					}
 
 					foreach (Argument a in context.arguments)
 					{
-						Entity ent = a.values.Find(x => x.name == a.choice);
-						
-						foreach (LNString ln in ent.strings)
+						if (a.values.Count != 0)
 						{
-							string str = (a.name + "." + ln.name);
-							d.text = d.text.Replace(str, ln.text);
-						}
-						
-						foreach (Number num in ent.numbers)
-						{
-							string str = (a.name + "." + num.name);
-							d.text = d.text.Replace(str, num.value.ToString());
+							Entity ent = a.values.Find(x => x.name == a.choice);
+							
+							foreach (LNString ln in ent.strings)
+							{
+								string str = (a.name + "." + ln.name);
+								d.text = d.text.Replace(str, ln.text);
+							}
+							
+							foreach (Number num in ent.numbers)
+							{
+								string str = (a.name + "." + num.name);
+								d.text = d.text.Replace(str, num.value.ToString());
+							}
 						}
 					}
 

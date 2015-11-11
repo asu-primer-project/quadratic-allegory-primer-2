@@ -14,32 +14,52 @@ storyworld ThreeLittlePigs
 	{
 		page title
 		{
+			draw: Fields image backdrop, 0, 0;
 			text: "The Three Little Pigs";
 		}
 		
 		page beginA
 		{
+			draw: Fields image backdrop, 0, 0;
+			draw: LittlePig image stand, 0, -220;
+			draw: LittlerPig image stand, -400, -240;
+			draw: LittlestPig image stand, 400, -250;
 			text: "There once lived three little pigs.";
 		}
 		
 		page beginB
 		{
+			draw: Fields image backdrop, 0, 0;
+			draw: LittlePig image stand, 0, -220;
 			text: "One was called Little Pig.";
 		}
 		
 		page beginC
 		{
+			draw: Fields image backdrop, 0, 0;
+			draw: LittlerPig image stand, -400, -240;
 			text: "Another was called Littler Pig.";
 		}
 		
 		page beginD
 		{
+			draw: Fields image backdrop, 0, 0;
+			draw: LittlestPig image stand, 400, -250;
 			text: "The last was called Littlest Pig.";
 		}
 		
 		page beginE
 		{
-			text: "These three pigs knew they lived in wolf country, so they decided to build homes for protection.";
+			draw: Fields image backdrop, 0, 0;
+			draw: LittlePig image run, 0, -220;
+			draw: LittlerPig image run, -400, -240;
+			draw: LittlestPig image run, 400, -250;
+			text: "These three pigs had moved into wolf country, so they knew they needed to quickly build homes for protection.";
+		}
+		
+		page throwaway
+		{
+			text: "See me and thus be doom!";
 		}
 	}
 	
@@ -53,6 +73,8 @@ storyworld ThreeLittlePigs
 		
 		agent: random;
 		tag: story;
+		image: nukeA, nukeBackdropA;
+		image: nukeB, nukeBackdropB;
 	}
 	
 	entity MoneyGiver
@@ -68,10 +90,19 @@ storyworld ThreeLittlePigs
 	{
 		icon: "Wolf", 0, 0, 0;
 
-		agent: random;
+		agent: user;
 		string: name, "Wolf";
 		num: money, 20;
 		tag: wolf;
+		relate: at, Fields;
+		
+		//Images
+		image: stand, wolfStand;
+		image: run, wolfRun;
+		image: get, wolfGet;
+		image: talk, wolfTalk;
+		image: sleep, wolfSleep;
+		image: eat, wolfEat;
 		
 		//Pronouns
 		string: pnSubject, "he";
@@ -86,13 +117,22 @@ storyworld ThreeLittlePigs
 	{
 		icon: "Littlest Pig", 0, 0, 0;
 	
-		agent: user;
+		agent: pig;
 		string: name, "Littlest Pig";
 		num: money, 10;
 		tag: pig;
 		tag: active;
-		relate: home, LittlestPigHouse;
+		relate: at, Fields;
 
+		//Images
+		image: stand, littlestPigStand;
+		image: run, littlestPigRun;
+		image: get, littlestPigGet;
+		image: talk, littlestPigTaunt;
+		image: fazed, littlestPigFazed;
+		image: cower, littlestPigCower;
+		image: dead, littlestPigDead;
+		
 		//Pronouns
 		string: pnSubject, "he";
 		string: pnObject, "him";
@@ -106,13 +146,22 @@ storyworld ThreeLittlePigs
 	{
 		icon: "Littler Pig", 0, 0, 0;
 	
-		agent: random;
+		agent: pig;
 		string: name, "Littler Pig";
 		num: money, 10;
 		tag: pig;
 		tag: active;
-		relate: home, LittlerPigHouse;
+		relate: at, Fields;
 
+		//Images
+		image: stand, littlerPigStand;
+		image: run, littlerPigRun;
+		image: get, littlerPigGet;
+		image: talk, littlerPigTaunt;
+		image: fazed, littlerPigFazed;
+		image: cower, littlerPigCower;
+		image: dead, littlerPigDead;
+		
 		//Pronouns
 		string: pnSubject, "she";
 		string: pnObject, "her";
@@ -126,12 +175,21 @@ storyworld ThreeLittlePigs
 	{
 		icon: "Little Pig", 0, 0, 0;
 	
-		agent: random;
+		agent: pig;
 		string: name, "Little Pig";
 		num: money, 10;
 		tag: pig;
 		tag: active;
-		relate: home, LittlePigHouse;
+		relate: at, Fields;
+
+		//Images
+		image: stand, littlePigStand;
+		image: run, littlePigRun;
+		image: get, littlePigGet;
+		image: talk, littlePigTaunt;
+		image: fazed, littlePigFazed;
+		image: cower, littlePigCower;
+		image: dead, littlePigDead;
 		
 		//Pronouns
 		string: pnSubject, "she";
@@ -145,134 +203,183 @@ storyworld ThreeLittlePigs
 	//Places
 	entity Store
 	{
-		icon: "Store", 0, 0, 0;
+		icon: "Hardware Store", 0, 0, 0;
 	
 		tag: place;
 		string: name, "the hardware store";
+		image: backdrop, shopBackdrop;
+		image: house, airHouse;
 	}
 	
-	entity LittlestPigHouse
+	entity Fields
 	{
-		icon: "Littlest Pig's House", 0, 0, 0;
+		icon: "Fields", 0, 0, 0;
+		
+		tag: place;
+		string: name, "the fields";
+		image: backdrop, fieldsBackdrop;
+		image: house, airHouse;
+	}
+	
+	entity TreeGrove
+	{
+		icon: "Tree Grove", 0, 0, 0;
 	
 		tag: place;
 		tag: home;
-		string: name, "Littlest Pig's house";
+		string: name, "the tree grove";
+		image: backdrop, treeGroveBackdrop;
+		image: house, airHouse;
 	}
 	
-	entity LittlerPigHouse
+	entity LargeRock
 	{
-		icon: "Littler Pig's House", 0, 0, 0;
+		icon: "Large Rock", 0, 0, 0;
 	
 		tag: place;
 		tag: home;
-		string: name, "Littler Pig's house";
+		string: name, "the large rock";
+		image: backdrop, largeRockBackdrop;
+		image: house, airHouse;
 	}
 	
-	entity LittlePigHouse
+	entity Beach
 	{
-		icon: "Little Pig's House", 0, 0, 0;
+		icon: "Beach", 0, 0, 0;
 	
 		tag: place;
 		tag: home;
-		string: name, "Little Pig's house";
+		string: name, "the beach";
+		image: backdrop, beachBackdrop;
+		image: house, airHouse;
 	}
 	
 	//Supplies
 	entity Wood
 	{
 		icon: "Wood", 0, 0, 0;
+		image: item, wood;
+		image: house, woodHouse;
 	
 		string: name, "wood";
 		num: cost, 5;
 		tag: supplies;
+		tag: item;
 	}
 	
 	entity Straw
 	{
 		icon: "Straw", 0, 0, 0;
-	
+		image: item, straw;
+		image: house, strawHouse;
+		
 		string: name, "straw";
 		num: cost, 2;
 		tag: supplies;
+		tag: item;
 	}
 	
 	entity Brick
 	{
 		icon: "Brick", 0, 0, 0;
+		image: item, brick;
+		image: house, brickHouse;
 	
 		string: name,"brick";
 		num: cost, 10;
 		tag: supplies;
+		tag: item;
 	}	
 	
 	entity Glass
 	{
 		icon: "Glass", 0, 0, 0;
-	
+		image: item, glass;
+		image: house, glassHouse;
+		
 		string: name, "glass";
 		num: cost, 20;
 		tag: supplies;
+		tag: item;
 	}
 	
 	entity Steel
 	{
 		icon: "Steel", 0, 0, 0;
+		image: item, steel;
+		image: house, steelHouse;
 	
 		string: name, "steel";
 		num: cost, 30;
 		tag: supplies;
+		tag: item;
 	}
 	
 	entity Diamond
 	{
 		icon: "Diamond", 0, 0, 0;
+		image: item, diamond;
+		image: house, diamondHouse;
 	
 		string: name, "diamond";
 		num: cost, 1000000;
 		tag: supplies;
+		tag: item;
 	}
 	
 	entity Gold
 	{
 		icon: "Gold", 0, 0, 0;
+		image: item, gold;
+		image: house, goldHouse;
 	
 		string: name, "gold";
-		num: cost, 100000;
+		num: cost, 10000;
 		tag: supplies;
+		tag: item;
 	}
 	
 	entity Canvas
 	{
 		icon: "Canvas", 0, 0, 0;
+		image: item, canvas;
+		image: house, canvasHouse;
 	
 		string: name, "canvas";
-		num: cost, 5;
+		num: cost, 15;
 		tag: supplies;
+		tag: item;
 	}
 	
 	entity Cardboard
 	{
 		icon: "Cardboard", 0, 0, 0;
+		image: item, cardboard;
+		image: house, cardboardHouse;
 	
 		string: name, "cardboard";
 		num: cost, 2;
 		tag: supplies;
+		tag: item;
 	}
 	
 	entity Air
 	{
 		icon: "Air", 0, 0, 0;
+		image: item, air;
+		image: house, airHouse;
 		
 		string: name, "air";
 		num: cost, 10;
 		tag: supplies;
+		tag: item;
 	}
 	
 	//Traps
 	entity Candy
 	{
 		icon: "Candy", 0, 0, 0;
+		image: item, candy;
 	
 		string: name, "fancy candy";
 		num: cost, 10;
@@ -283,6 +390,7 @@ storyworld ThreeLittlePigs
 	entity Apple
 	{
 		icon: "Apple", 0, 0, 0;
+		image: item, apple;
 	
 		string: name, "apple";
 		num: cost, 2;
@@ -293,6 +401,7 @@ storyworld ThreeLittlePigs
 	entity Pork
 	{
 		icon: "Pork", 0, 0, 0;
+		image: item, pork;
 	
 		string: name, "pork";
 		num: cost, 7;
@@ -303,6 +412,7 @@ storyworld ThreeLittlePigs
 	entity Cheese
 	{
 		icon: "Cheese", 0, 0, 0;
+		image: item, cheese;
 	
 		string: name, "cheese";
 		num: cost, 5;
@@ -314,6 +424,7 @@ storyworld ThreeLittlePigs
 	entity Scissors
 	{
 		icon: "Scissors", 0, 0, 0;
+		image: item, scissors;
 	
 		string: name, "scissors";
 		num: cost, 3;
@@ -324,7 +435,8 @@ storyworld ThreeLittlePigs
 	entity Vacuum	
 	{
 		icon: "Vacuum", 0, 0, 0;
-	
+		image: item, vacuum;
+		
 		string: name, "vacuum";
 		num: cost, 7;
 		tag: tool;		
@@ -334,6 +446,7 @@ storyworld ThreeLittlePigs
 	entity TNT
 	{
 		icon: "TNT", 0, 0, 0;
+		image: item, tnt;
 	
 		string: name, "TNT";
 		num: cost, 20;
@@ -344,6 +457,7 @@ storyworld ThreeLittlePigs
 	entity Sledgehammer
 	{
 		icon: "Sledgehammer", 0, 0, 0;
+		image: item, sledgehammer;
 	
 		string: name, "sledgehammer";
 		num: cost, 10;
@@ -354,6 +468,7 @@ storyworld ThreeLittlePigs
 	entity Flamethrower
 	{
 		icon: "Flamethrower", 0, 0, 0;
+		image: item, flamethrower;
 	
 		string: name, "flamethrower";
 		num: cost, 30;
@@ -364,6 +479,7 @@ storyworld ThreeLittlePigs
 	entity NuclearWarhead
 	{
 		icon: "Nuclear Warhead", 0, 0, 0;
+		image: item, nuke;
 	
 		string: name, "nuclear warhead";
 		num: cost, 1000000;
@@ -375,47 +491,206 @@ storyworld ThreeLittlePigs
 	entity dollar5
 	{
 		icon: "Five Dollar Bill", 0, 0, 0;
+		image: item, moneyFive;
 	
 		string: name, "five dollars";
 		num: value, 5;
-		num: odds, 9; //Out of 10
+		num: odds, 6;
 		tag: money;
 	}
 	
 	entity dollar10
 	{
 		icon: "Ten Dollar Bill", 0, 0, 0;
+		image: item, moneyTen;
 	
 		string: name, "ten dollars";
 		num: value, 10;
-		num: odds, 7; //Out of 10
+		num: odds, 4;
 		tag: money;
 	}
 
 	entity dollar20
 	{
 		icon: "Twenty Dollar Bill", 0, 0, 0;
+		image: item, moneyTwenty;
 	
 		string: name, "twenty dollars";
 		num: value, 20;
-		num: odds, 5; //Out of 10
+		num: odds, 4;
 		tag: money;
 	}
 	
 	entity dollar1000000
 	{
 		icon: "Million Dollar Bill", 0, 0, 0;
+		image: item, moneyMillion;
 	
 		string: name, "one million dollars";
 		num: value, 1000000;
-		num: odds, 1; //Out of 10
+		num: odds, 3; 
 		tag: money;
+	}
+	
+	//Taunts
+	entity taunt1
+	{
+		icon: "Taunt 1", 0, 0, 0;
+		string: text, "Nanana, you can't get me";
+		tag: taunt;
+	}
+
+	entity taunt2
+	{
+		icon: "Taunt 2", 0, 0, 0;
+		string: text, "I won't let you in by the hair of my chiny chin chin";
+		tag: taunt;
+	}
+	
+	entity taunt3
+	{
+		icon: "Taunt 3", 0, 0, 0;
+		string: text, "Go eat a chicken instead";
+		tag: taunt;
+	}
+	
+	entity taunt4
+	{
+		icon: "Taunt 4", 0, 0, 0;
+		string: text, "Ha, you are too weak to destroy this house";
+		tag: taunt;
+	}
+	
+	entity taunt5
+	{
+		icon: "Taunt 5", 0, 0, 0;
+		string: text, "You are going to starve you skinny wolf";
+		tag: taunt;
+	}
+	
+	entity taunt6
+	{
+		icon: "Taunt 6", 0, 0, 0;
+		string: text, "Your hunger will never be satisfied";
+		tag: taunt;
+	}
+	
+	entity taunt7
+	{
+		icon: "Taunt 7", 0, 0, 0;
+		string: text, "Tehehe, just give up wolf";
+		tag: taunt;
 	}
 	
 	///////////
 	// Verbs //
 	///////////
-	verb WakeUpWolf
+
+	//Control Verbs
+	//Give Money - The money giver uses odds to determine how much money to give to the character looking for cash.
+	verb GiveMoney
+	{
+		icon: "Give Money", 0, 0, 0;
+	
+		argument ?money
+		{
+			where: ?money has tag money;
+		}
+		
+		argument ?recipient
+		{
+			where: (?recipient has tag wolf or ?recipient has tag pig);
+			where: ?recipient has tag active;
+			where: ?recipient has tag lookingForMoney;
+		}
+
+		preconditions
+		{
+			where: ?me has tag moneyGiver;
+		}
+		
+		case find5
+		{
+			where: ?money value = 5;
+			
+			do: ?recipient add num money, (?recipient money + 5);
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+			
+			page verb
+			{
+				draw: Fields image backdrop, 0, 0;
+				draw: ?money image item, 0, 120;
+				draw: ?recipient image get, 0, -220;
+				text: "?recipient.name found ?money.name while searching around.";
+			}
+		}
+		
+		case find10
+		{
+			where: ?money value = 10;
+			
+			do: ?recipient add num money, (?recipient money + 10);
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+			
+			page verb
+			{
+				draw: Fields image backdrop, 0, 0;
+				draw: ?money image item, 0, 120;
+				draw: ?recipient image get, 0, -220;
+				text: "?recipient.name found ?money.name while searching around.";
+			}
+		}
+		
+		case find20
+		{
+			where: ?money value = 20;
+			
+			do: ?recipient add num money, (?recipient money + 20);
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+			
+			page verb
+			{
+				draw: Fields image backdrop, 0, 0;
+				draw: ?money image item, 0, 120;
+				draw: ?recipient image get, 0, -220;
+				text: "?recipient.name found ?money.name while searching around.";
+			}
+		}
+		
+		case find1000000
+		{
+			where: ?money value = 1000000;
+			
+			do: ?recipient add num money, (?recipient money + 1000000);
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+			
+			page verb
+			{
+				draw: Fields image backdrop, 0, 0;
+				draw: ?money image item, 0, 120;
+				draw: ?recipient image get, 0, -220;
+				text: "?recipient.name found ?money.name while searching around.";
+			}
+		}
+		
+		case findFail
+		{
+			do: ?recipient remove tag lookingForMoney;
+			do: ?recipient add tag foundMoney;
+
+			page verb
+			{
+				text: "ERROR: DEFAULT CASE FOR MONEY SEARCH REACHED";
+			}
+		}
+	}
+	
+	//Awake Wolf -
+	verb AwakeWolf
 	{
 		icon: "Wake Up Wolf", 0, 0, 0;
 	
@@ -428,61 +703,43 @@ storyworld ThreeLittlePigs
 		{
 			where: ?me has tag story;
 			where: not Wolf has tag active;
-			where: all ?pigs has tag hasSupplies;
-			where: all ?pigs has tag hasHouse;
+			where: all ?pigs has tag insideHouse;
 		}
 		
-		case WolfBecomesActive
+		case wolfBecomesActive
 		{
 			do: Wolf add tag active;
-			do: ?pigs remove tag active;
+			
+			page sleep
+			{
+				draw: Fields image backdrop, 0, 0;
+				draw: Wolf image sleep, 0, -220;
+				text: "Wolf slept soundly in the fields.";
+			}
 			
 			page wakeUp
 			{
-				text: "Wolf wakes up. He is hungry. How about some pork?";
+				draw: Fields image backdrop, 0, 0;
+				draw: Wolf image stand, 0, -220;
+				text: "Wolf slowly woke up. He was hungry. 'How about some pork?' he thought.";
 			}
-		}
+		}	
 	}
 	
-	verb BuySupplies
-	{
-		icon: "Buy Supplies", 0, 0, 0;
-	
-		argument ?supplies
-		{
-			where: ?supplies has tag supplies;
-			where: not ?supplies has tag bought;
-			where: ?me money >= ?supplies cost;
-		}
-		
-		preconditions
-		{
-			where: ?me has tag pig;
-			where: ?me has tag active;
-			where: not ?me has relate owns;
-			where: not ?me has tag lookingForMoney;
-		}
-		
-		case purchase
-		{	
-			do: ?me add num money, (?me money - ?supplies cost);
-			do: ?me add relate owns, ?supplies;
-			do: ?supplies add tag bought;
-			do: ?me add tag hasSupplies;
-			
-			page purchase
-			{
-				text: "?me.name spent $?supplies.cost to buy the ?supplies.name. ?me.pnCSubject now only has $?me.money.";
-			}
-		}
-	}
-	
+	//Pig Verbs
+	//Build House - Once a pig has materials and has run off to an area to build a home, they can build the house of those materials. 
 	verb BuildHouse
 	{
 		icon: "Build House", 0, 0, 0;
 	
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+	
 		argument ?supplies
 		{
+			text: "Build the house of?";
 			where: ?me owns ?supplies;
 			where: ?supplies has tag supplies;
 		}
@@ -491,20 +748,995 @@ storyworld ThreeLittlePigs
 		{
 			where: ?me has tag pig;
 			where: ?me has tag active;
-			where: ?me has tag hasSupplies;
 			where: not ?me has tag lookingForMoney;
+			where: ?at has tag home;
+			where: not ?me has tag insideHouse;
+			where: not ?at has relate hasHouse;
+			where: not ?me has tag distracted;
+			where: not ?me has tag fazed;
 		}
 		
-		case build
+		case buildWood
 		{
-			do: ?me add relate inHouse, ?supplies;
+			where: ?supplies name matches "wood";
+		
+			do: ?at add relate hasHouse, ?supplies;
 			do: ?me remove relate owns, ?supplies;
-			do: ?me remove tag active;
-			do: ?me add tag hasHouse;
+			do: ?at change image house to woodHouse;
 			
 			page verb
 			{
-				text: "?me.name built a house of ?supplies.name.";
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+		
+		case buildStraw
+		{
+			where: ?supplies name matches "straw";
+		
+			do: ?at add relate hasHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			do: ?at change image house to strawHouse;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+		
+		case buildBrick
+		{
+			where: ?supplies name matches "brick";
+		
+			do: ?at add relate hasHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			do: ?at change image house to brickHouse;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+		
+		case buildGlass
+		{
+			where: ?supplies name matches "glass";
+		
+			do: ?at add relate hasHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			do: ?at change image house to glassHouse;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+		
+		case buildSteel
+		{
+			where: ?supplies name matches "steel";
+		
+			do: ?at add relate hasHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			do: ?at change image house to steelHouse;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+		
+		case buildDiamond
+		{
+			where: ?supplies name matches "diamond";
+		
+			do: ?at add relate hasHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			do: ?at change image house to diamondHouse;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+		
+		case buildGold
+		{
+			where: ?supplies name matches "gold";
+		
+			do: ?at add relate hasHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			do: ?at change image house to goldHouse;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+		
+		case buildCanvas
+		{
+			where: ?supplies name matches "canvas";
+		
+			do: ?at add relate hasHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			do: ?at change image house to canvasHouse;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+		
+		case buildCardboard
+		{
+			where: ?supplies name matches "cardboard";
+		
+			do: ?at add relate hasHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			do: ?at change image house to cardboardHouse;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+		
+		case buildAir
+		{
+			do: ?at add relate hasHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?supplies image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name built a house of ?supplies.name at ?at.name.";
+			}
+		}
+	}
+	
+	//Enter House - If the pig is in an area with a house, they can enter it, even if another pig is inside. Once inside, pigs stay still and only taunt the wolf until the house is destroyed.
+	verb EnterHouse
+	{
+		icon: "Enter House", 0, 0, 0;
+		
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		variable ?otherPig
+		{
+			where: ?otherPig at ?at;
+			where: ?otherPig has tag insideHouse;
+		}
+		
+		variable ?supplies
+		{
+			where: ?at hasHouse ?supplies;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+			where: not ?me has tag insideHouse;
+			where: ?otherPig empty;
+			where: ?at has relate hasHouse;
+			where: not ?me has tag distracted;
+			where: not ?me has tag fazed;
+		}
+		
+		case enter
+		{
+			do: ?me add tag insideHouse;
+		
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				text: "?me.name entered the house made of ?supplies.name.";
+			}
+		}
+	}
+	
+	//Taunt - If inside a house and the wolf is outside, pigs can taunt the wolf. No impact on world state, should only influence the player.
+	verb Taunt
+	{
+		icon: "Taunt", 0, 0, 0;
+		
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		variable ?wolfAt
+		{
+			where: Wolf at ?wolfAt;
+		}
+		
+		argument ?taunt
+		{
+			where: ?taunt has tag taunt;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+			where: ?me has tag insideHouse;
+			where: ?at same ?wolfAt;
+			where: not ?me has tag distracted;
+			where: not ?me has tag fazed;
+		}
+		
+		case AirTaunt
+		{
+			where: ?at hasHouse Air;
+			
+			page taunt
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?me image talk, 0, -220;
+				draw: ?at image house, 0, -150;
+				text: "?me.name taunted Wolf by yelling, '?taunt.text!'";
+			}			
+		}
+		
+		case Taunt
+		{
+			page taunt
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?me image talk, 0, 100;
+				draw: ?at image house, 0, -150;
+				text: "?me.name stuck their head out the roof and taunted Wolf by yelling, '?taunt.text!'";
+			}
+		}
+	}
+	
+	//Cower - When a pig has no other options, they can cower, making them inactive.
+	verb Cower
+	{
+		icon: "Cower", 0, 0, 0;
+		
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+			where: not ?me has tag insideHouse;
+			where: not ?at name matches "the hardware store";
+			where: not ?me has tag distracted;
+			where: not ?me has tag fazed;
+		}
+		
+		case Cower
+		{
+			do: ?me remove tag active;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image cower, 0, -250;
+				text: "?me.name gave up and cowered at ?at.name.";
+			}
+		}
+	}
+	
+	//Become Undistracted - When a pig becomes distracted, they can get out of that state
+	verb BecomeUndistracted
+	{
+		icon: "Become Undistracted", 0, 0, 0;
+		
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+			where: ?me has tag distracted;
+		}
+		
+		case Undistract
+		{
+			do: ?me remove tag distracted;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				text: "?me.name snapped out of it and became undistracted.";
+			}
+		}
+	}
+	
+	//Become Unfazed - When a pig becomes fazed, they can get out of that state
+	verb BecomeUnfazed
+	{
+		icon: "Become Unfazed", 0, 0, 0;
+		
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+			where: ?me has tag fazed;
+		}
+		
+		case Unfaze
+		{
+			do: ?me remove tag fazed;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				text: "?me.name snapped out of it and became unfazed.";
+			}
+		}	
+	}
+	
+	//Wolf Verbs
+	//Ask For Item Price - Wolf can ask for the price of an item, allowing the player to make informed purchase decisions. The pig AIs don't need this info.
+	verb AskForItemPrice
+	{
+		icon: "Ask for Price", 0, 0, 0;
+		
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		argument ?item
+		{
+			text: "Which to ask about?";
+			where: ?item has tag item;
+			where: not ?item has tag priceAsked;
+			where: not ?item has tag bought;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me at Store;
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+		}
+		
+		case tell
+		{
+			do: ?item add tag priceAsked;
+		
+			page ask
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image talk, 0, -220;
+				text: "Wolf asked, 'How much does the ?item.name cost?'";
+			}
+		
+			page respond
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				text: "The hardware store owner said, 'The ?item.name costs $?item.cost.'";
+			}
+		}
+	}
+	
+	//Eat - When in the same area as a pig unprotected by shelter, the wolf can eat that pig.
+	verb Eat
+	{
+		icon: "Eat", 0, 0, 0;
+		
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		argument ?pig
+		{
+			text: "Who to eat?";
+			where: ?pig has tag pig;
+			where: ?pig at ?at;
+			where: not ?pig has tag dead; 
+			where: (not ?pig has tag insideHouse or ?at hasHouse Air);
+		}
+		
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me has tag active;
+			where: not ?me at Store;
+			where: not ?me has tag lookingForMoney;
+		}
+		
+		case eat
+		{
+			do: ?pig add tag eaten;
+			do: ?pig add tag dead;
+			do: ?pig remove tag active;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image eat, -300, -220;
+				draw: ?pig image run, 300, -220;
+				text: "Wolf grabbed ?pig.name and ate ?pig.pnObject completely whole!";
+			}
+		}
+	}
+	
+	//Give Up - Wolf can give up his pursuit whenever. It is independent of whether or not he still has a chance to improve "score." 
+	verb GiveUp
+	{
+		icon: "Give Up", 0, 0, 0;
+
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+		}
+		
+		case giveUp2
+		{
+			where: ((LittlePig has tag eaten and LittlerPig has tag eaten) or ((LittlePig has tag eaten and LittlestPig has tag eaten) or (LittlerPig has tag eaten and LittlestPig has tag eaten)));
+			
+			do: ?me add tag giveUp2;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image get, 0, -220;
+				text: "Wolf gave up his pursuit.";
+			}
+		}
+		
+		case giveUp1
+		{
+			where: (LittlePig has tag eaten or (LittlerPig has tag eaten or LittlestPig has tag eaten));
+		
+			do: ?me add tag giveUp1;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image get, 0, -220;
+				text: "Wolf gave up his pursuit.";
+			}
+		}
+		
+		case giveUp0
+		{
+			do: ?me add tag giveUp0;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image get, 0, -220;
+				text: "Wolf gave up his pursuit.";
+			}
+		}
+	}
+
+	//Destroy House - The wolf can use a tool to destroy a house to varying levels of success.
+	verb DestroyHouse
+	{
+		icon: "Destroy House", 0, 0, 0;
+
+		variable ?at
+		{
+			where: ?me at ?at;		
+		}
+		
+		variable ?house
+		{
+			where: ?at hasHouse ?house;
+		}
+		
+		variable ?pigs
+		{
+			where: ?pigs has tag pig;
+			where: ?pigs at ?at;
+			where: ?pigs has tag insideHouse;
+		}
+		
+		argument ?tool
+		{
+			text: "Which tool to destroy the house with?";
+			where: Wolf owns ?tool;
+			where: ?tool has tag tool;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+			where: not ?house empty;
+		}
+		
+		case Nuclear
+		{
+			where: ?tool name matches "Nuclear Warhead";
+		
+			do: Wolf add tag goneNuclear;
+			
+			page nuclearA
+			{
+				draw: ?at image backdrop, 0, 0;
+				text: "Wolf launched the nuke and waited for it to destroy the house.";
+			}
+			
+			page nuclearB
+			{
+				draw: Story image nukeA, 0, 0;
+				text: "The nuke landed and then exploded. It instantly burnt everything in site.";
+			}
+		}
+		
+		case DestroyHousePigDies
+		{
+			where: ((?house name matches "straw" and ?tool name matches "TNT") or 
+			((?house name matches "straw" and ?tool name matches "sledgehammer") or 
+			((?house name matches "glass" and ?tool name matches "TNT") or 
+			((?house name matches "canvas" and ?tool name matches "TNT") or 
+			((?house name matches "cardboard" and ?tool name matches "TNT") or 
+			((?house name matches "cardboard" and ?tool name matches "sledgehammer") or 
+			((?house name matches "air" and ?tool name matches "TNT") or 
+			((?house name matches "air" and ?tool name matches "sledgehammer") or (?house name matches "air" and ?tool name matches "flamethrower")))))))));
+
+			do: ?me remove relate owns, ?tool;
+			do: ?pigs remove tag active;
+			do: ?pigs add tag dead;
+			do: ?pigs remove tag insideHouse;
+			do: ?at change image house to airHouse;
+			do: ?at remove relate hasHouse, ?house;
+		
+			page Destroy
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?tool image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "Wolf attempted to use the ?tool.name to destroy the house made of ?house.name.";
+			}
+			
+			page Results
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?pigs image dead, 300, -220;
+				draw: ?me image stand, -300, -220;
+				text: "The ?tool.name not only destroyed the house of ?house.name but also killed the pig inside.";
+			}
+		}
+		
+		case DestroyHousePigFazed
+		{
+			where: ((?house name matches "wood" and ?tool name matches "TNT") or 
+			((?house name matches "straw" and ?tool name matches "vacuum") or 
+			((?house name matches "straw" and ?tool name matches "flamethrower") or 
+			((?house name matches "brick" and ?tool name matches "TNT") or 
+			((?house name matches "glass" and ?tool name matches "sledgehammer") or 
+			((?house name matches "canvas" and ?tool name matches "vacuum") or 
+			((?house name matches "canvas" and ?tool name matches "sledgehammer") or 
+			((?house name matches "cardboard" and ?tool name matches "flamethrower") or (?house name matches "air" and ?tool name matches "vacuum")))))))));
+
+			do: ?me remove relate owns, ?tool;
+			do: ?pigs add tag fazed;
+			do: ?pigs remove tag insideHouse;
+			do: ?at change image house to airHouse;
+			do: ?at remove relate hasHouse, ?house;
+		
+			page Destroy
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?tool image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "Wolf attempted to use the ?tool.name to destroy the house made of ?house.name.";
+			}
+			
+			page Results
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?pigs image fazed, 300, -220;
+				draw: ?me image stand, -300, -220;
+				text: "The ?tool.name not only destroyed the house of ?house.name but also fazed the pig inside.";
+			}		
+		}
+		
+		case DestroyHouse
+		{
+			where: ((?house name matches "wood" and ?tool name matches "sledgehammer") or 
+			((?house name matches "wood" and ?tool name matches "flamethrower") or 
+			((?house name matches "straw" and ?tool name matches "scissors") or 
+			((?house name matches "brick" and ?tool name matches "sledgehammer") or 
+			((?house name matches "steal" and ?tool name matches "TNT") or 
+			((?house name matches "gold" and ?tool name matches "TNT") or 
+			((?house name matches "gold" and ?tool name matches "sledgehammer") or 
+			((?house name matches "canvas" and ?tool name matches "scissors") or 
+			((?house name matches "canvas" and ?tool name matches "flamethrower") or
+			((?house name matches "cardboard" and ?tool name matches "scissors") or (?house name matches "air" and ?tool name matches "scissors")))))))))));
+			
+			do: ?me remove relate owns, ?tool;
+			do: ?at change image house to airHouse;
+			do: ?pigs remove tag insideHouse;
+			do: ?at remove relate hasHouse, ?house;
+		
+			page Destroy
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?tool image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "Wolf attempted to use the ?tool.name to destroy the house made of ?house.name.";
+			}
+			
+			page Results
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?pigs image stand, 300, -220;
+				draw: ?me image stand, -300, -220;
+				text: "The ?tool.name destroyed the house made of ?house.name but the pig inside was unfazed.";
+			}			
+		}
+		
+		case NoEffect
+		{
+			do: ?me remove relate owns, ?tool;
+		
+			page Destroy
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?tool image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "Wolf attempted to use the ?tool.name to destroy the house made of ?house.name.";
+			}
+			
+			page Results
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				text: "The ?tool.name could not tear down the walls of the house made of ?house.name.";
+			}				
+		}		
+	}
+	
+	//Plant Trap - The wolf can use a trap to varying levels of success depending on the circumstances.
+	verb PlantTrap
+	{
+		icon: "Plant Trap", 0, 0, 0;
+		
+		variable ?at
+		{
+			where: ?me at ?at;		
+		}
+		
+		variable ?house
+		{
+			where: ?at hasHouse ?house;
+		}
+		
+		argument ?trap
+		{
+			text: "Which trap to lure the pig out?";
+			where: Wolf owns ?trap;
+			where: ?trap has tag trap;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag wolf;
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+			where: not ?house empty;
+		}
+		
+		case LureOutLittlePig
+		{
+			where: ?trap name matches "cheese";
+			where: LittlePig at ?at;
+			where: LittlePig has tag insideHouse;
+			
+			do: LittlePig remove tag insideHouse;
+			do: LittlePig add tag distracted;
+			do: ?me remove relate owns, ?trap;
+
+			page placeTrap
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				draw: ?trap image item, 200, -350;
+				text: "Wolf placed the ?trap.name outside the house as a trap to lure out the pig.";
+			}
+			
+			page lure
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: LittlePig image stand, 0, -220;
+				draw: ?trap image item, 200, -350;
+				text: "Little Pig came out of the house and got distracted eating the ?trap.name.";
+			}
+		}
+		
+		case LureOutLittlerPig
+		{
+			where: ?trap name matches "apple";
+			where: LittlerPig at ?at;
+			where: LittlerPig has tag insideHouse;
+			
+			do: LittlerPig remove tag insideHouse;
+			do: LittlerPig add tag distracted;
+			do: ?me remove relate owns, ?trap;
+			
+			page placeTrap
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				draw: ?trap image item, 200, -350;
+				text: "Wolf placed the ?trap.name outside the house as a trap to lure out the pig.";
+			}
+			
+			page lure
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: LittlerPig image stand, 0, -220;
+				draw: ?trap image item, 200, -350;
+				text: "Littler Pig came out of the house and got distracted eating the ?trap.name.";
+			}			
+		}
+		
+		case LureOutLittlestPig
+		{
+			where: ?trap name matches "fancy candy";
+			where: LittlestPig at ?at;
+			where: LittlestPig has tag insideHouse;
+			
+			do: LittlestPig remove tag insideHouse;
+			do: LittlestPig add tag distracted;
+			do: ?me remove relate owns, ?trap;
+			
+			page placeTrap
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				draw: ?trap image item, 200, -350;
+				text: "Wolf placed the ?trap.name outside the house as a trap to lure out the pig.";
+			}
+			
+			page lure
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: LittlestPig image stand, 0, -220;
+				draw: ?trap image item, 200, -350;
+				text: "Littlest Pig came out of the house and got distracted eating the ?trap.name.";
+			}	
+		}
+		
+		case FailToLure
+		{
+			do: ?me remove relate owns, ?trap;
+			
+			page placeTrap
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				draw: ?trap image item, 200, -350;
+				text: "Wolf placed the ?trap.name outside the house as a trap to lure out the pig.";
+			}
+			
+			page fail
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?trap image item, 200, -350;
+				text: "After waiting some time, Wolf realized the pig was not going to be lured into his trap.";
+			}
+		}
+	}
+	
+	//Wolf and Pig Verbs
+	//Run - Characters can run from any location to any other location. This changes the stage they are on. Running as opposed to walking to create urgency.
+	verb Run
+	{
+		icon: "Run", 0, 0, 0;
+	
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		argument ?to
+		{
+			text: "Where to?";
+			where: ?to has tag place;
+			where: not ?me at ?to;
+		}
+		
+		preconditions
+		{
+			where: (?me has tag wolf or ?me has tag pig);
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+			where: not ?me has tag insideHouse;
+			where: not ?me has tag distracted;
+			where: not ?me has tag fazed;
+		}
+		
+		case run
+		{
+			do: ?me remove relate at, ?at;
+			do: ?me add relate at, ?to;
+			
+			page verb
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image run, 0, -220;
+				text: "?me.name ran off towards ?to.name.";
+			}
+		}
+	}
+	
+	//Look For Money - Characters can look for money in the fields once. This is a cheap way to allow for randomness to determine what characters can do.
+	verb LookForMoney
+	{
+		icon: "Look for Money", 0, 0, 0;
+		
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+		
+		preconditions
+		{
+			where: (?me has tag wolf or ?me has tag pig);
+			where: ?me has tag active;
+			where: not ?me has tag foundMoney;
+			where: not ?me has tag lookingForMoney;
+			where: ?me at Fields;
+			where: not ?me has tag distracted;
+			where: not ?me has tag fazed;
+		}
+		
+		case goLook
+		{
+			do: ?me add tag lookingForMoney;
+		
+			page goLook
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?at image house, 0, -150;
+				draw: ?me image stand, 0, -220;
+				text: "?me.name went searching for money in the grass fields.";
+			}
+		}
+	}
+	
+	//Buy - Characters, when at the hardware store, can buy items with money. Items include house materials, tools, and traps
+	verb Buy
+	{
+		icon: "Buy", 0, 0, 0;
+	
+		variable ?at
+		{
+			where: ?me at ?at;
+		}
+	
+		argument ?item
+		{
+			text: "What to buy?";
+			where: ?item has tag item;
+			where: not ?item has tag bought;
+			where: ?me money >= ?item cost;
+		}
+		
+		preconditions
+		{
+			where: (?me has tag wolf or ?me has tag pig);
+			where: ?me has tag active;
+			where: not ?me has tag lookingForMoney;
+			where: ?me at Store;
+			where: not ?me has tag distracted;
+			where: not ?me has tag fazed;
+		}
+		
+		case purchase
+		{	
+			do: ?me add num money, (?me money - ?item cost);
+			do: ?me add relate owns, ?item;
+			do: ?item add tag bought;
+			
+			page purchase
+			{
+				draw: ?at image backdrop, 0, 0;
+				draw: ?item image item, 0, 120;
+				draw: ?me image get, 0, -220;
+				text: "?me.name spent $?item.cost to buy the ?item.name. Afterwards, ?me.pnCSubject only had $?me.money.";
 			}
 		}
 	}
@@ -512,13 +1744,122 @@ storyworld ThreeLittlePigs
 	/////////////
 	// Endings //
 	/////////////
-	ending Temp
+	ending AllPigsEaten
 	{
-		where: Wolf has tag active;
-		
-		page end
+		where: LittlePig has tag eaten;
+		where: LittlerPig has tag eaten;
+		where: LittlestPig has tag eaten;
+	
+		page end1
 		{
-			text: "To be continued...";
+			draw: Fields image backdrop, 0, 0;
+			draw: Wolf image stand, 0, -220;
+			text: "Wolf, having eaten all the pigs, had satisfied his hunger.";
+		}
+		
+		page end2
+		{
+			draw: Fields image backdrop, 0, 0;
+			draw: Wolf image sleep, 0, -220;
+			text: "With a full stomach Wolf decided to take another nap.";
+		}
+		
+		page end3
+		{
+			draw: Fields image backdrop, 0, 0;
+			text: "The End";
+		}
+	}
+	
+	ending TwoPigsEaten
+	{
+		where: Wolf has tag giveUp2;
+	
+		page end1
+		{
+			draw: Fields image backdrop, 0, 0;
+			draw: Wolf image stand, 0, -220;
+			text: "Wolf could not catch that one last pig.";
+		}
+		
+		page end2
+		{
+			draw: Fields image backdrop, 0, 0;
+			draw: Wolf image sleep, 0, -220;
+			text: "Though still a bit hungry, Wolf goes to rest.";
+		}
+		
+		page end3
+		{
+			draw: Fields image backdrop, 0, 0;
+			text: "The End";
+		}
+	}
+	
+	ending OnePigEaten
+	{
+		where: Wolf has tag giveUp1;
+	
+		page end1
+		{
+			draw: Fields image backdrop, 0, 0;
+			draw: Wolf image stand, 0, -220;
+			text: "Wolf had to settle with only eating one pig.";
+		}
+		
+		page end2
+		{
+			draw: Fields image backdrop, 0, 0;
+			draw: Wolf image run, 0, -220;
+			text: "His stomach continued to growl, but at least he wouldn't starve. Maybe next time Wolf can fully feast.";
+		}
+		
+		page end3
+		{
+			draw: Fields image backdrop, 0, 0;
+			text: "The End";
+		}
+	}
+	
+	ending NoPigsEaten
+	{
+		where: Wolf has tag giveUp0;
+	
+		page end1
+		{
+			draw: Fields image backdrop, 0, 0;
+			draw: Wolf image stand, 0, -220;
+			text: "All the pigs had evaded Wolf's schemes. He had been made a fool.";
+		}
+		
+		page end2
+		{
+			draw: Fields image backdrop, 0, 0;
+			draw: Wolf image run, 0, -220;
+			text: "Wolf slowly walked into the distance, starving and saddened by his failure.";
+		}
+		
+		page end3
+		{
+			draw: Fields image backdrop, 0, 0;
+			text: "The End";
+		}
+	}
+	
+	ending GoneNuclear
+	{
+		where: Wolf has tag goneNuclear;
+	
+		page end1
+		{
+			draw: Story image nukeB, 0, 0;
+			text: "The nuclear explosion had left the land completely barren. Everyone died.";
+		}
+		
+		page end2
+		{
+			draw: Story image nukeB, 0, 0;
+			text: "The End";
 		}
 	}
 }

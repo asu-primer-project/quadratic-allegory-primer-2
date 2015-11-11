@@ -371,6 +371,98 @@ TLP Repository
 			}
 		}
 		
+	//Opening
+	verb WakeUpWolf
+	{
+		icon: "Wake Up Wolf", 0, 0, 0;
+	
+		variable ?pigs
+		{
+			where: ?pigs has tag pig;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag story;
+			where: not Wolf has tag active;
+			where: all ?pigs has relate inHouse;
+		}
+		
+		case WolfBecomesActive
+		{
+			do: Wolf add tag active;
+			do: ?pigs remove tag active;
+			
+			page wakeUp
+			{
+				text: "Wolf wakes up. He is hungry. How about some pork?";
+			}
+		}
+	}
+	
+	verb BuySupplies
+	{
+		icon: "Buy Supplies", 0, 0, 0;
+	
+		argument ?supplies
+		{
+			where: ?supplies has tag supplies;
+			where: not ?supplies has tag bought;
+			where: ?me money >= ?supplies cost;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+			where: ?me has tag active;
+			where: not ?me has relate owns;
+			where: not ?me has tag lookingForMoney;
+		}
+		
+		case purchase
+		{	
+			do: ?me add num money, (?me money - ?supplies cost);
+			do: ?me add relate owns, ?supplies;
+			do: ?supplies add tag bought;
+			
+			page purchase
+			{
+				text: "?me.name spent $?supplies.cost to buy the ?supplies.name. ?me.pnCSubject now only has $?me.money.";
+			}
+		}
+	}
+	
+	verb BuildHouse
+	{
+		icon: "Build House", 0, 0, 0;
+	
+		argument ?supplies
+		{
+			where: ?me owns ?supplies;
+			where: ?supplies has tag supplies;
+		}
+		
+		preconditions
+		{
+			where: ?me has tag pig;
+			where: ?me has tag active;
+			where: ?me has relate owns;
+			where: not ?me has tag lookingForMoney;
+		}
+		
+		case build
+		{
+			do: ?me add relate inHouse, ?supplies;
+			do: ?me remove relate owns, ?supplies;
+			do: ?me remove tag active;
+			
+			page verb
+			{
+				text: "?me.name built a house of ?supplies.name.";
+			}
+		}
+	}
+	
 	verb LookForMoney
 	{
 		icon: "Look for Money", 0, 0, 0;
@@ -379,6 +471,8 @@ TLP Repository
 		{
 			where: ?me has tag active;
 			where: not ?me has tag foundMoney;
+			where: not ?me has tag lookingForMoney;
+			where: not ?me has relate owns;
 		}
 		
 		case goLook
@@ -422,7 +516,7 @@ TLP Repository
 			
 			page verb
 			{
-				text: "?me.name found ?money.name while walking around.";
+				text: "?recipient.name found ?money.name while walking around.";
 			}
 		}
 		
@@ -436,7 +530,7 @@ TLP Repository
 			
 			page verb
 			{
-				text: "?me.name found ?money.name while walking around.";
+				text: "?recipient.name found ?money.name while walking around.";
 			}
 		}
 		
@@ -450,7 +544,7 @@ TLP Repository
 			
 			page verb
 			{
-				text: "?me.name found ?money.name while walking around.";
+				text: "?recipient.name found ?money.name while walking around.";
 			}
 		}
 		
@@ -464,7 +558,7 @@ TLP Repository
 			
 			page verb
 			{
-				text: "?me.name found ?money.name while walking around.";
+				text: "?recipient.name found ?money.name while walking around.";
 			}
 		}
 		
@@ -479,12 +573,67 @@ TLP Repository
 			}
 		}
 	}
-	
-	entity Air
-	{
-		icon: "Air", 0, 0, 0;
 		
-		string: name, "air";
-		num: cost, 10;
-		tag: supplies;
-	}
+Image Names
+--------------
+air
+airHouse
+apple
+brick
+brickHouse
+candy
+canvas
+canvasHouse
+cardboard
+cardboardHouse
+cheese
+diamond
+diamondHouse
+flamethrower
+glass
+glassHouse
+gold
+goldHouse
+littlePigCower
+littlePigDead
+littlePigFazed
+littlePigGet
+littlePigRun
+littlePigStand
+littlePigTaunt
+littlerPigCower
+littlerPigDead
+littlerPigFazed
+littlerPigGet
+littlerPigRun
+littlerPigStand
+littlerPigTaunt
+littlestPigCower
+littlestPigDead
+littlestPigFazed
+littlestPigGet
+littlestPigRun
+littlestPigStand
+littlestPigTaunt
+nuke
+pork
+scissors
+slegdehammer
+steel
+steelHouse
+straw
+strawHouse
+tnt
+vacuum
+wolfEat
+wolfGet
+wolfRun
+wolfSleep
+wolfStand
+wolfTalk
+wood
+woodHouse
+moneyFive
+moneyMillion
+moneyTen
+moneyTwenty

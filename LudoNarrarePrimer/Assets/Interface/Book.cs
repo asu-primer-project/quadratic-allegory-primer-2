@@ -419,6 +419,11 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
+			argument1 = 0;
+			argument2 = 0;
+			argument3 = 0;
+			argument4 = 0;
+
 			if (verbChoice != eng.currentUserChoices.Count - 1)
 				verbChoice++;
 			else
@@ -436,6 +441,11 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
+			argument1 = 0;
+			argument2 = 0;
+			argument3 = 0;
+			argument4 = 0;
+
 			if (verbChoice != 0)
 				verbChoice--;
 			else
@@ -453,6 +463,10 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
+			argument2 = 0;
+			argument3 = 0;
+			argument4 = 0;
+
 			if (argument1 != eng.currentUserChoices[verbChoice].arguments[0].values.Count - 1)
 				argument1++;
 			else
@@ -469,6 +483,10 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
+			argument2 = 0;
+			argument3 = 0;
+			argument4 = 0;
+
 			if (argument1 != 0)
 				argument1--;
 			else
@@ -485,6 +503,9 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
+			argument3 = 0;
+			argument4 = 0;
+
 			if (argument2 != eng.currentUserChoices[verbChoice].arguments[1].values.Count - 1)
 				argument2++;
 			else
@@ -501,6 +522,9 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
+			argument3 = 0;
+			argument4 = 0;
+
 			if (argument2 != 0)
 				argument2--;
 			else
@@ -517,6 +541,8 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
+			argument4 = 0;
+
 			if (argument3 != eng.currentUserChoices[verbChoice].arguments[2].values.Count - 1)
 				argument3++;
 			else
@@ -533,6 +559,8 @@ public class Book : MonoBehaviour
 	{
 		if (waitingForInput && settledLeft && settledRight)
 		{
+			argument4 = 0;
+
 			if (argument3 != 0)
 				argument3--;
 			else

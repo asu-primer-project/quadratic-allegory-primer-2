@@ -7,12 +7,9 @@ using System.Text;
 //Entity which queries its emotions and knowledge to make decisions
 public class MindPerson : Mind 
 {
-	private System.Random rand;
-	
 	public MindPerson()
 	{
 		name = "person";
-		rand = new System.Random();
 	}
 
 	//Given a value from -5 to 5, gambles to find whether to lean negative or positive

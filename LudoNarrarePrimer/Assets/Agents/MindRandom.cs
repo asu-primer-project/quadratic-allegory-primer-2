@@ -7,12 +7,9 @@ using System.Text;
 //This is an incredibly simple mind which chooses its action randomly.
 public class MindRandom : Mind 
 {	
-	private System.Random rand;
-
 	public MindRandom()
 	{
 		name = "random";
-		rand = new System.Random();
 	}
 
 	public void chooseArgument(Verb v, int argueNum)
@@ -21,25 +18,18 @@ public class MindRandom : Mind
 		{
 			Entity ac = null;
 			List<Entity> thoseWithOdds = v.arguments[argueNum].values.FindAll(x => x.numbers.Exists(y => y.name == "odds"));
+			List<int> roll = new List<int>();
 
-			int max = 0;
-			foreach (Entity e in thoseWithOdds)
-				max += e.numbers.Find(x => x.name == "odds").value;
+			int j = 0;
 
-			int spin = rand.Next(1, max);
-
-			int count = 0;
 			foreach (Entity e in thoseWithOdds)
 			{
-				count += e.numbers.Find(x => x.name == "odds").value;
-
-				if (spin <= count)
-				{
-					ac = e;
-					break;
-				}
+				for (int i = 0; i < e.numbers.Find(x => x.name == "odds").value; i++)
+					roll.Add(j);
+				j++;
 			}
-			
+
+			ac = thoseWithOdds[roll[rand.Next(0, roll.Count)]];
 			v.replaceWith(v.arguments[argueNum].name, ac.name);
 		}
 		else
